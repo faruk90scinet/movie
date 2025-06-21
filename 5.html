@@ -7,35 +7,95 @@
     body {
       font-family: 'SolaimanLipi', sans-serif;
       background-color: #f4f4f4;
-      padding: 40px;
-    }
-    h1 {
-      color: #333;
-    }
-    ul {
-      list-style: none;
+      margin: 0;
       padding: 0;
     }
-    li {
-      margin-bottom: 15px;
+
+    .menu {
+      text-align: center;
+      background-color: #333;
+      padding: 12px 0;
     }
-    a {
+
+    .menu a {
+      color: #fff;
+      text-decoration: none;
+      margin: 0 10px;
+      font-size: 16px;
+    }
+
+    .menu a:hover {
+      text-decoration: underline;
+    }
+
+    .main {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: calc(100vh - 60px); /* subtracting menu height */
+    }
+
+    .container {
+      background-color: #fff;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    table {
+      margin: 0 auto;
+    }
+
+    td {
+      padding: 12px 20px;
+    }
+
+    a.video-link {
       text-decoration: none;
       color: #0077cc;
       font-size: 1.2em;
     }
-    a:hover {
+
+    a.video-link:hover {
       text-decoration: underline;
     }
   </style>
 </head>
 <body>
-  <h1>ভ্লগ ভিডিও লিংক</h1>
-  <ul>
-    <li><a href="https://www.blogger.com/video.g?token=AD6v5dzQi080USAJc_nqd8csNBiy4uInrLfw_5X2QeXKBEOt7oc7OdkCpQyEnXehNNmWhD0OyuY7afTrKua4FHurYwJz_xb59Pas1vl51KALWsGsXgNkgJtwcmnkxHNOkts-7q7BGgr9" target="_blank">রোশনাই</a></li>
-    <li><a href="#" target="_blank">কথা</a></li>
-    <li><a href="https://www.blogger.com/video.g?token=AD6v5dw3WJPxqwnbraRPdBfmvQ7lYrnL4Nr1wiN9AJ66kqyqTIBorfK34HS2wysb5pkC5owFI4uqW1px1jCKAMVkY0rrikey-_q0yI1jd1Z3L6u-KsxhFRttLD4nPvAGjm1VNcEdDOTM" target="_blank">রাঙ্গামতি</a></li>
-    <li><a href="#" target="_blank">পরশুরাম</a></li>
-  </ul>
+
+  <div class="menu">
+    <a href="https://faruk90scinet.github.io/movie/">Channel 1</a> |
+    <a href="https://faruk90scinet.github.io/movie/2">Channel 2</a> |
+    <a href="https://faruk90scinet.github.io/movie/3">Channel 3</a> |
+    <a href="https://faruk90scinet.github.io/movie/4">Channel 4</a> |
+    <a href="https://faruk90scinet.github.io/movie/5">জলসা</a>
+  </div>
+
+  <div class="main">
+    <div class="container">
+      <h1>ভ্লগ ভিডিও লিংক</h1>
+      <table>
+        <tr>
+          <td><a class="video-link" href="https://www.blogger.com/video.g?token=AD6v5dzQi080USAJc_nqd8csNBiy4uInrLfw_5X2QeXKBEOt7oc7OdkCpQyEnXehNNmWhD0OyuY7afTrKua4FHurYwJz_xb59Pas1vl51KALWsGsXgNkgJtwcmnkxHNOkts-7q7BGgr9" target="_blank">রোশনাই</a></td>
+        </tr>
+        <tr>
+          <td><a class="video-link" href="#" target="_blank">কথা</a></td>
+        </tr>
+        <tr>
+          <td><a class="video-link" href="https://www.blogger.com/video.g?token=AD6v5dw3WJPxqwnbraRPdBfmvQ7lYrnL4Nr1wiN9AJ66kqyqTIBorfK34HS2wysb5pkC5owFI4uqW1px1jCKAMVkY0rrikey-_q0yI1jd1Z3L6u-KsxhFRttLD4nPvAGjm1VNcEdDOTM" target="_blank">রাঙ্গামতি</a></td>
+        </tr>
+        <tr>
+          <td><a class="video-link" href="#" target="_blank">পরশুরাম</a></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
 </body>
 </html>
