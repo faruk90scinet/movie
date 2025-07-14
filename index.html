@@ -1,47 +1,82 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Faruk's Movie Zone</title>
+  <meta charset="UTF-8">
+  <title>নাটক</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'SolaimanLipi', sans-serif;
       background-color: #f4f4f4;
       margin: 0;
       padding: 0;
+    }
+
+    .menu {
       text-align: center;
-      color: #333;
+      background-color: #1a1a1a;
+      padding: 14px 0;
     }
 
-    .menu, .footer {
-      background-color: #1e1e2f;
-      padding: 16px 0;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    }
-
-    .menu a, .footer a {
+    .menu a {
       color: #ffffff;
       text-decoration: none;
-      margin: 0 15px;
+      margin: 0 14px;
       font-size: 18px;
       font-weight: bold;
-      padding: 8px 14px;
-      border-radius: 8px;
-      transition: background-color 0.3s, color 0.3s;
+      transition: color 0.3s;
     }
 
-    .menu a:hover, .footer a:hover {
-      background-color: #ffcc00;
-      color: #000;
+    .menu a:hover {
+      color: #ffcc00;
     }
 
-    h2 {
-      margin: 30px 0 20px;
+    .main {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: calc(100vh - 80px);
+    }
+
+    .container {
+      background-color: #ffffff;
+      padding: 40px 50px;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+      text-align: center;
+      max-width: 500px;
+      width: 90%;
+    }
+
+    h1 {
       font-size: 32px;
+      color: #222;
+      margin-bottom: 30px;
+      border-bottom: 2px solid #0077cc;
+      padding-bottom: 10px;
     }
 
-    video {
+    table {
+      margin: 0 auto;
+    }
+
+    td {
+      padding: 18px 0;
+    }
+
+    a.video-link {
+      text-decoration: none;
+      color: #0077cc;
+      font-size: 22px;
+      font-weight: bold;
+      transition: all 0.3s;
+    }
+
+    a.video-link:hover {
+      color: #d6006f;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    }
+
+      video {
       width: 1280px;
       height: 720px;
       max-width: 90%;
@@ -55,26 +90,15 @@
         width: 100%;
         height: auto;
       }
-
-      .menu a, .footer a {
-        font-size: 18px;
-        margin: 6px;
-      }
-
-      h2 {
-        font-size: 26px;
-      }
-    }
   </style>
 </head>
 <body>
 
-  <!-- Top Menu -->
   <div class="menu">
-    <a href="https://faruk90scinet.github.io/movie/">Channel 1</a>
-    <a href="https://faruk90scinet.github.io/movie/2">Channel 2</a>
-    <a href="https://faruk90scinet.github.io/movie/3">Channel 3</a>
-    <a href="https://faruk90scinet.github.io/movie/4">Channel 4</a>
+    <a href="https://faruk90scinet.github.io/movie/">Channel 1</a> |
+    <a href="https://faruk90scinet.github.io/movie/2">Channel 2</a> |
+    <a href="https://faruk90scinet.github.io/movie/3">Channel 3</a> |
+    <a href="https://faruk90scinet.github.io/movie/4">Channel 4</a> |
     <a href="https://faruk90scinet.github.io/movie/5">জলসা</a>
   </div>
 
