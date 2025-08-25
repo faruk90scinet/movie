@@ -59,26 +59,34 @@
         height: auto;
       }
 
-      .menu a, .footer a {
-        font-size: 18px;
-        margin: 6px;
-      }
-
       h2 {
         font-size: 26px;
       }
     }
   </style>
+  <script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const currentPage = window.location.pathname.split("/").pop(); 
+    const links = document.querySelectorAll(".menu a, .footer a");
+
+    links.forEach(link => {
+      const linkPage = link.getAttribute("href");
+      if (linkPage === currentPage || (linkPage === "index.html" && currentPage === "")) {
+        link.classList.add("active");
+      }
+    });
+  });
+</script>
 </head>
 <body>
 
   <!-- Top Menu -->
   <div class="menu">
-    <a href="https://faruk90scinet.github.io/movie/" class="active">Channel 1</a> |
-    <a href="https://faruk90scinet.github.io/movie/2" class="active">Channel 2</a> |
-    <a href="https://faruk90scinet.github.io/movie/3" class="active">Channel 3</a> |
-    <a href="https://faruk90scinet.github.io/movie/4" class="active">Channel 4</a> |
-    <a href="https://faruk90scinet.github.io/movie/5" class="active">জলসা</a>
+    <a href="https://faruk90scinet.github.io/movie/">Channel 1</a> |
+    <a href="https://faruk90scinet.github.io/movie/2">Channel 2</a> |
+    <a href="https://faruk90scinet.github.io/movie/3">Channel 3</a> |
+    <a href="https://faruk90scinet.github.io/movie/4">Channel 4</a> |
+    <a href="https://faruk90scinet.github.io/movie/5">জলসা</a>
   </div>
 
   <!-- Heading -->
@@ -90,11 +98,11 @@
 
   <!-- Footer Menu -->
   <div class="footer">
-    <a href="https://faruk90scinet.github.io/movie/" class="active">Channel 1</a>
-    <a href="https://faruk90scinet.github.io/movie/2" class="active">Channel 2</a>
-    <a href="https://faruk90scinet.github.io/movie/3" class="active">Channel 3</a>
-    <a href="https://faruk90scinet.github.io/movie/4" class="active">Channel 4</a>
-    <a href="https://faruk90scinet.github.io/movie/5" class="active">জলসা</a>
+    <a href="https://faruk90scinet.github.io/movie/">Channel 1</a>
+    <a href="https://faruk90scinet.github.io/movie/2">Channel 2</a>
+    <a href="https://faruk90scinet.github.io/movie/3">Channel 3</a>
+    <a href="https://faruk90scinet.github.io/movie/4">Channel 4</a>
+    <a href="https://faruk90scinet.github.io/movie/5">জলসা</a>
   </div>
 
 </body>
