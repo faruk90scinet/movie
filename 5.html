@@ -115,5 +115,18 @@
   </div>
 </div>
 
+  <script>
+document.addEventListener("DOMContentLoaded", function() {
+  const currentUrl = window.location.href; // full page URL
+  const links = document.querySelectorAll(".menu a, .footer a");
+
+  links.forEach(link => {
+    if (link.href === currentUrl) {
+      link.classList.add("active");
+    }
+  });
+});
+</script>
+
 </body>
 </html>
