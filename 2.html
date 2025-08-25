@@ -34,6 +34,11 @@
     color: #ffcc00;
     }
 
+    /* Active page highlight */
+    .menu a.active, .footer a.active {
+    color: #ffcc00;
+    }
+    
     h2 {
       margin: 30px 0 20px;
       font-size: 30px;
@@ -54,21 +59,16 @@
         height: auto;
       }
 
-      .menu a, .footer a {
-        font-size: 18px;
-        margin: 6px;
-      }
-
       h2 {
         font-size: 26px;
       }
     }
   </style>
+
 </head>
 <body>
 
   <!-- Top Menu -->
-
   <div class="menu">
     <a href="https://faruk90scinet.github.io/movie/">Channel 1</a> |
     <a href="https://faruk90scinet.github.io/movie/2">Channel 2</a> |
@@ -78,10 +78,9 @@
   </div>
 
   <!-- Heading -->
-  <h2>🎬 Faruk's Movie Zone - সু থ ভা ক </h2>
-
+  <h2>🎬 Faruk's Movie Zone - সুথ ভাক </h2>  
   <!-- Video Player -->
-  <video controls> <source src="https://dl.dropboxusercontent.com/scl/fi/1e3ycsir3pi1icj9kykd9/.mp4?rlkey=10mbp7pah4utjtjrpzjj8wnmc&st=n5m4o2si" type="video/mp4">
+  <video controls> <source src="https://dl.dropboxusercontent.com/scl/fi/24oet0dzvcxv2meux8kkc/tal-tali.mp4?rlkey=5zmtlhh7d4taq9esmze3lr551" type="video/mp4">
     Your browser does not support the video tag.
   </video>
 
@@ -93,6 +92,20 @@
     <a href="https://faruk90scinet.github.io/movie/4">Channel 4</a>
     <a href="https://faruk90scinet.github.io/movie/5">জলসা</a>
   </div>
+ <!-- Script goes here -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const currentPage = window.location.pathname.split("/").pop(); 
+      const links = document.querySelectorAll(".menu a, .footer a");
 
+      links.forEach(link => {
+        const linkPage = link.getAttribute("href");
+        if (linkPage === currentPage || (linkPage === "index.html" && currentPage === "")) {
+          link.classList.add("active");
+        }
+      });
+    });
+  </script>
+  
 </body>
 </html>
