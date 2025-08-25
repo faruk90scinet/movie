@@ -64,19 +64,7 @@
       }
     }
   </style>
-  <script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const currentPage = window.location.pathname.split("/").pop(); 
-    const links = document.querySelectorAll(".menu a, .footer a");
 
-    links.forEach(link => {
-      const linkPage = link.getAttribute("href");
-      if (linkPage === currentPage || (linkPage === "index.html" && currentPage === "")) {
-        link.classList.add("active");
-      }
-    });
-  });
-</script>
 </head>
 <body>
 
@@ -104,6 +92,20 @@
     <a href="https://faruk90scinet.github.io/movie/4">Channel 4</a>
     <a href="https://faruk90scinet.github.io/movie/5">জলসা</a>
   </div>
+ <!-- Script goes here -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const currentPage = window.location.pathname.split("/").pop(); 
+      const links = document.querySelectorAll(".menu a, .footer a");
 
+      links.forEach(link => {
+        const linkPage = link.getAttribute("href");
+        if (linkPage === currentPage || (linkPage === "index.html" && currentPage === "")) {
+          link.classList.add("active");
+        }
+      });
+    });
+  </script>
+  
 </body>
 </html>
