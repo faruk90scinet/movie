@@ -2,130 +2,184 @@
 <html lang="bn">
 <head>
   <meta charset="UTF-8">
-  <title>নাটক</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>জল.সার নাটক</title>
   <style>
-    body {
-      font-family: 'SolaimanLipi', sans-serif;
-      background-color: #f4f4f4;
+    /* Reset & Typography */
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      text-align: center;
+    }
+
+    body {
+      font-family: 'SolaimanLipi', 'Hind Siliguri', sans-serif;
+      /* Subtle gradient background for a modern feel */
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
       color: #333;
+      display: flex;
+      flex-direction: column;
     }
 
-    .menu {
-      text-align: center;
+    /* Navigation Bar */
+    .navbar {
       background-color: #1a1a1a;
-      padding: 14px 0;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      padding: 15px 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px; /* Replaces the need for "|" separators */
     }
 
-    .menu a {
-      color: #ffffff;
+    .navbar a {
+      color: #e0e0e0;
       text-decoration: none;
-      margin: 0 14px;
-      font-size: 18px;
-      font-weight: bold;
-      transition: color 0.3s;
+      font-size: 16px;
+      font-weight: 600;
+      padding: 8px 18px;
+      border-radius: 20px;
+      transition: all 0.3s ease;
     }
 
-    .menu a:hover {
+    .navbar a:hover {
+      background-color: #333;
       color: #ffcc00;
     }
 
-  .menu a.active, .footer a.active {
-      color: #ffcc00; /* highlight color */
+    .navbar a.active {
+      background-color: #ffcc00;
+      color: #1a1a1a;
     }
 
+    /* Main Content Area */
     .main {
+      flex: 1;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: calc(100vh - 80px);
+      padding: 40px 20px;
     }
 
     .container {
       background-color: #ffffff;
-      padding: 40px 50px;
-      border-radius: 16px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
       text-align: center;
       max-width: 500px;
-      width: 90%;
+      width: 100%;
     }
 
     h1 {
-      font-size: 32px;
-      color: #222;
+      font-size: 28px;
+      color: #1a1a1a;
       margin-bottom: 30px;
-      border-bottom: 2px solid #0077cc;
-      padding-bottom: 10px;
+      position: relative;
+      display: inline-block;
     }
 
-    table {
-      margin: 0 auto;
+    /* Custom underline for the header */
+    h1::after {
+      content: '';
+      position: absolute;
+      width: 60%;
+      height: 3px;
+      background-color: #0077cc;
+      bottom: -10px;
+      left: 20%;
+      border-radius: 2px;
     }
 
-    td {
-      padding: 18px 0;
+    /* Video Links (Modern Button Cards) */
+    .video-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
 
-    a.video-link {
+    .video-link {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px 20px;
+      background-color: #f8f9fa;
+      border: 1px solid #e9ecef;
+      border-radius: 12px;
       text-decoration: none;
-      color: #0077cc;
-      font-size: 22px;
+      color: #2c3e50;
+      font-size: 20px;
       font-weight: bold;
-      transition: all 0.3s;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     }
 
-    a.video-link:hover {
-      color: #d6006f;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    .video-link:hover {
+      background-color: #0077cc;
+      color: #ffffff;
+      transform: translateY(-3px); /* Smooth lift effect */
+      box-shadow: 0 6px 15px rgba(0, 119, 204, 0.25);
+      border-color: #0077cc;
+    }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 600px) {
+      .container {
+        padding: 30px 20px;
+      }
+      
+      h1 {
+        font-size: 24px;
+      }
+
+      .navbar {
+        gap: 8px;
+      }
+      
+      .navbar a {
+        font-size: 14px;
+        padding: 6px 12px;
+      }
     }
   </style>
 </head>
 <body>
 
-  <div class="menu">
-    <a href="https://faruk90scinet.github.io/movie/">Channel 1</a> |
-    <a href="https://faruk90scinet.github.io/movie/2">Channel 2</a> |
-    <a href="https://faruk90scinet.github.io/movie/3">Channel 3</a> |
-    <a href="https://faruk90scinet.github.io/movie/4">Channel 4</a> |
+  <nav class="navbar">
+    <a href="https://faruk90scinet.github.io/movie/">Channel 1</a>
+    <a href="https://faruk90scinet.github.io/movie/2">Channel 2</a>
+    <a href="https://faruk90scinet.github.io/movie/3">Channel 3</a>
+    <a href="https://faruk90scinet.github.io/movie/4">Channel 4</a>
     <a href="https://faruk90scinet.github.io/movie/5">জলসা</a>
-  </div>
+  </nav>
 
-<div class="main">
-  <div class="container">
-    <h1>📽️ জল.সার নাটক - 4</h1>
-    <table>
-      <tr>
-        <td><a class="video-link" href="https://www.blogger.com/video.g?token=AD6v5dz87w8E1msKQCkuEAoT0wsg8mXn7qlswxJTVRv2VBBd4JoS_TfH1eX8KcLaPFRrPK9MY7I_6Sw3mEYaieposwc3x45QUmDHyoqG8LSGh8v7k0IbNF_CsgM_6GJPxhZanZ-oqT0" target="_blank">চির.সখা</a> </td>
-      </tr>
-      <tr>
-        <td><a class="video-link" href="https://www.blogger.com/video.g?token=AD6v5dyeoE39lcSFzf7DhpM5x0Ur1nrzWWvJOGQbOqkkSa_xeOPCfVfRZ2q70qXzj2g6e_wJ1xJzfILMpIVB_Jt00QilnqyaoKKgUrn0c6407J-zG1Z2cqm74Q7_rfyiAN_vJH_Rz-I" target="_blank">রাঙ্গা.মতি</a></td>
-      </tr>
-      <tr>
-        <td><a class="video-link" href="https://www.blogger.com/video.g?token=AD6v5dzfkry1USNAWkT1-dra4S1R--Zf2Jipb5c8ABtJgIJVHw0RgFzR6q59BN0TGaEPs-g6yvRP9rrTxPxAJy48gi-MFukAcBygdoAK4T_vhOOS_RoqYUR1JBVvgPbuixhHm5dq468" target="_blank">পর.শুরাম</a></td>
-      </tr>
-      <tr>
-        <td><a class="video-link" href="https://draft.blogger.com/video.g?token=AD6v5dw7lM1ekIpMAXBUGmucZNT_c5CTARsSzTrtntzM_sP3m0InIaFuA63GljL35I7n3hoa9GUa25rboCxQNWkLxD-pYCXRCsWtQNJD1U2geg6sHY8sx0iv7_5WAbNqs834yRvJFX4" target="_blank">প্রফে.সর বি.দ্যা</a></td>
-      </tr>
-    </table>
-  </div>
-</div>
+  <main class="main">
+    <div class="container">
+      <h1>📽️ জল.সার নাটক - 4</h1>
+      
+      <div class="video-list">
+        <a class="video-link" href="https://www.blogger.com/video.g?token=AD6v5dz87w8E1msKQCkuEAoT0wsg8mXn7qlswxJTVRv2VBBd4JoS_TfH1eX8KcLaPFRrPK9MY7I_6Sw3mEYaieposwc3x45QUmDHyoqG8LSGh8v7k0IbNF_CsgM_6GJPxhZanZ-oqT0" target="_blank">চির.সখা</a>
+        <a class="video-link" href="https://www.blogger.com/video.g?token=AD6v5dyeoE39lcSFzf7DhpM5x0Ur1nrzWWvJOGQbOqkkSa_xeOPCfVfRZ2q70qXzj2g6e_wJ1xJzfILMpIVB_Jt00QilnqyaoKKgUrn0c6407J-zG1Z2cqm74Q7_rfyiAN_vJH_Rz-I" target="_blank">রাঙ্গা.মতি</a>
+        <a class="video-link" href="https://www.blogger.com/video.g?token=AD6v5dzfkry1USNAWkT1-dra4S1R--Zf2Jipb5c8ABtJgIJVHw0RgFzR6q59BN0TGaEPs-g6yvRP9rrTxPxAJy48gi-MFukAcBygdoAK4T_vhOOS_RoqYUR1JBVvgPbuixhHm5dq468" target="_blank">পর.শুরাম</a>
+        <a class="video-link" href="https://draft.blogger.com/video.g?token=AD6v5dw7lM1ekIpMAXBUGmucZNT_c5CTARsSzTrtntzM_sP3m0InIaFuA63GljL35I7n3hoa9GUa25rboCxQNWkLxD-pYCXRCsWtQNJD1U2geg6sHY8sx0iv7_5WAbNqs834yRvJFX4" target="_blank">প্রফে.সর বি.দ্যা</a>
+      </div>
+    </div>
+  </main>
 
   <script>
-document.addEventListener("DOMContentLoaded", function() {
-  const currentUrl = window.location.href; // full page URL
-  const links = document.querySelectorAll(".menu a, .footer a");
+    document.addEventListener("DOMContentLoaded", function() {
+      // Slightly improved logic to handle trailing slashes robustly
+      const currentUrl = window.location.href.split('?')[0].replace(/\/$/, ""); 
+      const links = document.querySelectorAll(".navbar a");
 
-  links.forEach(link => {
-    if (link.href === currentUrl) {
-      link.classList.add("active");
-    }
-  });
-});
-</script>
+      links.forEach(link => {
+        const linkUrl = link.href.split('?')[0].replace(/\/$/, "");
+        if (linkUrl === currentUrl) {
+          link.classList.add("active");
+        }
+      });
+    });
+  </script>
 
 </body>
 </html>
