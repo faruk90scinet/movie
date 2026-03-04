@@ -5,106 +5,191 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Faruk's Movie Zone</title>
   <style>
-    body {
-      font-family: 'SolaimanLipi', sans-serif;
-      background-color: #f4f4f4;
+    /* Reset & Typography */
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      text-align: center;
+    }
+
+    body {
+      font-family: 'SolaimanLipi', 'Hind Siliguri', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
       color: #333;
+      display: flex;
+      flex-direction: column;
     }
 
-    .menu, .footer {
-      text-align: center;
+    /* Shared Navigation Bar for Top & Bottom */
+    .navbar {
       background-color: #1a1a1a;
-      padding: 14px 0;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      padding: 15px 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
     }
 
-    .menu a, .footer a {
-      color: #ffffff;
+    .navbar a {
+      color: #e0e0e0;
       text-decoration: none;
-      margin: 0 14px;
-      font-size: 18px;
-      font-weight: bold;
-      transition: color 0.3s;
+      font-size: 16px;
+      font-weight: 600;
+      padding: 8px 18px;
+      border-radius: 20px;
+      transition: all 0.3s ease;
     }
 
-    .menu a:hover, .footer a:hover {
-    color: #ffcc00;
+    .navbar a:hover {
+      background-color: #333;
+      color: #ffcc00;
     }
 
     /* Active page highlight */
-    .menu a.active, .footer a.active {
-    color: #ffcc00;
+    .navbar a.active {
+      background-color: #ffcc00;
+      color: #1a1a1a;
     }
-    
+
+    /* Main Content Area */
+    .main {
+      flex: 1; /* Pushes the footer to the bottom */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    .container {
+      background-color: #ffffff;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      width: 100%;
+      max-width: 1000px;
+    }
+
     h2 {
-      margin: 30px 0 20px;
-      font-size: 30px;
+      font-size: 32px;
+      color: #1a1a1a;
+      margin-bottom: 30px;
+      position: relative;
+      display: inline-block;
+    }
+
+    /* Custom underline for the header */
+    h2::after {
+      content: '';
+      position: absolute;
+      width: 50%;
+      height: 3px;
+      background-color: #0077cc;
+      bottom: -10px;
+      left: 25%;
+      border-radius: 2px;
+    }
+
+    /* Video Player Styling */
+    .video-wrapper {
+      width: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+      background-color: #000; 
     }
 
     video {
-      width: 1280px;
-      height: 720px;
-      max-width: 70%;
-      border-radius: 10px;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
-      margin-bottom: 30px;
+      width: 100%;
+      height: auto;
+      display: block; 
+      aspect-ratio: 16 / 9; 
     }
 
-    @media (max-width: 1300px) {
-      video {
-        width: 70%;
-        height: auto;
+    /* Subtitle Customization */
+    video::cue {
+      background-color: rgba(0, 0, 0, 0.8);
+      color: #ffffff;
+      font-size: 1.2rem;
+      font-family: 'SolaimanLipi', sans-serif;
+    }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px 15px;
+      }
+      
+      h2 {
+        font-size: 24px;
+        margin-bottom: 25px;
       }
 
-      h2 {
-        font-size: 26px;
+      .navbar {
+        gap: 8px;
+        padding: 12px 10px;
+      }
+      
+      .navbar a {
+        font-size: 14px;
+        padding: 6px 12px;
       }
     }
   </style>
-
 </head>
 <body>
 
-  <!-- Top Menu -->
-  <div class="menu">
-    <a href="https://faruk90scinet.github.io/movie/">Channel 1</a> |
-    <a href="https://faruk90scinet.github.io/movie/2">Channel 2</a> |
-    <a href="https://faruk90scinet.github.io/movie/3">Channel 3</a> |
-    <a href="https://faruk90scinet.github.io/movie/4">Channel 4</a> |
-    <a href="https://faruk90scinet.github.io/movie/5">জলসা</a>
-  </div>
-
-  <!-- Heading -->
-  <h2>🎬 Faruk's Movie Zone - indhrr </h2>  
-  <!-- Video Player -->
-  <video controls> <source src="https://dl.dropboxusercontent.com/scl/fi/0lh6y1npuesqbbst0aj92/indhrr.mkv?rlkey=y429driybh1lsbuaxiab0m0rh" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
-
-  <!-- Footer Menu -->
-  <div class="footer">
+  <header class="navbar">
     <a href="https://faruk90scinet.github.io/movie/">Channel 1</a>
     <a href="https://faruk90scinet.github.io/movie/2">Channel 2</a>
     <a href="https://faruk90scinet.github.io/movie/3">Channel 3</a>
     <a href="https://faruk90scinet.github.io/movie/4">Channel 4</a>
     <a href="https://faruk90scinet.github.io/movie/5">জলসা</a>
-  </div>
- <!-- Script goes here -->
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-  const currentUrl = window.location.href; // full page URL
-  const links = document.querySelectorAll(".menu a, .footer a");
+  </header>
 
-  links.forEach(link => {
-    if (link.href === currentUrl) {
-      link.classList.add("active");
-    }
-  });
-});
-</script>
-  
+  <main class="main">
+    <div class="container">
+      <h2>🎬 Faruk's Movie Zone - indhrr</h2>
+
+      <div class="video-wrapper">
+        <video controls crossorigin="anonymous">
+          
+          <source src="https://dl.dropboxusercontent.com/scl/fi/0lh6y1npuesqbbst0aj92/indhrr.mkv?rlkey=y429driybh1lsbuaxiab0m0rh" type="video/mp4"> 
+          <source src="your-video-link.webm" type="video/webm">
+          <source src="your-video-link.ogv" type="video/ogg">
+
+          <track kind="subtitles" src="subtitles_bn.vtt" srclang="bn" label="Bengali" default>
+          <track kind="subtitles" src="subtitles_en.vtt" srclang="en" label="English">
+
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    </div>
+  </main>
+
+  <footer class="navbar">
+    <a href="https://faruk90scinet.github.io/movie/">Channel 1</a>
+    <a href="https://faruk90scinet.github.io/movie/2">Channel 2</a>
+    <a href="https://faruk90scinet.github.io/movie/3">Channel 3</a>
+    <a href="https://faruk90scinet.github.io/movie/4">Channel 4</a>
+    <a href="https://faruk90scinet.github.io/movie/5">জলসা</a>
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const currentUrl = window.location.href.split('?')[0].replace(/\/$/, ""); 
+      const links = document.querySelectorAll(".navbar a");
+
+      links.forEach(link => {
+        const linkUrl = link.href.split('?')[0].replace(/\/$/, "");
+        if (linkUrl === currentUrl) {
+          link.classList.add("active");
+        }
+      });
+    });
+  </script>
+
 </body>
 </html>
