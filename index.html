@@ -116,6 +116,65 @@
       font-family: 'SolaimanLipi', sans-serif;
     }
 
+    /* --- PLAYLIST STYLES --- */
+    .playlist-container {
+      margin-top: 30px;
+      text-align: left;
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid #e0e0e0;
+    }
+
+    .playlist-title {
+      font-size: 20px;
+      margin-bottom: 15px;
+      color: #1a1a1a;
+      font-weight: bold;
+    }
+
+    .playlist {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 250px; /* Makes it scrollable if there are many videos */
+      overflow-y: auto;
+      padding-right: 10px;
+    }
+
+    .playlist-item {
+      padding: 12px 15px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+    }
+
+    .playlist-item:hover {
+      background: #e9ecef;
+      border-color: #ccc;
+    }
+
+    .playlist-item.playing {
+      background: #0077cc;
+      color: #fff;
+      border-color: #0077cc;
+    }
+
+    /* Custom Scrollbar for Playlist */
+    .playlist::-webkit-scrollbar {
+      width: 8px;
+    }
+    .playlist::-webkit-scrollbar-thumb {
+      background: #ccc;
+      border-radius: 4px;
+    }
+
     /* Mobile Responsiveness */
     @media (max-width: 600px) {
       .container {
@@ -136,6 +195,10 @@
         font-size: 14px;
         padding: 6px 12px;
       }
+
+      .playlist-item {
+        font-size: 14px;
+      }
     }
   </style>
 </head>
@@ -151,20 +214,22 @@
 
   <main class="main">
     <div class="container">
-      <h2>🎬 Faruk's Movie Zone - rahuk2</h2>
+      <h2 id="current-video-title">🎬 snklp - Episode 1</h2>
 
       <div class="video-wrapper">
-        <video controls crossorigin="anonymous">
-          <source src="https://dl.dropboxusercontent.com/scl/fi/567k0uiumby2vqemgsrhu/rahu-k2.mkv?rlkey=04bwl7kbd04ksq0cgj7pb8w1c" type="video/mp4">
-          <source src="your-video-link.webm" type="video/webm">
-          <source src="your-video-link.ogv" type="video/ogg">
-
+        <video id="main-player" controls crossorigin="anonymous">
           <track kind="subtitles" src="Sijjin.vtt" srclang="bn" label="Bengali" default>
           <track kind="subtitles" src="subtitles_en.vtt" srclang="en" label="English">
-
           Your browser does not support the video tag.
         </video>
       </div>
+
+      <div class="playlist-container">
+        <div class="playlist-title">📺 Episodes / Playlist</div>
+        <div class="playlist" id="playlist">
+          </div>
+      </div>
+
     </div>
   </main>
 
@@ -178,6 +243,7 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", function() {
+      // 1. Navbar Active Link Logic
       const currentUrl = window.location.href.split('?')[0].replace(/\/$/, ""); 
       const links = document.querySelectorAll(".navbar a");
 
@@ -187,6 +253,67 @@
           link.classList.add("active");
         }
       });
+
+      // 2. Playlist Logic
+      const videoList = [
+        { title: "🎬 snklp - Episode 1", src: "https://dl.dropboxusercontent.com/scl/fi/e9h0uvrn93whticxr7ebm/snklp-1.mkv?rlkey=1ulu7sgf62f2xb52rrpljblr9" },
+        { title: "🎬 snklp - Episode 2", src: "https://dl.dropboxusercontent.com/scl/fi/o1r56c6derzbzxrw6zvxg/snklp-2.mkv?rlkey=jo0p40nbyqxxqwulyxuhn6rea" },
+        { title: "🎬 snklp - Episode 3", src: "https://dl.dropboxusercontent.com/scl/fi/qjnw1qm5v6eq2covxldrm/snklp-3.mkv?rlkey=akmo2jj8105uggcoqont88k94" },
+        { title: "🎬 snklp - Episode 4", src: "https://dl.dropboxusercontent.com/scl/fi/m0vkuhvsfseo0s6vhviph/snklp-4.mkv?rlkey=bkiydj8qi1c5ua1bfuuljtvwt" },
+        { title: "🎬 snklp - Episode 5", src: "https://dl.dropboxusercontent.com/scl/fi/aieapphwgafqz7duj60d6/snklp-5.mkv?rlkey=plt0yymrjcoow7q1cqlchm0u2" },
+        { title: "🎬 snklp - Episode 6", src: "https://dl.dropboxusercontent.com/scl/fi/10bbffwp4vuo5k5v6zs3v/snklp-6.mkv?rlkey=720rmo3z3xnrkxr7pmq2p6cak" },
+        { title: "🎬 snklp - Episode 7", src: "https://dl.dropboxusercontent.com/scl/fi/abj3zecce442j25shp6ey/snklp-7.mkv?rlkey=yqcaa837wxxe27tawyxshfm3c" },
+        { title: "🎬 snklp - Episode 8", src: "https://dl.dropboxusercontent.com/scl/fi/nct5v1lw2v611rycaf4k5/snklp-8.mkv?rlkey=5ltlfnn9t7qvi5zk75hel66bn" },
+        { title: "🎬 snklp - Episode 9", src: "https://dl.dropboxusercontent.com/scl/fi/qrtutsqx07j99msgp48b6/snklp-9.mkv?rlkey=owr5p4q85fhatcpc1kc8054lb" },
+        { title: "🎬 snklp - Episode 10", src: "https://dl.dropboxusercontent.com/scl/fi/5xjytdhk2mdjrjj8omoa7/snklp-10.mkv?rlkey=ptjzie2639b0pnr5obp8j4wp1" }
+      ];
+
+      const player = document.getElementById("main-player");
+      const titleDisplay = document.getElementById("current-video-title");
+      const playlistContainer = document.getElementById("playlist");
+
+      // Function to load and play a video
+      function loadVideo(index) {
+        const video = videoList[index];
+        
+        // Update Video Source
+        player.src = video.src;
+        player.play(); // Auto-play when clicked from playlist
+
+        // Update Title
+        titleDisplay.innerText = video.title;
+
+        // Update active class in playlist
+        const items = document.querySelectorAll('.playlist-item');
+        items.forEach(item => item.classList.remove('playing'));
+        items[index].classList.add('playing');
+      }
+
+      // Generate Playlist HTML
+      videoList.forEach((video, index) => {
+        const item = document.createElement('div');
+        item.classList.add('playlist-item');
+        item.innerText = video.title;
+        
+        // Click event to change video
+        item.addEventListener('click', () => loadVideo(index));
+        
+        playlistContainer.appendChild(item);
+      });
+
+      // Initialize the first video on page load (without auto-playing immediately)
+      player.src = videoList[0].src;
+      titleDisplay.innerText = videoList[0].title;
+      document.querySelectorAll('.playlist-item')[0].classList.add('playing');
+
+      // Auto-play next video when current one ends
+      player.addEventListener('ended', () => {
+        let currentIndex = videoList.findIndex(v => v.src === player.src);
+        if (currentIndex < videoList.length - 1) {
+          loadVideo(currentIndex + 1);
+        }
+      });
+
     });
   </script>
 
