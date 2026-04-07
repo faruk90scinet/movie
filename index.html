@@ -142,11 +142,24 @@
 
   <footer class="navbar">
     <a href="https://faruk90scinet.github.io/movie/">Channel 1</a>
-    </footer>
+    <a href="https://faruk90scinet.github.io/movie/2">Channel 2</a>
+    <a href="https://faruk90scinet.github.io/movie/3">Channel 3</a>
+    <a href="https://faruk90scinet.github.io/movie/4">Channel 4</a>
+    <a href="https://faruk90scinet.github.io/movie/5">জলসা</a>
+  </footer>
 
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-      // 1. Video Data with Subtitles
+      // 1. Navbar Active Link Logic
+      const currentUrl = window.location.href.split('?')[0].replace(/\/$/, "");
+      document.querySelectorAll(".navbar a").forEach(link => {
+        const linkUrl = link.href.split('?')[0].replace(/\/$/, "");
+        if (linkUrl === currentUrl) {
+          link.classList.add("active");
+        }
+      });
+
+      // 2. Video Data with Subtitles
       const videoList = [
         { 
           title: "Mamla LGL Hi - Episode-01", 
@@ -163,7 +176,7 @@
           src: "https://dl.dropboxusercontent.com/scl/fi/wv7uy9nxs61lifgeltlgm/MLH-3.mp4?rlkey=8nlh66fk3fi4g921sdqd9kz31",
           subtitle: "mamla-3.vtt" 
         },
-          { 
+        { 
           title: "Mamla LGL Hi - Episode-04", 
           src: "https://dl.dropboxusercontent.com/scl/fi/x21l40e9qm7vck4n9lf4y/MLH-4.mp4?rlkey=hktc3caatkd8rjfk62ki8079f",
           subtitle: "mamla-4.vtt" 
@@ -188,14 +201,13 @@
           src: "https://dl.dropboxusercontent.com/scl/fi/fpg6i9vaq770mj7inxil0/MLH-8.mp4?rlkey=963ji5ogwd7qgrgjc0esdljol",
           subtitle: "mamla-8.vtt" 
         }
-        // Add more episodes here following the same format
       ];
 
       const player = document.getElementById("main-player");
       const titleDisplay = document.getElementById("current-video-title");
       const playlistContainer = document.getElementById("playlist");
 
-      // 2. Load Video Function
+      // 3. Load Video Function
       function loadVideo(index, autoPlay = true) {
         const video = videoList[index];
         
@@ -228,7 +240,7 @@
         if (autoPlay) player.play();
       }
 
-      // 3. Generate Playlist
+      // 4. Generate Playlist
       videoList.forEach((video, index) => {
         const item = document.createElement('div');
         item.className = 'playlist-item';
@@ -237,10 +249,10 @@
         playlistContainer.appendChild(item);
       });
 
-      // 4. Initial Load (First video, no autoplay)
+      // 5. Initial Load (First video, no autoplay)
       loadVideo(0, false);
 
-      // 5. Auto-play Next
+      // 6. Auto-play Next
       player.onended = () => {
         let nextIndex = videoList.findIndex(v => v.src === player.src) + 1;
         if (nextIndex < videoList.length) loadVideo(nextIndex);
