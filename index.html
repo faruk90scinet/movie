@@ -6,11 +6,7 @@
   <title>Faruk's Movie Zone</title>
   <style>
     /* Reset & Typography */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: 'SolaimanLipi', 'Hind Siliguri', sans-serif;
@@ -21,11 +17,9 @@
       flex-direction: column;
     }
 
-    /* Shared Navigation Bar for Top & Bottom */
     .navbar {
       background-color: #1a1a1a;
       padding: 15px 20px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
@@ -39,23 +33,16 @@
       font-weight: 600;
       padding: 8px 18px;
       border-radius: 20px;
-      transition: all 0.3s ease;
+      transition: 0.3s;
     }
 
-    .navbar a:hover {
-      background-color: #333;
-      color: #ffcc00;
-    }
-
-    /* Active page highlight */
-    .navbar a.active {
+    .navbar a:hover, .navbar a.active {
       background-color: #ffcc00;
       color: #1a1a1a;
     }
 
-    /* Main Content Area */
     .main {
-      flex: 1; /* Pushes the footer to the bottom */
+      flex: 1;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -72,74 +59,39 @@
       max-width: 1000px;
     }
 
-    h2 {
-      font-size: 32px;
-      color: #1a1a1a;
-      margin-bottom: 30px;
-      position: relative;
-      display: inline-block;
-    }
+    h2 { font-size: 32px; margin-bottom: 30px; }
 
-    /* Custom underline for the header */
-    h2::after {
-      content: '';
-      position: absolute;
-      width: 50%;
-      height: 3px;
-      background-color: #0077cc;
-      bottom: -10px;
-      left: 25%;
-      border-radius: 2px;
-    }
-
-    /* Video Player Styling */
     .video-wrapper {
       width: 100%;
       border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
       background-color: #000; 
     }
 
-    video {
-      width: 100%;
-      height: auto;
-      display: block; 
-      aspect-ratio: 16 / 9; 
-    }
+    video { width: 100%; aspect-ratio: 16 / 9; display: block; }
 
     /* Subtitle Customization */
     video::cue {
       background-color: rgba(0, 0, 0, 0.8);
       color: #ffffff;
       font-size: 1.2rem;
-      font-family: 'SolaimanLipi', sans-serif;
     }
 
-    /* --- PLAYLIST STYLES --- */
+    /* Playlist Styles */
     .playlist-container {
       margin-top: 30px;
       text-align: left;
       background: #f8f9fa;
       padding: 20px;
       border-radius: 12px;
-      border: 1px solid #e0e0e0;
-    }
-
-    .playlist-title {
-      font-size: 20px;
-      margin-bottom: 15px;
-      color: #1a1a1a;
-      font-weight: bold;
     }
 
     .playlist {
       display: flex;
       flex-direction: column;
       gap: 10px;
-      max-height: 250px; /* Makes it scrollable if there are many videos */
+      max-height: 250px;
       overflow-y: auto;
-      padding-right: 10px;
     }
 
     .playlist-item {
@@ -148,57 +100,17 @@
       border: 1px solid #ddd;
       border-radius: 8px;
       cursor: pointer;
-      font-size: 16px;
-      font-weight: 500;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-    }
-
-    .playlist-item:hover {
-      background: #e9ecef;
-      border-color: #ccc;
+      transition: 0.2s;
     }
 
     .playlist-item.playing {
       background: #0077cc;
       color: #fff;
-      border-color: #0077cc;
     }
 
-    /* Custom Scrollbar for Playlist */
-    .playlist::-webkit-scrollbar {
-      width: 8px;
-    }
-    .playlist::-webkit-scrollbar-thumb {
-      background: #ccc;
-      border-radius: 4px;
-    }
-
-    /* Mobile Responsiveness */
     @media (max-width: 600px) {
-      .container {
-        padding: 20px 15px;
-      }
-      
-      h2 {
-        font-size: 24px;
-        margin-bottom: 25px;
-      }
-
-      .navbar {
-        gap: 8px;
-        padding: 12px 10px;
-      }
-      
-      .navbar a {
-        font-size: 14px;
-        padding: 6px 12px;
-      }
-
-      .playlist-item {
-        font-size: 14px;
-      }
+      .container { padding: 20px 15px; }
+      h2 { font-size: 24px; }
     }
   </style>
 </head>
@@ -214,106 +126,101 @@
 
   <main class="main">
     <div class="container">
-      <h2 id="current-video-title">🎬 Kattan - Episode 1-5</h2>
+      <h2 id="current-video-title">Loading...</h2>
 
       <div class="video-wrapper">
         <video id="main-player" controls crossorigin="anonymous">
-          <track kind="subtitles" src="Sijjin.vtt" srclang="bn" label="Bengali" default>
-          <track kind="subtitles" src="mamla-1.vtt" srclang="en" label="English">
           Your browser does not support the video tag.
         </video>
       </div>
 
       <div class="playlist-container">
-        <div class="playlist-title">📺 Movies / Playlist</div>
-        <div class="playlist" id="playlist">
-          </div>
+        <div class="playlist" id="playlist"></div>
       </div>
-
     </div>
   </main>
 
   <footer class="navbar">
     <a href="https://faruk90scinet.github.io/movie/">Channel 1</a>
-    <a href="https://faruk90scinet.github.io/movie/2">Channel 2</a>
-    <a href="https://faruk90scinet.github.io/movie/3">Channel 3</a>
-    <a href="https://faruk90scinet.github.io/movie/4">Channel 4</a>
-    <a href="https://faruk90scinet.github.io/movie/5">জলসা</a>
-  </footer>
+    </footer>
 
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-      // 1. Navbar Active Link Logic
-      const currentUrl = window.location.href.split('?')[0].replace(/\/$/, ""); 
-      const links = document.querySelectorAll(".navbar a");
-
-      links.forEach(link => {
-        const linkUrl = link.href.split('?')[0].replace(/\/$/, "");
-        if (linkUrl === currentUrl) {
-          link.classList.add("active");
-        }
-      });
-
-      // 2. Playlist Logic
+      // 1. Video Data with Subtitles
       const videoList = [
-        { title: "Mamla LGL Hi - Episode-01", src: "https://dl.dropboxusercontent.com/scl/fi/4zbnwyzgfds32hqsrjoy5/MLH-1.mp4?rlkey=ttchcpboej7pnm59bl4tdrh9s" },
-        { title: "Mamla LGL Hi - Episode-02", src: "https://dl.dropboxusercontent.com/scl/fi/p2is71p121znpkiuyu1ki/MLH-2.mp4?rlkey=xeh69gq1hqntrgvscvb925yr2" },
-        { title: "Mamla LGL Hi - Episode-03", src: "https://dl.dropboxusercontent.com/scl/fi/wv7uy9nxs61lifgeltlgm/MLH-3.mp4?rlkey=8nlh66fk3fi4g921sdqd9kz31" },
-        { title: "Mamla LGL Hi - Episode-04", src: "https://dl.dropboxusercontent.com/scl/fi/x21l40e9qm7vck4n9lf4y/MLH-4.mp4?rlkey=hktc3caatkd8rjfk62ki8079f" },
-        { title: "Mamla LGL Hi - Episode-05", src: "https://dl.dropboxusercontent.com/scl/fi/v1msqbi86xw7xdspyreah/MLH-5.mp4?rlkey=jycoro2u93agafizmj8662ee9" },
-        { title: "Mamla LGL Hi - Episode-06", src: "https://dl.dropboxusercontent.com/scl/fi/uygq4xo3l1mqddmvjpvzu/MLH-6.mp4?rlkey=n4dwdg5mrlx1362dzmusgqqqr" },
-        { title: "Mamla LGL Hi - Episode-07", src: "https://dl.dropboxusercontent.com/scl/fi/u6e693q58g49ky91qb28e/MLH-7.mp4?rlkey=g1tkl3q7ytssyigfgm6krwin6" },
-        { title: "Mamla LGL Hi - Episode-08", src: "https://dl.dropboxusercontent.com/scl/fi/fpg6i9vaq770mj7inxil0/MLH-8.mp4?rlkey=963ji5ogwd7qgrgjc0esdljol" },
-        ];
+        { 
+          title: "Mamla LGL Hi - Episode-01", 
+          src: "https://dl.dropboxusercontent.com/scl/fi/4zbnwyzgfds32hqsrjoy5/MLH-1.mp4?rlkey=ttchcpboej7pnm59bl4tdrh9s",
+          subtitle: "mamla-1.vtt" 
+        },
+        { 
+          title: "Mamla LGL Hi - Episode-02", 
+          src: "https://dl.dropboxusercontent.com/scl/fi/p2is71p121znpkiuyu1ki/MLH-2.mp4?rlkey=xeh69gq1hqntrgvscvb925yr2",
+          subtitle: "mamla-2.vtt" 
+        },
+        { 
+          title: "Mamla LGL Hi - Episode-03", 
+          src: "https://dl.dropboxusercontent.com/scl/fi/wv7uy9nxs61lifgeltlgm/MLH-3.mp4?rlkey=8nlh66fk3fi4g921sdqd9kz31",
+          subtitle: "mamla-3.vtt" 
+        }
+        // Add more episodes here following the same format
+      ];
 
       const player = document.getElementById("main-player");
       const titleDisplay = document.getElementById("current-video-title");
       const playlistContainer = document.getElementById("playlist");
 
-      // Function to load and play a video
-      function loadVideo(index) {
+      // 2. Load Video Function
+      function loadVideo(index, autoPlay = true) {
         const video = videoList[index];
         
-        // Update Video Source
+        // Remove old tracks
+        while (player.firstChild) {
+          player.removeChild(player.firstChild);
+        }
+
+        // Set Video Source
         player.src = video.src;
-        player.play(); // Auto-play when clicked from playlist
 
-        // Update Title
-        titleDisplay.innerText = video.title;
+        // Create and Add Subtitle Track
+        if (video.subtitle) {
+          const track = document.createElement("track");
+          track.kind = "subtitles";
+          track.label = "Bengali";
+          track.srclang = "bn";
+          track.src = video.subtitle;
+          track.default = true; // Auto-enable subtitles
+          player.appendChild(track);
+        }
 
-        // Update active class in playlist
-        const items = document.querySelectorAll('.playlist-item');
-        items.forEach(item => item.classList.remove('playing'));
-        items[index].classList.add('playing');
+        titleDisplay.innerText = "🎬 " + video.title;
+
+        // UI Update
+        document.querySelectorAll('.playlist-item').forEach((item, idx) => {
+          item.classList.toggle('playing', idx === index);
+        });
+
+        if (autoPlay) player.play();
       }
 
-      // Generate Playlist HTML
+      // 3. Generate Playlist
       videoList.forEach((video, index) => {
         const item = document.createElement('div');
-        item.classList.add('playlist-item');
+        item.className = 'playlist-item';
         item.innerText = video.title;
-        
-        // Click event to change video
-        item.addEventListener('click', () => loadVideo(index));
-        
+        item.onclick = () => loadVideo(index);
         playlistContainer.appendChild(item);
       });
 
-      // Initialize the first video on page load (without auto-playing immediately)
-      player.src = videoList[0].src;
-      titleDisplay.innerText = videoList[0].title;
-      document.querySelectorAll('.playlist-item')[0].classList.add('playing');
+      // 4. Initial Load (First video, no autoplay)
+      loadVideo(0, false);
 
-      // Auto-play next video when current one ends
-      player.addEventListener('ended', () => {
-        let currentIndex = videoList.findIndex(v => v.src === player.src);
-        if (currentIndex < videoList.length - 1) {
-          loadVideo(currentIndex + 1);
-        }
-      });
-
+      // 5. Auto-play Next
+      player.onended = () => {
+        let nextIndex = videoList.findIndex(v => v.src === player.src) + 1;
+        if (nextIndex < videoList.length) loadVideo(nextIndex);
+      };
     });
   </script>
-
 </body>
 </html>
