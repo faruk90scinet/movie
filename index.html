@@ -66,15 +66,18 @@
       border-radius: 12px;
       overflow: hidden;
       background-color: #000; 
+      position: relative;
+      aspect-ratio: 16 / 9;
     }
 
-    video { width: 100%; aspect-ratio: 16 / 9; display: block; }
-
-    /* Subtitle Customization */
-    video::cue {
-      background-color: rgba(0, 0, 0, 0.8);
-      color: #ffffff;
-      font-size: 1.2rem;
+    /* Target the new Google Drive Iframe */
+    iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
     }
 
     /* Playlist Styles */
@@ -129,9 +132,7 @@
       <h2 id="current-video-title">Loading..</h2>
 
       <div class="video-wrapper">
-        <video id="main-player" controls crossorigin="anonymous">
-          Your browser does not support the video tag.
-        </video>
+        <iframe id="main-player" allow="autoplay; encrypted-media" allowfullscreen></iframe>
       </div>
 
       <div class="playlist-container">
@@ -159,22 +160,16 @@
         }
       });
 
-      // 2. Video Data with Subtitles
+      // 2. Video Data Array
+      // Using the /preview link structure lets Google's native player handle playback cleanly.
       const videoList = [
         { 
-          title: "DRSM3", 
-          src: "https://drive.google.com/file/d/1E0VgL2UaOyXxiQtyNZqPUjZUA3LD3hdt/preview",
-          subtitle: "https://dl.dropboxusercontent.com/#"
+          title: "DRSM-3", 
+          src: "https://drive.google.com/file/d/1E0VgL2UaOyXxiQtyNZqPUjZUA3LD3hdt/preview"
         },
         { 
           title: "HDLN", 
-          src: "https://dl.dropboxusercontent.com/#",
-          subtitle: "https://dl.dropboxusercontent.com/#"
-        },
-        { 
-          title: "000", 
-          src: "https://dl.dropboxusercontent.com/#",
-          subtitle: "https://dl.dropboxusercontent.com/#"
+          src: "https://drive.google.com/file/d/YOUR_SECOND_DRIVE_FILE_ID_HERE/preview"
         }
       ];
 
@@ -183,36 +178,18 @@
       const playlistContainer = document.getElementById("playlist");
 
       // 3. Load Video Function
-      function loadVideo(index, autoPlay = true) {
+      function loadVideo(index) {
         const video = videoList[index];
         
-        // Remove old tracks
-        while (player.firstChild) {
-          player.removeChild(player.firstChild);
-        }
-
-        // Set Video Source
+        // Point the iframe to Google's specialized stream player
         player.src = video.src;
-
-        // Create and Add Subtitle Track
-        if (video.subtitle) {
-          const track = document.createElement("track");
-          track.kind = "subtitles";
-          track.label = "Bengali";
-          track.srclang = "bn";
-          track.src = video.subtitle;
-          track.default = true; // Auto-enable subtitles
-          player.appendChild(track);
-        }
 
         titleDisplay.innerText = "🎬 " + video.title;
 
-        // UI Update
+        // UI Playlist Item Update
         document.querySelectorAll('.playlist-item').forEach((item, idx) => {
           item.classList.toggle('playing', idx === index);
         });
-
-        if (autoPlay) player.play();
       }
 
       // 4. Generate Playlist
@@ -224,14 +201,8 @@
         playlistContainer.appendChild(item);
       });
 
-      // 5. Initial Load (First video, no autoplay)
-      loadVideo(0, false);
-
-      // 6. Auto-play Next
-      player.onended = () => {
-        let nextIndex = videoList.findIndex(v => v.src === player.src) + 1;
-        if (nextIndex < videoList.length) loadVideo(nextIndex);
-      };
+      // 5. Initial Load (First video)
+      loadVideo(0);
     });
   </script>
 </body>
