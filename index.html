@@ -70,8 +70,8 @@
       aspect-ratio: 16 / 9;
     }
 
-    /* Target the new Google Drive Iframe */
-    iframe {
+    /* Target both iframe and video tag */
+    iframe, video {
       position: absolute;
       top: 0;
       left: 0;
@@ -132,7 +132,11 @@
       <h2 id="current-video-title">Loading..</h2>
 
       <div class="video-wrapper">
-        <iframe id="main-player" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        <iframe id="main-iframe" allow="autoplay; encrypted-media" allowfullscreen style="display:none;"></iframe>
+        
+        <video id="main-video" controls crossorigin="anonymous" style="display:none;">
+            <track id="video-track" kind="subtitles" srclang="en" label="English" default>
+        </video>
       </div>
 
       <div class="playlist-container">
@@ -161,30 +165,58 @@
       });
 
       // 2. Video Data Array
-      // Using the /preview link structure lets Google's native player handle playback cleanly.
+      // Added 'type' and 'subtitle' keys. 
       const videoList = [
         { 
-          title: "DRSM-3", 
-          src: "https://drive.google.com/file/d/1E0VgL2UaOyXxiQtyNZqPUjZUA3LD3hdt/preview"
+          title: "MlWds", 
+          type: "video", // Direct file link uses standard HTML5 video
+          src: "https://dl.dropboxusercontent.com/scl/fi/hna2ov4i2wf01kzsv10k2/mlwdtms.mkv?rlkey=fxtsiyc9vytu7ckuwqn77c04d", // Note: MKV may not play in all browsers
+          subtitle: "https://dl.dropboxusercontent.com/scl/fi/5wf3xgt735hdxwahsoc2n/mlwdtms_bn.vtt?rlkey=7k95i54zfumq8tgjem3vhznxq" // ADD YOUR .VTT SUBTITLE LINK HERE
         },
         { 
           title: "HDLN", 
-          src: "https://drive.google.com/file/d/14va-WHbFVbpGmHqfcFYPkwqe5DkiP0TP/preview"
+          type: "iframe", // Google Drive uses iframe (cannot add custom subtitles via code)
+          src: "https://drive.google.com/file/d/14va-WHbFVbpGmHqfcFYPkwqe5DkiP0TP/preview",
+          subtitle: ""
         }
       ];
 
-      const player = document.getElementById("main-player");
+      const iframePlayer = document.getElementById("main-iframe");
+      const videoPlayer = document.getElementById("main-video");
+      const videoTrack = document.getElementById("video-track");
       const titleDisplay = document.getElementById("current-video-title");
       const playlistContainer = document.getElementById("playlist");
 
       // 3. Load Video Function
       function loadVideo(index) {
         const video = videoList[index];
-        
-        // Point the iframe to Google's specialized stream player
-        player.src = video.src;
-
         titleDisplay.innerText = "🎬 " + video.title;
+
+        // Reset players
+        iframePlayer.src = "";
+        videoPlayer.src = "";
+        videoPlayer.pause();
+        
+        if (video.type === "iframe") {
+            // Show iframe, hide video
+            iframePlayer.style.display = "block";
+            videoPlayer.style.display = "none";
+            iframePlayer.src = video.src;
+        } else if (video.type === "video") {
+            // Show video, hide iframe
+            videoPlayer.style.display = "block";
+            iframePlayer.style.display = "none";
+            videoPlayer.src = video.src;
+            
+            // Handle Subtitles
+            if (video.subtitle) {
+                videoTrack.src = video.subtitle;
+                videoTrack.style.display = "block";
+            } else {
+                videoTrack.src = "";
+            }
+            videoPlayer.load(); // Reload to apply track
+        }
 
         // UI Playlist Item Update
         document.querySelectorAll('.playlist-item').forEach((item, idx) => {
