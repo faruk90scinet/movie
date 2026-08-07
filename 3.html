@@ -1,184 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Faruk's Movie Zone</title>
-  <style>
-    /* Reset & Typography */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+<script>
+    document.addEventListener("DOMContentLoaded", async function() {
+      // 1. Identify which channel this page is for
+      const channelId = "channel3"; // Change to "channel2", "channel3", etc. on other pages
 
-    body {
-      font-family: 'SolaimanLipi', 'Hind Siliguri', sans-serif;
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-      min-height: 100vh;
-      color: #333;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* Shared Navigation Bar for Top & Bottom */
-    .navbar {
-      background-color: #1a1a1a;
-      padding: 15px 20px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 15px;
-    }
-
-    .navbar a {
-      color: #e0e0e0;
-      text-decoration: none;
-      font-size: 16px;
-      font-weight: 600;
-      padding: 8px 18px;
-      border-radius: 20px;
-      transition: all 0.3s ease;
-    }
-
-    .navbar a:hover {
-      background-color: #333;
-      color: #ffcc00;
-    }
-
-    /* Active page highlight */
-    .navbar a.active {
-      background-color: #ffcc00;
-      color: #1a1a1a;
-    }
-
-    /* Main Content Area */
-    .main {
-      flex: 1; /* Pushes the footer to the bottom */
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 40px 20px;
-    }
-
-    .container {
-      background-color: #ffffff;
-      padding: 40px;
-      border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      width: 100%;
-      max-width: 1000px;
-    }
-
-    h2 {
-      font-size: 32px;
-      color: #1a1a1a;
-      margin-bottom: 30px;
-      position: relative;
-      display: inline-block;
-    }
-
-    /* Custom underline for the header */
-    h2::after {
-      content: '';
-      position: absolute;
-      width: 50%;
-      height: 3px;
-      background-color: #0077cc;
-      bottom: -10px;
-      left: 25%;
-      border-radius: 2px;
-    }
-
-    /* Video Player Styling */
-    .video-wrapper {
-      width: 100%;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-      background-color: #000; 
-    }
-
-    video {
-      width: 100%;
-      height: auto;
-      display: block; 
-      aspect-ratio: 16 / 9; 
-    }
-
-    /* Subtitle Customization */
-    video::cue {
-      background-color: rgba(0, 0, 0, 0.8);
-      color: #ffffff;
-      font-size: 1.2rem;
-      font-family: 'SolaimanLipi', sans-serif;
-    }
-
-    /* Mobile Responsiveness */
-    @media (max-width: 600px) {
-      .container {
-        padding: 20px 15px;
-      }
-      
-      h2 {
-        font-size: 24px;
-        margin-bottom: 25px;
-      }
-
-      .navbar {
-        gap: 8px;
-        padding: 12px 10px;
-      }
-      
-      .navbar a {
-        font-size: 14px;
-        padding: 6px 12px;
-      }
-    }
-  </style>
-</head>
-<body>
-
-  <header class="navbar">
-    <a href="https://faruk90scinet.github.io/movie/">Channel 1</a>
-    <a href="https://faruk90scinet.github.io/movie/2">Channel 2</a>
-    <a href="https://faruk90scinet.github.io/movie/3">Channel 3</a>
-    <a href="https://faruk90scinet.github.io/movie/4">Channel 4</a>
-    <a href="https://faruk90scinet.github.io/movie/5">জলসা</a>
-  </header>
-
-  <main class="main">
-    <div class="container">
-      <h2>🎬 Faruk's Movie Zone -idh MUR</h2>
-
-      <div class="video-wrapper">
-        <video controls crossorigin="anonymous">
-          
-          <source src="https://dl.dropboxusercontent.com/scl/fi/o6b6tq77ior3g3zntq8tg/idhmur.mkv?rlkey=fa928au49s5rbz7uq5ryg5m9v" type="video/mp4">
-          <source src="your-video-link.webm" type="video/webm">
-          <source src="your-video-link.ogv" type="video/ogg">
-
-          <track kind="subtitles" src="https://dl.dropboxusercontent.com/scl/fi/b4w8a1zqus7zgrlg4x6uj/idhmur_bn.vtt?rlkey=u4vi3yotmkjw5yuvljod0jnfc" srclang="bn" label="Bengali" default>
-          <track kind="subtitles" src="https://dl.dropboxusercontent.com/#" srclang="en" label="English">
-
-          Your browser does not support the video tag.
-        </video>
-      </div>
-    </div>
-  </main>
-
-  <footer class="navbar">
-    <a href="https://faruk90scinet.github.io/movie/">Channel 1</a>
-    <a href="https://faruk90scinet.github.io/movie/2">Channel 2</a>
-    <a href="https://faruk90scinet.github.io/movie/3">Channel 3</a>
-    <a href="https://faruk90scinet.github.io/movie/4">Channel 4</a>
-    <a href="https://faruk90scinet.github.io/movie/5">জলসা</a>
-  </footer>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
       const currentUrl = window.location.href.split('?')[0].replace(/\/$/, ""); 
       const links = document.querySelectorAll(".navbar a");
 
@@ -188,8 +12,40 @@
           link.classList.add("active");
         }
       });
+
+      function makeDirectLink(url) {
+        if (!url) return '';
+        return url.replace("www.dropbox.com", "dl.dropboxusercontent.com").replace("?dl=0", "");
+      }
+
+      try {
+        // Fetch the absolute URL so it works from any subfolder (/2, /3, /4)
+        const response = await fetch('https://faruk90scinet.github.io/movie/movie-data.json');
+        const allData = await response.json();
+        
+        // Grab only the data for this specific channel
+        const data = allData[channelId];
+
+        const videoSrc = makeDirectLink(data.videoLink);
+        const subBn = makeDirectLink(data.subtitleBnLink);
+        const subEn = makeDirectLink(data.subtitleEnLink);
+
+        document.getElementById('movie-title').innerText = `🎬 Faruk's Movie Zone - ${data.title}`;
+
+        const videoHTML = `
+          <video controls crossorigin="anonymous">          
+            <source src="${videoSrc}" type="video/mp4">
+            ${subBn ? `<track kind="subtitles" src="${subBn}" srclang="bn" label="Bengali" default>` : ''}
+            ${subEn ? `<track kind="subtitles" src="${subEn}" srclang="en" label="English">` : ''}
+            Your browser does not support the video tag.
+          </video>
+        `;
+        
+        document.getElementById('video-container').innerHTML = videoHTML;
+
+      } catch (error) {
+        console.error("Error loading movie data:", error);
+        document.getElementById('movie-title').innerText = "🎬 Error loading movie.";
+      }
     });
   </script>
-
-</body>
-</html>
