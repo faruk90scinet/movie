@@ -21,7 +21,7 @@
     :root {
       /* Sony LIV Inspired Palette */
       --bg-base: #000000;
-      --liv-gold: #FFC107;       /* Signature liv yellow/gold */
+      --liv-gold: #FFC107;
       --liv-cyan: #00E5FF;
       --liv-purple: #8A2BE2;
       --liv-orange: #FF4500;
@@ -53,13 +53,12 @@
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid var(--glass-border);
-      /* Subtle gradient border at the bottom of the nav */
       border-bottom: 2px solid;
       border-image: linear-gradient(90deg, var(--liv-cyan), var(--liv-purple), var(--liv-orange)) 1;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
       padding: 10px 15px;
       margin: 25px auto;
-      border-radius: 8px; /* Sharper, app-like corners */
+      border-radius: 8px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -211,7 +210,7 @@
 </head>
 <body>
 
-  <!-- Sleek Top Navigation with specific URLs -->
+  <!-- Sleek Top Navigation with specific URLs (Trailing Slashes Removed) -->
   <nav class="navbar">
     <a href="https://faruk90scinet.github.io/movie">Channel 1</a>
     <a href="https://faruk90scinet.github.io/movie/2">Channel 2</a>
@@ -242,11 +241,11 @@
       // ==========================================
       // SET CHANNEL ID HERE (channel1 to channel5)
       // ==========================================
-      const channelId = "channel1"; 
+      const channelId = "channel5"; 
 
       // Navigation Highlighting
       const currentUrl = window.location.href.split('?')[0].replace(/\/$/, ""); 
-      const links = document.querySelectorAll("nav.navbar a");
+      const links = document.querySelectorAll(".navbar a");
 
       links.forEach(link => {
         const linkUrl = link.href.split('?')[0].replace(/\/$/, "");
@@ -275,14 +274,27 @@
         // Update Title
         document.getElementById('movie-title').innerHTML = `<span class="brand-badge">FMZ</span> ${data.title}`;
 
-        // Build Video Element
+        // Build Video Element using the WebM trick for MKV
         const videoHTML = `
           <video controls crossorigin="anonymous" playsinline>          
+            <!-- HACK: We use video/webm to trick the browser into reading the MKV container -->
+            <source src="${videoSrc}" type="video/webm">
+            
+            <!-- Fallback in case the browser refuses the WebM trick -->
             <source src="${videoSrc}" type="video/mp4">
+
             ${subBn ? `<track kind="subtitles" src="${subBn}" srclang="bn" label="Bengali" default>` : ''}
             ${subEn ? `<track kind="subtitles" src="${subEn}" srclang="en" label="English">` : ''}
             Your browser does not support the video tag.
           </video>
+
+          <!-- Fallback Download Button for MKV -->
+          <div style="margin-top: 20px; text-align: center;">
+             <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 8px;">Browser won't play the MKV?</p>
+             <a href="${videoSrc}" target="_blank" style="color: #000; background-color: var(--liv-gold); padding: 6px 16px; border-radius: 4px; text-decoration: none; font-size: 14px; font-weight: 600; display: inline-block; box-shadow: 0 2px 10px rgba(255, 193, 7, 0.3);">
+                Download / Watch Externally
+             </a>
+          </div>
         `;
         
         document.getElementById('video-container').innerHTML = videoHTML;
