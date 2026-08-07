@@ -1,25 +1,25 @@
 {
   "channel1": {
-    "title": "Movie Title for Channel 1",
-    "videoLink": "https://www.dropbox.com/s/.../movie1.mkv",
-    "subtitleBnLink": "https://www.dropbox.com/s/.../sub1.vtt",
+    "title": "ACINTA",
+    "videoLink": "https://www.dropbox.com/scl/fi/oyxwqpuchy2koaor8vl87/Acinta.mkv",
+    "subtitleBnLink": "https://www.dropbox.com/s/your_bengali_subtitle_link.vtt",
     "subtitleEnLink": ""
   },
   "channel2": {
-    "title": "Movie Title for Channel 2",
-    "videoLink": "https://www.dropbox.com/s/.../movie2.mp4",
+    "title": "Movie Title 2",
+    "videoLink": "https://www.dropbox.com/s/your_movie_2.mp4",
     "subtitleBnLink": "",
     "subtitleEnLink": ""
   },
   "channel3": {
-    "title": "Movie Title for Channel 3",
-    "videoLink": "https://www.dropbox.com/s/.../movie3.mkv",
-    "subtitleBnLink": "https://www.dropbox.com/s/.../sub3.vtt",
+    "title": "Movie Title 3",
+    "videoLink": "https://www.dropbox.com/s/your_movie_3.mkv",
+    "subtitleBnLink": "https://www.dropbox.com/s/sub3.vtt",
     "subtitleEnLink": ""
   },
   "channel4": {
-    "title": "Movie Title for Channel 4",
-    "videoLink": "https://www.dropbox.com/s/.../movie4.mkv",
+    "title": "Movie Title 4",
+    "videoLink": "https://www.dropbox.com/s/your_movie_4.mp4",
     "subtitleBnLink": "",
     "subtitleEnLink": ""
   }
