@@ -1,0 +1,26 @@
+{
+  "channel1": {
+    "title": "ACINTA",
+    "videoLink": "https://www.dropbox.com/scl/fi/oyxwqpuchy2koaor8vl87/Acinta.mkv",
+    "subtitleBnLink": "https://www.dropbox.com/s/your_bengali_subtitle_link.vtt",
+    "subtitleEnLink": ""
+  },
+  "channel2": {
+    "title": "Another Movie",
+    "videoLink": "https://www.dropbox.com/s/your_movie_2.mp4",
+    "subtitleBnLink": "",
+    "subtitleEnLink": ""
+  },
+  "channel3": {
+    "title": "Third Movie",
+    "videoLink": "https://www.dropbox.com/s/your_movie_3.mkv",
+    "subtitleBnLink": "https://www.dropbox.com/s/sub3.vtt",
+    "subtitleEnLink": ""
+  },
+  "channel4": {
+    "title": "Fourth Movie",
+    "videoLink": "https://www.dropbox.com/s/your_movie_4.mp4",
+    "subtitleBnLink": "",
+    "subtitleEnLink": ""
+  }
+}
