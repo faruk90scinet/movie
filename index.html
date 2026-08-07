@@ -4,8 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Faruk's Movie Zone</title>
+  
+  <!-- Premium Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet">
+
   <style>
-    /* Reset & Typography */
+    /* Reset & Base Typography */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -13,63 +19,70 @@
     }
 
     :root {
-      /* Hoichoi Inspired Color Palette */
-      --bg-color: #0c0202;           /* Deepest Black-Red */
-      --surface-color: rgba(20, 5, 5, 0.9); /* Dark Reddish Black for Navbar */
-      --accent-color: #ff0000;       /* Hoichoi Vibrant Red */
-      --text-main: #ffffff;
-      --text-muted: #b38080;         /* Muted Reddish-Grey */
-      --border-color: #330a0a;       /* Dark Red Border */
+      /* Premium Slate Color Palette */
+      --bg-base: #13171A;        /* Deep Charcoal */
+      --bg-glow: #1E2429;        /* Lighter Slate for the center */
+      --glass-bg: rgba(30, 36, 41, 0.65);
+      --glass-border: rgba(255, 255, 255, 0.06);
+      --text-main: #F1F5F9;
+      --text-muted: #94A3B8;
+      --accent: #00D2D3;         /* Sophisticated Cinematic Teal */
     }
 
     body {
-      font-family: 'SolaimanLipi', 'Hind Siliguri', system-ui, -apple-system, sans-serif;
-      background-color: var(--bg-color);
-      /* Cinematic red glow at the top */
-      background-image: radial-gradient(circle at top, #3a0000 0%, var(--bg-color) 70%);
+      font-family: 'Poppins', 'Hind Siliguri', sans-serif;
+      background-color: var(--bg-base);
+      background-image: radial-gradient(circle at 50% 0%, var(--bg-glow) 0%, var(--bg-base) 80%);
       min-height: 100vh;
       color: var(--text-main);
       display: flex;
       flex-direction: column;
+      align-items: center;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* Glassmorphism Navigation Bar */
+    /* Minimalist Floating Navigation */
     .navbar {
-      background: var(--surface-color);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      padding: 16px 30px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+      padding: 8px 12px;
+      margin: 30px auto;
+      border-radius: 100px;
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 12px;
+      gap: 4px;
+      width: 90%;
+      max-width: 700px;
       position: sticky;
-      top: 0;
+      top: 20px;
       z-index: 100;
-      border-bottom: 1px solid var(--border-color);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
     }
 
     .navbar a {
       color: var(--text-muted);
       text-decoration: none;
-      font-size: 15px;
-      font-weight: 600;
-      padding: 10px 22px;
-      border-radius: 4px; /* Square edges for a modern app feel */
-      letter-spacing: 0.5px;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 10px 24px;
+      border-radius: 50px;
       transition: all 0.3s ease;
+      letter-spacing: 0.5px;
     }
 
     .navbar a:hover {
       color: var(--text-main);
-      background: rgba(255, 0, 0, 0.15); /* Faint red hover */
+      background: rgba(255, 255, 255, 0.05);
     }
 
     .navbar a.active {
-      color: #ffffff;
-      background: var(--accent-color);
-      box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4);
+      color: var(--bg-base);
+      background: var(--text-main);
+      font-weight: 600;
+      box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
     }
 
     /* Main Content Area */
@@ -78,48 +91,53 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 50px 20px;
       width: 100%;
-      max-width: 1200px;
-      margin: 0 auto;
+      max-width: 1100px;
+      padding: 20px;
     }
 
-    /* Cinematic Title */
-    .title-container {
+    /* Clean Video Container */
+    .video-section {
       width: 100%;
-      text-align: left;
-      margin-bottom: 25px;
-      padding-left: 5px;
+      margin-bottom: 50px;
+    }
+
+    /* Elegant Title */
+    .title-container {
+      margin-bottom: 24px;
+      padding-left: 8px;
     }
 
     h2 {
-      font-size: 30px;
-      font-weight: 700;
+      font-size: 24px;
+      font-weight: 500;
       letter-spacing: 0.5px;
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+      color: var(--text-main);
       display: flex;
       align-items: center;
-      gap: 12px;
     }
 
-    h2 .brand {
-      color: var(--accent-color);
-      font-weight: 800;
+    .brand-badge {
+      color: var(--accent);
+      font-weight: 600;
+      margin-right: 12px;
+      font-size: 14px;
+      letter-spacing: 2px;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      border: 1px solid rgba(0, 210, 211, 0.3);
+      padding: 4px 10px;
+      border-radius: 4px;
+      background: rgba(0, 210, 211, 0.05);
     }
 
-    /* Video Player Styling */
+    /* Player Styling */
     .video-wrapper {
       width: 100%;
-      border-radius: 8px;
+      border-radius: 12px;
       overflow: hidden;
       background-color: #000;
-      /* Subtle red cinematic shadow behind the player */
-      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8), 
-                  0 0 40px rgba(255, 0, 0, 0.15),
-                  0 0 0 1px var(--border-color);
-      position: relative;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     video {
@@ -130,47 +148,36 @@
       outline: none;
     }
 
-    /* Subtitle Customization */
+    /* Premium Subtitles */
     video::cue {
-      background-color: rgba(0, 0, 0, 0.85);
+      background-color: rgba(0, 0, 0, 0.5);
       color: #ffffff;
       font-size: 1.3rem;
-      font-family: 'SolaimanLipi', sans-serif;
-      text-shadow: 2px 2px 4px rgba(0,0,0,1);
+      font-family: 'Hind Siliguri', sans-serif;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
     }
 
-    /* Footer styling */
+    /* Minimalist Footer */
     .footer {
-      background: var(--bg-color);
-      padding: 30px 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 15px;
-      border-top: 1px solid var(--border-color);
+      width: 100%;
+      padding: 40px 20px;
+      text-align: center;
+      border-top: 1px solid var(--glass-border);
       margin-top: auto;
-    }
-
-    .footer .navbar {
-      background: transparent;
-      backdrop-filter: none;
-      border: none;
-      box-shadow: none;
-      padding: 0;
-      position: static;
     }
 
     .footer p {
       color: var(--text-muted);
       font-size: 13px;
       letter-spacing: 1px;
+      font-weight: 300;
     }
 
     /* Mobile Responsiveness */
     @media (max-width: 768px) {
       .navbar {
-        padding: 15px 10px;
-        flex-wrap: nowrap;
+        width: 92%;
+        padding: 6px 8px;
         overflow-x: auto;
         justify-content: flex-start;
         -ms-overflow-style: none;
@@ -182,36 +189,23 @@
 
       .navbar a {
         white-space: nowrap;
-        font-size: 14px;
+        font-size: 13px;
         padding: 8px 16px;
       }
 
-      .main {
-        padding: 30px 15px;
-      }
-
       h2 {
-        font-size: 22px;
+        font-size: 18px;
       }
-      
-      .video-wrapper {
-        border-radius: 6px;
-      }
-    }
 
-    /* Loading Pulse Animation */
-    .pulse {
-      animation: pulse 2s infinite;
-    }
-    @keyframes pulse {
-      0% { opacity: 0.6; }
-      50% { opacity: 1; }
-      100% { opacity: 0.6; }
+      .brand-badge {
+        font-size: 12px;
+      }
     }
   </style>
 </head>
 <body>
 
+  <!-- Sleek Top Navigation -->
   <nav class="navbar">
     <a href="https://faruk90scinet.github.io/movie/">Channel 1</a>
     <a href="https://faruk90scinet.github.io/movie/2/">Channel 2</a>
@@ -221,23 +215,18 @@
   </nav>
 
   <main class="main">
-    <div class="title-container">
-      <h2 id="movie-title" class="pulse">🎬 Loading...</h2>
-    </div>
+    <div class="video-section">
+      <div class="title-container">
+        <h2 id="movie-title"><span class="brand-badge">FMZ</span> Loading...</h2>
+      </div>
 
-    <div class="video-wrapper" id="video-container">
-      <!-- Video player injected here -->
+      <div class="video-wrapper" id="video-container">
+        <!-- Video player automatically injected here -->
+      </div>
     </div>
   </main>
 
   <footer class="footer">
-    <div class="navbar">
-      <a href="https://faruk90scinet.github.io/movie/">Channel 1</a>
-      <a href="https://faruk90scinet.github.io/movie/2/">Channel 2</a>
-      <a href="https://faruk90scinet.github.io/movie/3/">Channel 3</a>
-      <a href="https://faruk90scinet.github.io/movie/4/">Channel 4</a>
-      <a href="https://faruk90scinet.github.io/movie/5/">Channel 5</a>
-    </div>
     <p>© Faruk's Movie Zone. All rights reserved.</p>
   </footer>
 
@@ -251,20 +240,14 @@
 
       // Navigation Highlighting
       const currentUrl = window.location.href.split('?')[0].replace(/\/$/, ""); 
-      const topLinks = document.querySelectorAll("nav.navbar a");
-      const bottomLinks = document.querySelectorAll(".footer .navbar a");
+      const links = document.querySelectorAll("nav.navbar a");
 
-      function highlightLinks(links) {
-        links.forEach(link => {
-          const linkUrl = link.href.split('?')[0].replace(/\/$/, "");
-          if (linkUrl === currentUrl) {
-            link.classList.add("active");
-          }
-        });
-      }
-      
-      highlightLinks(topLinks);
-      highlightLinks(bottomLinks);
+      links.forEach(link => {
+        const linkUrl = link.href.split('?')[0].replace(/\/$/, "");
+        if (linkUrl === currentUrl) {
+          link.classList.add("active");
+        }
+      });
 
       // Format standard Dropbox links into direct streams
       function makeDirectLink(url) {
@@ -283,10 +266,8 @@
         const subBn = makeDirectLink(data.subtitleBnLink);
         const subEn = makeDirectLink(data.subtitleEnLink);
 
-        // Update Title and remove pulse animation
-        const titleEl = document.getElementById('movie-title');
-        titleEl.classList.remove('pulse');
-        titleEl.innerHTML = `<span class="brand">FMZ</span> | ${data.title}`;
+        // Update Title
+        document.getElementById('movie-title').innerHTML = `<span class="brand-badge">FMZ</span> ${data.title}`;
 
         // Build Video Element
         const videoHTML = `
@@ -302,9 +283,7 @@
 
       } catch (error) {
         console.error("Error loading movie data:", error);
-        const titleEl = document.getElementById('movie-title');
-        titleEl.classList.remove('pulse');
-        titleEl.innerText = "⚠️ Error loading movie data.";
+        document.getElementById('movie-title').innerHTML = `<span class="brand-badge">ERR</span> Unable to load movie data.`;
       }
     });
   </script>
