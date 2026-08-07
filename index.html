@@ -13,20 +13,20 @@
     }
 
     :root {
-      /* Amazon Prime Color Palette */
-      --bg-color: #0f171e;           /* Deep Midnight Navy */
-      --surface-color: rgba(27, 37, 48, 0.9); /* Lighter Navy for Navbar */
-      --accent-color: #00a8e1;       /* Prime Cyan Blue */
-      --accent-hover: #3397dd;
+      /* Hoichoi Inspired Color Palette */
+      --bg-color: #0c0202;           /* Deepest Black-Red */
+      --surface-color: rgba(20, 5, 5, 0.9); /* Dark Reddish Black for Navbar */
+      --accent-color: #ff0000;       /* Hoichoi Vibrant Red */
       --text-main: #ffffff;
-      --text-muted: #8197a4;         /* Slate Grey/Blue */
-      --border-color: #1f2d3d;
+      --text-muted: #b38080;         /* Muted Reddish-Grey */
+      --border-color: #330a0a;       /* Dark Red Border */
     }
 
     body {
       font-family: 'SolaimanLipi', 'Hind Siliguri', system-ui, -apple-system, sans-serif;
       background-color: var(--bg-color);
-      background-image: radial-gradient(circle at top, #1b2530 0%, var(--bg-color) 80%);
+      /* Cinematic red glow at the top */
+      background-image: radial-gradient(circle at top, #3a0000 0%, var(--bg-color) 70%);
       min-height: 100vh;
       color: var(--text-main);
       display: flex;
@@ -47,7 +47,7 @@
       top: 0;
       z-index: 100;
       border-bottom: 1px solid var(--border-color);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
     }
 
     .navbar a {
@@ -56,20 +56,20 @@
       font-size: 15px;
       font-weight: 600;
       padding: 10px 22px;
-      border-radius: 6px; /* slightly squarer, more like Prime UI */
+      border-radius: 4px; /* Square edges for a modern app feel */
       letter-spacing: 0.5px;
       transition: all 0.3s ease;
     }
 
     .navbar a:hover {
       color: var(--text-main);
-      background: rgba(0, 168, 225, 0.15); /* Faint blue hover */
+      background: rgba(255, 0, 0, 0.15); /* Faint red hover */
     }
 
     .navbar a.active {
       color: #ffffff;
       background: var(--accent-color);
-      box-shadow: 0 4px 12px rgba(0, 168, 225, 0.3);
+      box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4);
     }
 
     /* Main Content Area */
@@ -96,7 +96,7 @@
       font-size: 30px;
       font-weight: 700;
       letter-spacing: 0.5px;
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
       display: flex;
       align-items: center;
       gap: 12px;
@@ -105,15 +105,19 @@
     h2 .brand {
       color: var(--accent-color);
       font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
     /* Video Player Styling */
     .video-wrapper {
       width: 100%;
-      border-radius: 12px;
+      border-radius: 8px;
       overflow: hidden;
       background-color: #000;
-      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7), 
+      /* Subtle red cinematic shadow behind the player */
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8), 
+                  0 0 40px rgba(255, 0, 0, 0.15),
                   0 0 0 1px var(--border-color);
       position: relative;
     }
@@ -128,11 +132,11 @@
 
     /* Subtitle Customization */
     video::cue {
-      background-color: rgba(0, 0, 0, 0.75);
+      background-color: rgba(0, 0, 0, 0.85);
       color: #ffffff;
       font-size: 1.3rem;
       font-family: 'SolaimanLipi', sans-serif;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+      text-shadow: 2px 2px 4px rgba(0,0,0,1);
     }
 
     /* Footer styling */
@@ -191,7 +195,7 @@
       }
       
       .video-wrapper {
-        border-radius: 8px;
+        border-radius: 6px;
       }
     }
 
@@ -213,6 +217,7 @@
     <a href="https://faruk90scinet.github.io/movie/2/">Channel 2</a>
     <a href="https://faruk90scinet.github.io/movie/3/">Channel 3</a>
     <a href="https://faruk90scinet.github.io/movie/4/">Channel 4</a>
+    <a href="https://faruk90scinet.github.io/movie/5/">Channel 5</a>
   </nav>
 
   <main class="main">
@@ -231,6 +236,7 @@
       <a href="https://faruk90scinet.github.io/movie/2/">Channel 2</a>
       <a href="https://faruk90scinet.github.io/movie/3/">Channel 3</a>
       <a href="https://faruk90scinet.github.io/movie/4/">Channel 4</a>
+      <a href="https://faruk90scinet.github.io/movie/5/">Channel 5</a>
     </div>
     <p>© Faruk's Movie Zone. All rights reserved.</p>
   </footer>
@@ -239,7 +245,7 @@
     document.addEventListener("DOMContentLoaded", async function() {
       
       // ==========================================
-      // SET CHANNEL ID HERE (channel1, channel2, channel3, channel4)
+      // SET CHANNEL ID HERE (channel1 to channel5)
       // ==========================================
       const channelId = "channel1"; 
 
