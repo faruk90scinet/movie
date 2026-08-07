@@ -241,7 +241,7 @@
       // ==========================================
       // SET CHANNEL ID HERE (channel1 to channel5)
       // ==========================================
-      const channelId = "channel1"; 
+      const channelId = "channel4"; 
 
       // Navigation Highlighting
       const currentUrl = window.location.href.split('?')[0].replace(/\/$/, ""); 
@@ -287,6 +287,8 @@
             ${subEn ? `<track kind="subtitles" src="${subEn}" srclang="en" label="English">` : ''}
             Your browser does not support the video tag.
           </video>
+
+        `;
         
         document.getElementById('video-container').innerHTML = videoHTML;
 
