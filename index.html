@@ -13,17 +13,20 @@
     }
 
     :root {
-      --bg-color: #0a0a0c;
-      --surface-color: rgba(20, 20, 24, 0.85);
-      --accent-color: #e50914; /* Cinematic Red */
-      --text-main: #f5f5f5;
-      --text-muted: #a3a3a3;
+      /* Amazon Prime Color Palette */
+      --bg-color: #0f171e;           /* Deep Midnight Navy */
+      --surface-color: rgba(27, 37, 48, 0.9); /* Lighter Navy for Navbar */
+      --accent-color: #00a8e1;       /* Prime Cyan Blue */
+      --accent-hover: #3397dd;
+      --text-main: #ffffff;
+      --text-muted: #8197a4;         /* Slate Grey/Blue */
+      --border-color: #1f2d3d;
     }
 
     body {
       font-family: 'SolaimanLipi', 'Hind Siliguri', system-ui, -apple-system, sans-serif;
       background-color: var(--bg-color);
-      background-image: radial-gradient(circle at top, #1a1a24 0%, var(--bg-color) 70%);
+      background-image: radial-gradient(circle at top, #1b2530 0%, var(--bg-color) 80%);
       min-height: 100vh;
       color: var(--text-main);
       display: flex;
@@ -35,38 +38,38 @@
       background: var(--surface-color);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
-      padding: 18px 30px;
+      padding: 16px 30px;
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       position: sticky;
       top: 0;
       z-index: 100;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      border-bottom: 1px solid var(--border-color);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
     }
 
     .navbar a {
       color: var(--text-muted);
       text-decoration: none;
       font-size: 15px;
-      font-weight: 500;
-      padding: 10px 20px;
-      border-radius: 30px;
+      font-weight: 600;
+      padding: 10px 22px;
+      border-radius: 6px; /* slightly squarer, more like Prime UI */
       letter-spacing: 0.5px;
       transition: all 0.3s ease;
     }
 
     .navbar a:hover {
-      color: #ffffff;
-      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-main);
+      background: rgba(0, 168, 225, 0.15); /* Faint blue hover */
     }
 
     .navbar a.active {
       color: #ffffff;
       background: var(--accent-color);
-      box-shadow: 0 4px 15px rgba(229, 9, 20, 0.4);
-      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(0, 168, 225, 0.3);
     }
 
     /* Main Content Area */
@@ -86,14 +89,14 @@
       width: 100%;
       text-align: left;
       margin-bottom: 25px;
-      padding-left: 10px;
+      padding-left: 5px;
     }
 
     h2 {
-      font-size: 32px;
+      font-size: 30px;
       font-weight: 700;
-      letter-spacing: 1px;
-      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+      letter-spacing: 0.5px;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
       display: flex;
       align-items: center;
       gap: 12px;
@@ -101,16 +104,17 @@
 
     h2 .brand {
       color: var(--accent-color);
+      font-weight: 800;
     }
 
     /* Video Player Styling */
     .video-wrapper {
       width: 100%;
-      border-radius: 16px;
+      border-radius: 12px;
       overflow: hidden;
       background-color: #000;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 
-                  0 0 0 1px rgba(255, 255, 255, 0.1);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7), 
+                  0 0 0 1px var(--border-color);
       position: relative;
     }
 
@@ -122,6 +126,7 @@
       outline: none;
     }
 
+    /* Subtitle Customization */
     video::cue {
       background-color: rgba(0, 0, 0, 0.75);
       color: #ffffff;
@@ -138,7 +143,7 @@
       flex-direction: column;
       align-items: center;
       gap: 15px;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      border-top: 1px solid var(--border-color);
       margin-top: auto;
     }
 
@@ -146,6 +151,7 @@
       background: transparent;
       backdrop-filter: none;
       border: none;
+      box-shadow: none;
       padding: 0;
       position: static;
     }
@@ -233,7 +239,7 @@
     document.addEventListener("DOMContentLoaded", async function() {
       
       // ==========================================
-      // SET CHANNEL ID HERE (channel1, channel2, etc.)
+      // SET CHANNEL ID HERE (channel1, channel2, channel3, channel4)
       // ==========================================
       const channelId = "channel1"; 
 
