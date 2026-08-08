@@ -25,8 +25,8 @@
       --liv-cyan: #00E5FF;
       --liv-purple: #8A2BE2;
       --liv-orange: #FF4500;
-      --glass-bg: rgba(15, 15, 20, 0.75);
-      --glass-border: rgba(255, 255, 255, 0.1);
+      --glass-bg: rgba(18, 18, 24, 0.85);
+      --glass-border: rgba(255, 255, 255, 0.12);
       --text-main: #FFFFFF;
       --text-muted: #A0A0A0;
     }
@@ -34,11 +34,10 @@
     body {
       font-family: 'Poppins', 'Hind Siliguri', sans-serif;
       background-color: var(--bg-base);
-      /* Vibrant background gradients inspired by the Sony LIV wave */
       background-image: 
-        radial-gradient(circle at 10% 20%, rgba(0, 229, 255, 0.15) 0%, transparent 40%),
-        radial-gradient(circle at 90% 80%, rgba(255, 69, 0, 0.15) 0%, transparent 40%),
-        radial-gradient(circle at 50% 50%, rgba(138, 43, 226, 0.1) 0%, transparent 50%);
+        radial-gradient(circle at 10% 20%, rgba(0, 229, 255, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(255, 69, 0, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(138, 43, 226, 0.08) 0%, transparent 50%);
       min-height: 100vh;
       color: var(--text-main);
       display: flex;
@@ -47,7 +46,7 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* Floating Navigation with Gradient Accent Border */
+    /* Navigation Bar */
     .navbar {
       background: var(--glass-bg);
       backdrop-filter: blur(20px);
@@ -64,7 +63,7 @@
       align-items: center;
       gap: 6px;
       width: 90%;
-      max-width: 750px;
+      max-width: 1280px;
       position: sticky;
       top: 20px;
       z-index: 100;
@@ -93,30 +92,30 @@
       box-shadow: 0 0 15px rgba(255, 193, 7, 0.4);
     }
 
-    /* Main Content Area */
-    .main {
+    /* Main Container with Two-Column Grid */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 25px;
+      width: 100%;
+      max-width: 1280px;
+      padding: 0 20px 40px 20px;
       flex: 1;
+    }
+
+    /* Left Column: Player Section */
+    .player-section {
       display: flex;
       flex-direction: column;
-      align-items: center;
       width: 100%;
-      max-width: 1100px;
-      padding: 20px;
     }
 
-    .video-section {
-      width: 100%;
-      margin-bottom: 50px;
-    }
-
-    /* Elegant Title */
     .title-container {
-      margin-bottom: 20px;
-      padding-left: 5px;
+      margin-bottom: 16px;
     }
 
     h2 {
-      font-size: 26px;
+      font-size: 24px;
       font-weight: 600;
       letter-spacing: 0.5px;
       color: var(--text-main);
@@ -129,22 +128,21 @@
       background-color: var(--liv-gold);
       font-weight: 700;
       margin-right: 12px;
-      font-size: 14px;
+      font-size: 13px;
       letter-spacing: 1px;
       text-transform: uppercase;
-      padding: 4px 12px;
+      padding: 4px 10px;
       border-radius: 4px;
       box-shadow: 0 2px 10px rgba(255, 193, 7, 0.3);
     }
 
-    /* Player Styling */
     .video-wrapper {
       width: 100%;
       border-radius: 12px;
       overflow: hidden;
       background-color: #000;
       box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--glass-border);
       position: relative;
     }
 
@@ -156,23 +154,100 @@
       outline: none;
     }
 
-    /* Cinematic Subtitles */
     video::cue {
-      background-color: rgba(0, 0, 0, 0.7);
+      background-color: rgba(0, 0, 0, 0.75);
       color: #ffffff;
       font-size: 1.3rem;
       font-family: 'Hind Siliguri', sans-serif;
       text-shadow: 2px 2px 4px rgba(0,0,0,1);
     }
 
+    /* Right Column: Sidebar Channels Section */
+    .sidebar-section {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .sidebar-heading {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 2px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sidebar-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    /* Sidebar Channel Card */
+    .sidebar-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: 10px;
+      padding: 16px;
+      text-decoration: none;
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 10px;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      position: relative;
+      min-height: 110px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .sidebar-card:hover {
+      border-color: var(--liv-gold);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 25px rgba(255, 193, 7, 0.2);
+      background: rgba(30, 30, 42, 0.9);
+    }
+
+    .card-tag {
+      font-size: 11px;
+      font-weight: 700;
+      color: #000;
+      background: var(--liv-gold);
+      padding: 3px 8px;
+      border-radius: 3px;
+      width: fit-content;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-main);
+      line-height: 1.4;
+    }
+
+    .card-action {
+      font-size: 12px;
+      color: var(--liv-cyan);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
     /* Minimalist Footer */
     .footer {
       width: 100%;
-      padding: 40px 20px;
+      padding: 30px 20px;
       text-align: center;
       border-top: 1px solid var(--glass-border);
       margin-top: auto;
-      background: rgba(0, 0, 0, 0.4);
+      background: rgba(0, 0, 0, 0.6);
     }
 
     .footer p {
@@ -183,7 +258,11 @@
     }
 
     /* Mobile Responsiveness */
-    @media (max-width: 768px) {
+    @media (max-width: 992px) {
+      .main-grid {
+        grid-template-columns: 1fr; /* Stacks player on top, sidebar below on mobile */
+      }
+
       .navbar {
         width: 95%;
         padding: 8px;
@@ -210,17 +289,20 @@
 </head>
 <body>
 
-  <!-- Sleek Top Navigation with specific URLs (Trailing Slashes Removed) -->
+  <!-- Top Navigation Bar -->
   <nav class="navbar">
     <a href="https://faruk90scinet.github.io/movie">Channel 1</a>
     <a href="https://faruk90scinet.github.io/movie/2">Channel 2</a>
     <a href="https://faruk90scinet.github.io/movie/3">Channel 3</a>
     <a href="https://faruk90scinet.github.io/movie/4">Channel 4</a>
-    <a href="https://faruk90scinet.github.io/movie/5">Channel 5</a>
+    <a href="https://faruk90scinet.github.io/movie/5">জলসা</a>
   </nav>
 
-  <main class="main">
-    <div class="video-section">
+  <!-- Two-Column Grid Area -->
+  <main class="main-grid">
+    
+    <!-- Left Column: Video Player -->
+    <section class="player-section">
       <div class="title-container">
         <h2 id="movie-title"><span class="brand-badge">FMZ</span> Loading...</h2>
       </div>
@@ -228,7 +310,13 @@
       <div class="video-wrapper" id="video-container">
         <!-- Video player automatically injected here -->
       </div>
-    </div>
+    </section>
+
+    <!-- Right Column: Sidebar Other Channels -->
+    <aside class="sidebar-section" id="sidebar-container">
+      <!-- Sidebar channel cards dynamically injected here -->
+    </aside>
+
   </main>
 
   <footer class="footer">
@@ -239,9 +327,17 @@
     document.addEventListener("DOMContentLoaded", async function() {
       
       // ==========================================
-      // SET CHANNEL ID HERE (channel1 to channel5)
+      // SET CHANNEL ID FOR THIS PAGE (channel1, channel2, etc.)
       // ==========================================
       const channelId = "channel1"; 
+
+      const channelsList = [
+        { id: "channel1", label: "Channel 1", url: "https://faruk90scinet.github.io/movie" },
+        { id: "channel2", label: "Channel 2", url: "https://faruk90scinet.github.io/movie/2" },
+        { id: "channel3", label: "Channel 3", url: "https://faruk90scinet.github.io/movie/3" },
+        { id: "channel4", label: "Channel 4", url: "https://faruk90scinet.github.io/movie/4" },
+        { id: "channel5", label: "জলসা", url: "https://faruk90scinet.github.io/movie/5" }
+      ];
 
       // Navigation Highlighting
       const currentUrl = window.location.href.split('?')[0].replace(/\/$/, ""); 
@@ -260,37 +356,54 @@
         return url.replace("www.dropbox.com", "dl.dropboxusercontent.com").replace("?dl=0", "");
       }
 
-      // Load the movie dynamically from the master JSON file
+      // Load movie and sidebar data from the master JSON file
       try {
         const response = await fetch('https://faruk90scinet.github.io/movie/movie-data.json');
         const allData = await response.json();
+        
+        // 1. Render Current Main Movie
         const data = allData[channelId];
-
-        // Format links
         const videoSrc = makeDirectLink(data.videoLink);
         const subBn = makeDirectLink(data.subtitleBnLink);
         const subEn = makeDirectLink(data.subtitleEnLink);
 
-        // Update Title
         document.getElementById('movie-title').innerHTML = `<span class="brand-badge">FMZ</span> ${data.title}`;
 
-        // Build Video Element using the WebM trick for MKV
         const videoHTML = `
           <video controls crossorigin="anonymous" playsinline>          
-            <!-- HACK: We use video/webm to trick the browser into reading the MKV container -->
             <source src="${videoSrc}" type="video/webm">
-            
-            <!-- Fallback in case the browser refuses the WebM trick -->
             <source src="${videoSrc}" type="video/mp4">
-
             ${subBn ? `<track kind="subtitles" src="${subBn}" srclang="bn" label="Bengali" default>` : ''}
             ${subEn ? `<track kind="subtitles" src="${subEn}" srclang="en" label="English">` : ''}
             Your browser does not support the video tag.
           </video>
 
+          <div style="margin-top: 15px; text-align: center;">
+             <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 8px;">Browser won't play the MKV?</p>
+             <a href="${videoSrc}" target="_blank" style="color: #000; background-color: var(--liv-gold); padding: 6px 16px; border-radius: 4px; text-decoration: none; font-size: 13px; font-weight: 600; display: inline-block; box-shadow: 0 2px 10px rgba(255, 193, 7, 0.3);">
+                Download / Watch Externally
+             </a>
+          </div>
         `;
-        
         document.getElementById('video-container').innerHTML = videoHTML;
+
+        // 2. Render Right Sidebar Channels dynamically
+        const otherChannels = channelsList.filter(ch => ch.id !== channelId);
+        let sidebarHTML = `<h3 class="sidebar-heading">📺 Other Channels</h3><div class="sidebar-list">`;
+
+        otherChannels.forEach(ch => {
+          const chData = allData[ch.id] || { title: ch.label };
+          sidebarHTML += `
+            <a href="${ch.url}" class="sidebar-card">
+              <span class="card-tag">${ch.label}</span>
+              <div class="card-title">${chData.title || 'Watch Now'}</div>
+              <span class="card-action">Switch Channel →</span>
+            </a>
+          `;
+        });
+
+        sidebarHTML += `</div>`;
+        document.getElementById('sidebar-container').innerHTML = sidebarHTML;
 
       } catch (error) {
         console.error("Error loading movie data:", error);
