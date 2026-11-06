@@ -34,6 +34,8 @@ const IMAGE = /\.(jpe?g|png|webp)$/i;
 const LANG = { en: 'English', eng: 'English', hi: 'Hindi', hin: 'Hindi', ml: 'Malayalam', mal: 'Malayalam', ta: 'Tamil', tam: 'Tamil', te: 'Telugu', tel: 'Telugu', kn: 'Kannada', kan: 'Kannada', bn: 'বাংলা', ben: 'বাংলা' };
 
 const log = (...a) => console.log(...a);
+// --quick: only update the movie list (fast). Without it: also make thumbnails and subtitles.
+const QUICK = process.argv.includes('--quick');
 
 /* ---------------- Dropbox API ---------------- */
 let TOKEN = '';
@@ -192,7 +194,10 @@ async function cuesFromVideo(file) {
     log(`   downloading ${file.name} (${(file.size / 1e9).toFixed(2)} GB)…`);
     const t0 = Date.now();
     const r = await download(file.id);
-    await pipeline(Readable.fromWeb(r.body), fs.createWriteStream(tmp));
+    const body = Readable.fromWeb(r.body);
+    let got = 0, next = 0.1;
+    body.on('data', c => { got += c.length; if (file.size && got / file.size >= next) { log(`   downloaded ${Math.round(next * 100)}%`); next += 0.1; } });
+    await pipeline(body, fs.createWriteStream(tmp));
     log(`   downloaded in ${((Date.now() - t0) / 1000).toFixed(0)}s, reading subtitle tracks…`);
     const res = await MkvSubs.extract(await fs.openAsBlob(tmp));
     res.tracks.forEach(t => log(`     track ${t.number}: ${t.codec} ${t.lang} "${t.name}" ${t.kind} ${t.cues.length} lines`));
@@ -297,15 +302,16 @@ async function main() {
     const entry = { title: cleanTitle(numbered(v.name).rest, n), nav: 'Channel ' + n, videoLink: await shareLink(v, state) };
     if (posters[n]) entry.poster = await shareLink(posters[n], state);
     else {
-      state.thumbs[key] = await makeThumb(key, v, state);
-      if (state.thumbs[key].ok) entry.poster = `thumbs/${key}.jpg?v=${state.thumbs[key].v}`;
+      if (!QUICK) state.thumbs[key] = await makeThumb(key, v, state);
+      const th = state.thumbs[key];
+      if (th && th.ok && th.sig === v.content_hash) entry.poster = `thumbs/${key}.jpg?v=${th.v}`;
     }
-    state.subs[key] = await buildSubtitles(key, v, sidecars[n], state);
+    if (!QUICK) state.subs[key] = await buildSubtitles(key, v, sidecars[n], state);
     fs.writeFileSync(STATE_FILE, JSON.stringify(state, null, 1));   // save progress after each movie
     const subs = subtitleEntries(key, state.subs[key]);
     if (subs) entry.subtitles = subs;
     data[key] = entry;
-    log(`Channel ${n}: ${entry.title} — subtitles: ${state.subs[key].status}`);
+    log(`Channel ${n}: ${entry.title} — subtitles: ${(state.subs[key] || {}).status || 'not yet'}`);
   }
 
   if (natokFile) {
