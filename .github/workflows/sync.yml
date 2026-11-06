@@ -37,7 +37,7 @@ jobs:
         run: |
           git config user.name "FMZ Sync"
           git config user.email "fmz-sync@users.noreply.github.com"
-          git add movie-data.json subs
+          git add movie-data.json subs thumbs
           if git diff --cached --quiet; then
             echo "Nothing new."
             exit 0
