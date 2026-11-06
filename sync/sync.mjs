@@ -15,6 +15,7 @@ import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { Readable } from 'node:stream';
 import { pipeline } from 'node:stream/promises';
+import { execFileSync, execSync } from 'node:child_process';
 
 const require = createRequire(import.meta.url);
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -22,6 +23,7 @@ const MkvSubs = require(path.join(ROOT, 'mkvsubs.js'));
 const S = require(path.join(ROOT, 'subtitles.js'));
 const cfg = JSON.parse(fs.readFileSync(path.join(ROOT, 'sync-config.json'), 'utf8'));
 const SUBS_DIR = path.join(ROOT, 'subs');
+const THUMBS_DIR = path.join(ROOT, 'thumbs');
 const STATE_FILE = path.join(SUBS_DIR, 'state.json');
 const DATA_FILE = path.join(ROOT, 'movie-data.json');
 
@@ -133,6 +135,45 @@ function parseNatok(text) {
   return { title, links };
 }
 
+/* ---------------- Thumbnails (a picture taken from the movie) ---------------- */
+let ffmpegReady = false;
+function ensureFfmpeg() {
+  if (ffmpegReady) return;
+  try { execSync('ffmpeg -version', { stdio: 'ignore' }); }
+  catch { log('   installing ffmpeg…'); execSync('sudo apt-get update -qq && sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq ffmpeg', { stdio: 'inherit' }); }
+  ffmpegReady = true;
+}
+
+async function makeThumb(key, video, state) {
+  const out = path.join(THUMBS_DIR, key + '.jpg');
+  const prev = state.thumbs[key];
+  if (prev && prev.sig === video.content_hash && (prev.ok ? fs.existsSync(out) : (prev.tries || 0) >= 3)) return prev;
+  log(` ${key}: making thumbnail`);
+  try {
+    ensureFfmpeg();
+    // A temporary link lets ffmpeg jump straight to a point in the movie without downloading all of it
+    const { link } = await api('files/get_temporary_link', { path: video.id });
+    let dur = 0;
+    try { dur = parseFloat(execFileSync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', link], { timeout: 90000 }).toString()) || 0; } catch { }
+    const points = dur > 0 ? [0.15, 0.32, 0.5].map(f => dur * f) : [180, 420, 900];
+    let best = null, bestSize = 0;
+    points.forEach((t, i) => {
+      const f = path.join(os.tmpdir(), `${key}-${i}.jpg`);
+      try {
+        execFileSync('ffmpeg', ['-y', '-v', 'error', '-ss', String(Math.floor(t)), '-i', link, '-frames:v', '1', '-vf', 'scale=640:-2', '-q:v', '4', f], { timeout: 180000 });
+        const s = fs.statSync(f).size;
+        if (s > bestSize) { bestSize = s; best = f; }   // the most detailed frame — avoids dark or blank shots
+      } catch { }
+    });
+    if (!best) throw new Error('could not grab a frame');
+    fs.copyFileSync(best, out);
+    return { sig: video.content_hash, ok: true, v: Date.now().toString(36) };
+  } catch (e) {
+    console.error('   thumbnail error: ' + e.message);
+    return { sig: video.content_hash, ok: false, tries: (prev && prev.sig === video.content_hash ? prev.tries || 0 : 0) + 1 };
+  }
+}
+
 /* ---------------- Subtitles ---------------- */
 function pickTrack(tracks) {
   const text = tracks.filter(t => t.kind === 'text' && t.cues.length > 0);
@@ -227,8 +268,9 @@ function subtitleEntries(key, st) {
 /* ---------------- Main ---------------- */
 async function main() {
   fs.mkdirSync(SUBS_DIR, { recursive: true });
+  fs.mkdirSync(THUMBS_DIR, { recursive: true });
   const state = fs.existsSync(STATE_FILE) ? JSON.parse(fs.readFileSync(STATE_FILE, 'utf8')) : {};
-  state.links = state.links || {}; state.subs = state.subs || {};
+  state.links = state.links || {}; state.subs = state.subs || {}; state.thumbs = state.thumbs || {};
 
   await login();
   const dir = await folderPath();
@@ -254,6 +296,10 @@ async function main() {
     keep.add(key);
     const entry = { title: cleanTitle(numbered(v.name).rest, n), nav: 'Channel ' + n, videoLink: await shareLink(v, state) };
     if (posters[n]) entry.poster = await shareLink(posters[n], state);
+    else {
+      state.thumbs[key] = await makeThumb(key, v, state);
+      if (state.thumbs[key].ok) entry.poster = `thumbs/${key}.jpg?v=${state.thumbs[key].v}`;
+    }
     state.subs[key] = await buildSubtitles(key, v, sidecars[n], state);
     fs.writeFileSync(STATE_FILE, JSON.stringify(state, null, 1));   // save progress after each movie
     const subs = subtitleEntries(key, state.subs[key]);
@@ -269,6 +315,10 @@ async function main() {
   }
 
   // Forget movies that were removed from Dropbox
+  for (const key of Object.keys(state.thumbs)) if (!keep.has(key)) {
+    delete state.thumbs[key];
+    fs.rmSync(path.join(THUMBS_DIR, key + '.jpg'), { force: true });
+  }
   for (const key of Object.keys(state.subs)) if (!keep.has(key)) {
     delete state.subs[key];
     fs.rmSync(path.join(SUBS_DIR, key + '.bn.vtt'), { force: true });
