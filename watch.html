@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#07070b">
+  <title>Faruk's Movie Zone</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="watch">
+  <header class="topbar">
+    <a class="brand" href="index.html"><b>FMZ</b><span>Faruk's Movie Zone</span></a>
+    <nav class="nav" id="nav" aria-label="Movies"></nav>
+  </header>
+
+  <main class="watch-main">
+    <div class="watch">
+      <div class="stage">
+        <div class="player-box" id="playerBox" hidden>
+          <div class="player show-controls" id="player" tabindex="0" aria-label="Video player">
+            <video id="video" playsinline preload="metadata"></video>
+            <div class="tap" id="tap"></div>
+            <div class="sub-layer" id="subLayer"></div>
+            <div class="osd" id="osd"></div>
+            <div class="spinner" id="spinner" hidden></div>
+            <button class="big-play" id="bigPlay" type="button" aria-label="Play"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></button>
+            <div class="toast" id="toast"><span id="toastText"></span><button type="button" id="toastBtn" hidden></button></div>
+
+            <div class="controls" id="controls" data-nav-skip>
+              <input type="range" class="seek" id="seek" min="0" max="1000" value="0" step="1" aria-label="Seek">
+              <div class="ctl-row">
+                <button class="ctl" id="bPlay" type="button" aria-label="Play / pause">
+                  <svg class="main" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>
+                  <svg class="alt" viewBox="0 0 24 24"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
+                </button>
+                <button class="ctl" id="bBack" type="button" aria-label="Back 10 seconds">
+                  <svg viewBox="0 0 24 24"><path d="M12 5V2L7 6l5 4V7a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z"/><text x="12" y="16.2" font-size="6.4" font-family="Arial" font-weight="700" text-anchor="middle" fill="#fff">10</text></svg>
+                </button>
+                <button class="ctl" id="bFwd" type="button" aria-label="Forward 10 seconds">
+                  <svg viewBox="0 0 24 24"><path d="M12 5V2l5 4-5 4V7a6 6 0 1 0 6 6h2a8 8 0 1 1-8-8z"/><text x="12" y="16.2" font-size="6.4" font-family="Arial" font-weight="700" text-anchor="middle" fill="#fff">10</text></svg>
+                </button>
+                <button class="ctl" id="bMute" type="button" aria-label="Mute">
+                  <svg class="main" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg>
+                  <svg class="alt" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9zm13.6 3 2.7-2.7-1.4-1.4-2.7 2.7-2.7-2.7-1.4 1.4 2.7 2.7-2.7 2.7 1.4 1.4 2.7-2.7 2.7 2.7 1.4-1.4z"/></svg>
+                </button>
+                <input type="range" class="vol" id="vol" min="0" max="1" step="0.05" value="1" aria-label="Volume">
+                <span class="time" id="time">0:00 / 0:00</span>
+                <span class="spacer"></span>
+                <span class="tr-status" id="trStatus"></span>
+                <button class="ctl" id="bCC" type="button" aria-label="Subtitles">
+                  <svg viewBox="0 0 24 24"><path d="M19 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm-8 7H9.5v-.5h-2v3h2V13H11v1a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1zm7 0h-1.5v-.5h-2v3h2V13H18v1a1 1 0 0 1-1 1h-3a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1z"/></svg>
+                </button>
+                <button class="ctl" id="bAudio" type="button" aria-label="Audio language" hidden>
+                  <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0-9 9v7a2 2 0 0 0 2 2h3v-8H5v-1a7 7 0 0 1 14 0v1h-3v8h3a2 2 0 0 0 2-2v-7a9 9 0 0 0-9-9z"/></svg>
+                </button>
+                <button class="ctl" id="bSet" type="button" aria-label="Settings">
+                  <svg viewBox="0 0 24 24"><path d="M19.4 13a7.5 7.5 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.4 7.4 0 0 0-1.7-1L15 3h-4l-.4 2.7a7.4 7.4 0 0 0-1.7 1l-2.5-1-2 3.5L6.6 11a7.5 7.5 0 0 0 0 2l-2.2 1.6 2 3.5 2.5-1a7.4 7.4 0 0 0 1.7 1L11 21h4l.4-2.7a7.4 7.4 0 0 0 1.7-1l2.5 1 2-3.5zM13 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z" transform="translate(-1 0)"/></svg>
+                </button>
+                <button class="ctl" id="bFS" type="button" aria-label="Full screen">
+                  <svg class="main" viewBox="0 0 24 24"><path d="M4 4h6v2H6v4H4zm10 0h6v6h-2V6h-4zM4 14h2v4h4v2H4zm14 0h2v6h-6v-2h4z"/></svg>
+                  <svg class="alt" viewBox="0 0 24 24"><path d="M8 4h2v6H4V8h4zm6 0h2v4h4v2h-6zM4 14h6v6H8v-4H4zm10 0h6v2h-4v4h-2z"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="menu" id="menu" hidden data-nav-skip></div>
+
+            <div class="error-box" id="errorBox" hidden>
+              <h3 id="errTitle">This video can't play here</h3>
+              <p id="errText"></p>
+              <div class="btn-row">
+                <a class="btn primary" id="errVlc" href="#">Open in VLC</a>
+                <button class="btn" id="errCopy" type="button">Copy video link</button>
+                <button class="btn" id="errRetry" type="button">Try again</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="info">
+          <h1 id="title">Loading…</h1>
+          <div class="meta" id="meta"></div>
+          <div class="links" id="links" hidden></div>
+          <p class="keys" id="keys" hidden>
+            <kbd>Space</kbd> play/pause · <kbd>←</kbd><kbd>→</kbd> 10s · <kbd>F</kbd> full screen · <kbd>C</kbd> subtitles · <kbd>M</kbd> mute
+          </p>
+        </div>
+      </div>
+
+      <aside class="side">
+        <h2>More to watch</h2>
+        <div class="more" id="more"></div>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="footer">© Faruk's Movie Zone</footer>
+
+  <script src="common.js"></script>
+  <script src="subtitles.js"></script>
+  <script src="player.js"></script>
+</body>
+</html>

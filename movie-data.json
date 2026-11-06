@@ -1,26 +1,57 @@
 {
   "channel1": {
     "title": "DT TT Fahad Fasil",
+    "nav": "Channel 1",
     "videoLink": "https://www.dropbox.com/scl/fi/47paczx4x57a0x8ivd19v/dttt.mkv?rlkey=257jy2mseg1wnm31hhfus7y35&dl=0",
-    "subtitleBnLink": "https://www.dropbox.com/scl/fi/87ybfeei8sv9hu9sbdb8l/dttt_trackbn.vtt?rlkey=ss8qxzvz47zlrxyfw3x4qm80c&dl=0",
-    "subtitleEnLink": ""
+    "subtitles": [
+      {
+        "url": "https://www.dropbox.com/scl/fi/87ybfeei8sv9hu9sbdb8l/dttt_trackbn.vtt?rlkey=ss8qxzvz47zlrxyfw3x4qm80c&dl=0"
+      }
+    ]
   },
   "channel2": {
     "title": "Gurthu",
+    "nav": "Channel 2",
     "videoLink": "https://www.dropbox.com/scl/fi/h4cmw67v2i9nzx7obhcd2/Gurthu-kosth-unnayi.mkv?rlkey=evej2jiwy0gd05efbuf9xv8vm&dl=0",
-    "subtitleBnLink": "https://www.dropbox.com/scl/fi/jket2k8u8yj00ps5k0nw2/gurthu-kosth-unnayi_subtitles01.eng.vtt?rlkey=czjgzlastnrc6kuhhzc3yfws3&dl=0",
-    "subtitleEnLink": ""
+    "subtitles": [
+      {
+        "url": "https://www.dropbox.com/scl/fi/jket2k8u8yj00ps5k0nw2/gurthu-kosth-unnayi_subtitles01.eng.vtt?rlkey=czjgzlastnrc6kuhhzc3yfws3&dl=0"
+      }
+    ]
   },
   "channel3": {
     "title": "S I G M A",
+    "nav": "Channel 3",
     "videoLink": "https://www.dropbox.com/scl/fi/kts0xz6gmmx6eyrzv3arc/SGMA.mkv?rlkey=f8zdzggy4vu8tzcdns1s2dzja&dl=0",
-    "subtitleBnLink": "https://www.dropbox.com/scl/fi/vcx1ubj7aofh6id6k0z9i/sgma_track04.vtt?rlkey=fti38sx6avmhem1o91ahp0l2e&dl=0",
-    "subtitleEnLink": ""
+    "subtitles": [
+      {
+        "url": "https://www.dropbox.com/scl/fi/vcx1ubj7aofh6id6k0z9i/sgma_track04.vtt?rlkey=fti38sx6avmhem1o91ahp0l2e&dl=0"
+      }
+    ]
   },
   "channel4": {
     "title": "ram leela",
+    "nav": "Channel 4",
     "videoLink": "https://www.dropbox.com/scl/fi/rrlnzx2ta6n1mypa1hfr7/rnleela.mkv?rlkey=mnlplgz9pgk6j0z0xb6u15x3z&dl=0",
-    "subtitleBnLink": "https://www.dropbox.com/scl/fi/a2e5v3lt3q3y3phgcavsw/rnleela_bn.vtt?rlkey=cnzkt3d6h2x47ww1ckvfs7m0y&dl=0",
-    "subtitleEnLink": ""
+    "subtitles": [
+      {
+        "url": "https://www.dropbox.com/scl/fi/a2e5v3lt3q3y3phgcavsw/rnleela_bn.vtt?rlkey=cnzkt3d6h2x47ww1ckvfs7m0y&dl=0"
+      }
+    ]
+  },
+  "jolsa": {
+    "title": "আজকের নাটক 06-11-2026 (2)",
+    "nav": "জলসার নাটক",
+    "type": "links",
+    "links": [
+      {
+        "title": "পর.শুরাম",
+        "url": "https://www.blogger.com/video.g?token=AD6v5dx2QS30fuH2GiNqGbtZkGBrnC7ACjc2ECo6dfm74Xeg5YLrdFBMmQe_h081GN-Ef-EAVKdv-JqgXV4G_vWe-mMtDIi3r8Bw1U_VMO7pJQ4aFLaoQ-D9GmEjyq3BaypWbRM4ZS3O&origin=www.morestable.xyz"
+      },
+      {
+        "title": "প্রফে.সর বি.দ্যা",
+        "url": "https://www.blogger.com/video.g?token=AD6v5dydCts7BjdTCHeTyW7pTEBgpf27ia0IqEPU1Skgp-NTgoAWJqp23Am3MjPP2Pqzt2ijIq6lhsO84IGqX06I1X5TmADW0uBpz9Eo7cnMHjqPnUVYop8htnsdo9kHyzBVSVli8oM&origin=www.morestable.xyz"
+      }
+    ]
   }
 }

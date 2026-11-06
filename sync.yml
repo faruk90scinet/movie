@@ -1,0 +1,47 @@
+name: Sync movies from Dropbox
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'   # every 15 minutes
+  workflow_dispatch:          # "Run workflow" button for an instant update
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: dropbox-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Read Dropbox folder, extract and translate subtitles
+        run: node sync/sync.mjs
+        env:
+          DROPBOX_APP_KEY: ${{ secrets.DROPBOX_APP_KEY }}
+          DROPBOX_APP_SECRET: ${{ secrets.DROPBOX_APP_SECRET }}
+          DROPBOX_REFRESH_TOKEN: ${{ secrets.DROPBOX_REFRESH_TOKEN }}
+
+      - name: Publish changes to the website
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "FMZ Sync"
+          git config user.email "fmz-sync@users.noreply.github.com"
+          git add movie-data.json subs
+          if git diff --cached --quiet; then
+            echo "Nothing new."
+            exit 0
+          fi
+          git commit -m "Update movies from Dropbox"
+          git push
+          gh api -X POST "repos/${{ github.repository }}/pages/builds" >/dev/null 2>&1 || true
