@@ -5,7 +5,25 @@
 
   const ua = navigator.userAgent;
   FMZ.isTV = /SMART-TV|SmartTV|Tizen|Web0S|webOS|NetCast|BRAVIA|AFT[A-Z]|Android TV|GoogleTV|CrKey|HbbTV|Opera TV|VIDAA|Hisense|Toshiba|TSBNetTV|PhilipsTV|Large Screen/i.test(ua);
-  if (FMZ.isTV) document.documentElement.classList.add('tv');
+  // Android TV boxes/browsers (e.g. TV Bro) often look like a tablet: Android, not "Mobile", no touch screen
+  if (!FMZ.isTV && /TV ?Bro/i.test(ua)) FMZ.isTV = true;
+  if (!FMZ.isTV && /Android/i.test(ua) && !/Mobile/i.test(ua) && !('ontouchstart' in window) && !(navigator.maxTouchPoints > 0)) FMZ.isTV = true;
+  const root = document.documentElement;
+  if (FMZ.isTV) root.classList.add('tv');
+
+  /* Layout decided by the real screen shape: landscape → sidebar on the right, player fits the screen height */
+  function layout() {
+    const w = window.innerWidth, h = window.innerHeight;
+    const wide = FMZ.isTV || (w > h && w >= 600);
+    root.classList.toggle('wide', wide);
+    root.classList.toggle('narrow', !wide);
+    const bar = document.querySelector('.topbar');
+    const room = h - (bar ? bar.offsetHeight : 50) - 110;   // leave space for the movie title under the player
+    root.style.setProperty('--pmax', Math.max(320, Math.round(room * 16 / 9)) + 'px');
+  }
+  layout();
+  window.addEventListener('resize', layout);
+  document.addEventListener('DOMContentLoaded', layout);
 
   /* Screen text size (S / M / L), remembered on this device */
   const UI_SIZES = [['S', .85], ['M', 1], ['L', 1.18]];

@@ -251,3 +251,14 @@ html.tv .player-box{width:100%}
   .player,.thumb{height:0;padding-top:56.25%}
   .player:fullscreen{height:100%;padding-top:0}
 }
+
+/* ---- Layout by screen shape (set by common.js; overrides the media queries above) ---- */
+html.wide .watch{grid-template-columns:minmax(0,1fr) 17rem;grid-template-columns:minmax(0,1fr) clamp(13rem,24vw,22rem)}
+html.wide .player-box{width:100%;max-width:var(--pmax)}
+html.wide .more{flex-direction:column;overflow:visible;padding:0;margin:0}
+html.wide .mini{grid-template-columns:42% 1fr;min-width:0;align-items:center}
+html.wide body[data-page=watch] .topbar{position:relative}
+html.narrow .watch{grid-template-columns:minmax(0,1fr)}
+html.narrow .player-box{width:100%;max-width:none}
+html.narrow .more{flex-direction:row;overflow-x:auto}
+html.narrow .mini{grid-template-columns:1fr;min-width:13rem;align-items:start}
