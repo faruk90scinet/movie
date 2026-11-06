@@ -226,3 +226,12 @@ input[type=range]:focus-visible::-moz-range-thumb{box-shadow:0 0 0 .3rem rgba(25
 .empty{color:var(--muted);padding:3rem 0;text-align:center}
 .footer{padding:1.6rem var(--gutter);text-align:center;border-top:1px solid var(--line);color:var(--muted);font-size:.78rem;letter-spacing:.04em}
 .footer a{color:var(--muted)}
+
+/* Episode player (iframe) */
+.frame-player iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#000}
+.frame-tools{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem;margin-top:.8rem}
+.frame-now{flex:1;min-width:10rem;font-family:'Hind Siliguri','Poppins',sans-serif;font-weight:600;font-size:1.05rem}
+.frame-tools .btn{padding:.45rem 1rem;font-size:.85rem}
+.link-btn{width:100%;text-align:left;color:var(--text);cursor:pointer}
+.link-btn.active{border-color:var(--gold);background:var(--gold-soft)}
+@media (max-width:640px){.frame-tools{padding:0 var(--gutter)}}

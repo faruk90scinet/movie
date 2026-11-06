@@ -13,6 +13,7 @@
 <body data-page="home">
   <header class="topbar">
     <a class="brand" href="index.html"><b>FMZ</b><span>Faruk's Movie Zone</span></a>
+    <nav class="nav" id="nav" aria-label="Channels"></nav>
   </header>
 
   <main>
@@ -37,6 +38,7 @@
       try { data = await FMZ.loadData(); }
       catch (e) { grid.innerHTML = '<p class="empty">Could not load the movie list. Please refresh.</p>'; return; }
 
+      FMZ.renderNav(data, null);
       const items = FMZ.items(data);
       const card = it => {
         const links = FMZ.isLinks(it);

@@ -44,12 +44,33 @@
   }
 
   function renderLinks() {
+    const links = (item.links || []).filter(l => l && (l.url || l.link));
     const box = $('#links');
     box.hidden = false;
-    box.innerHTML = (item.links || []).map(l =>
-      `<a class="link-btn" href="${FMZ.esc(l.url || l.link)}" target="_blank" rel="noopener"><span class="play">${FMZ.PLAY_SVG}</span><span>${FMZ.esc(l.title || l.label || 'Play')}</span></a>`).join('');
-    $('#meta').innerHTML = item.subtitle ? `<span class="chip">${FMZ.esc(item.subtitle)}</span>` : '';
-    const first = box.querySelector('a'); first && first.focus();
+    $('#meta').innerHTML = `<span class="chip gold">${links.length} videos</span>`;
+    if (!links.length) { box.innerHTML = '<p class="card-sub">No videos yet.</p>'; return; }
+    $('#frameBox').hidden = false;
+    box.innerHTML = links.map((l, i) =>
+      `<button class="link-btn" type="button" data-i="${i}"><span class="play">${FMZ.PLAY_SVG}</span><span>${FMZ.esc(l.title || l.label || 'Video ' + (i + 1))}</span></button>`).join('');
+    const frame = $('#frame'), fp = $('#framePlayer');
+    const saved = LS.get('fmz-ep:' + itemId, 0);
+    function play(i, focusFrame) {
+      const l = links[i]; if (!l) return;
+      const url = l.url || l.link;
+      if (frame.src !== url) frame.src = url;
+      $('#frameOpen').href = url;
+      $('#frameNow').textContent = l.title || '';
+      box.querySelectorAll('.link-btn').forEach((b, k) => b.classList.toggle('active', k === i));
+      LS.set('fmz-ep:' + itemId, i);
+      if (focusFrame) fp.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+    box.addEventListener('click', e => { const b = e.target.closest('.link-btn'); if (b) play(+b.dataset.i, true); });
+    $('#frameFS').onclick = () => {
+      if (fp.requestFullscreen) fp.requestFullscreen().catch(() => { });
+      else if (fp.webkitRequestFullscreen) fp.webkitRequestFullscreen();
+    };
+    play(saved < links.length ? saved : 0, false);
+    const act = box.querySelector('.link-btn.active'); act && act.focus({ preventScroll: true });
   }
 
   /* ================= Player setup ================= */
@@ -64,6 +85,7 @@
     sub.track.mode = 'hidden';
     sub.track.addEventListener('cuechange', renderSubs);
 
+    if (item.poster) video.poster = FMZ.directLink(item.poster);
     video.volume = LS.get('fmz-vol', 1);
     video.src = srcUrl;
     bindEvents();
