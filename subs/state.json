@@ -25,6 +25,12 @@
    "status": "ok",
    "v": "mw4vd20l",
    "label": "English"
+  },
+  "channel3": {
+   "sig": "vid:2ad526b85ee69f41947de5a706f714852cb92865a533d8a62a00ad5fb1e587a8",
+   "status": "ok",
+   "v": "mw55uyyc",
+   "label": "English"
   }
  },
  "thumbs": {
@@ -37,6 +43,11 @@
    "sig": "cd3e1ce333b569cbdcd9460eaf8a569fe752caeda64b7038f55285a0f40c453d",
    "ok": true,
    "v": "mw4w3ril"
+  },
+  "channel3": {
+   "sig": "2ad526b85ee69f41947de5a706f714852cb92865a533d8a62a00ad5fb1e587a8",
+   "ok": true,
+   "v": "mw55ubv7"
   }
  }
 }
