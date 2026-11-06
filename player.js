@@ -12,6 +12,7 @@
   const menu = $('#menu'), subLayer = $('#subLayer'), vol = $('#vol');
   const B = { play: $('#bPlay'), back: $('#bBack'), fwd: $('#bFwd'), mute: $('#bMute'), cc: $('#bCC'), audio: $('#bAudio'), set: $('#bSet'), fs: $('#bFS'), big: $('#bigPlay') };
 
+  const STEP = 15;   // seconds for ← → / skip buttons
   const SIZES = [['S', .75], ['M', 1], ['L', 1.25], ['XL', 1.5], ['XXL', 1.85]];
   const SPEEDS = [.75, 1, 1.25, 1.5, 2];
 
@@ -116,8 +117,8 @@
 
     B.play.addEventListener('click', togglePlay);
     B.big.addEventListener('click', e => { e.stopPropagation(); togglePlay(); });
-    B.back.addEventListener('click', () => skip(-10));
-    B.fwd.addEventListener('click', () => skip(10));
+    B.back.addEventListener('click', () => skip(-STEP));
+    B.fwd.addEventListener('click', () => skip(STEP));
     B.mute.addEventListener('click', () => { video.muted = !video.muted; });
     B.fs.addEventListener('click', toggleFS);
     B.cc.addEventListener('click', () => toggleMenu('cc', openCCMenu));
@@ -144,7 +145,7 @@
       if (e.pointerType === 'mouse') { togglePlay(); showControls(); return; }
       const now = Date.now(), r = player.getBoundingClientRect(), x = (e.clientX - r.left) / r.width;
       if (now - lastTap < 320 && Math.abs(e.clientX - lastX) < 70 && (x < .38 || x > .62)) {
-        skip(x < .5 ? -10 : 10); lastTap = 0; return;
+        skip(x < .5 ? -STEP : STEP); lastTap = 0; return;
       }
       lastTap = now; lastX = e.clientX;
       if (player.classList.contains('show-controls') && !video.paused) hideControls(true); else showControls();
@@ -552,14 +553,14 @@
       stop();
       showControls();
       if (inCtl && ctlVisible) {
-        if (a === seek && (dir === 'left' || dir === 'right')) { skip(dir === 'left' ? -10 : 10); return; }
+        if (a === seek && (dir === 'left' || dir === 'right')) { skip(dir === 'left' ? -STEP : STEP); return; }
         if (!FMZ.moveFocus(dir, controls)) {
           if (dir === 'up') { hideControls(true); player.focus({ preventScroll: true }); }
           else if (dir === 'down' || dir === 'right') FMZ.moveFocus(dir, document, player);
         }
         return;
       }
-      if (dir === 'left' || dir === 'right') skip(dir === 'left' ? -10 : 10);
+      if (dir === 'left' || dir === 'right') skip(dir === 'left' ? -STEP : STEP);
       else B.play.focus({ preventScroll: true });
       return;
     }
@@ -573,8 +574,8 @@
       case 'f': case 'F': stop(); toggleFS(); break;
       case 'm': case 'M': stop(); video.muted = !video.muted; osd(video.muted ? 'Muted' : 'Sound on', 'center'); break;
       case 'c': case 'C': case 'Subtitle': stop(); cycleSubs(); break;
-      case 'j': case 'J': case 'MediaRewind': case 'MediaTrackPrevious': stop(); skip(k.startsWith('Media') ? -30 : -10); break;
-      case 'l': case 'L': case 'MediaFastForward': case 'MediaTrackNext': stop(); skip(k.startsWith('Media') ? 30 : 10); break;
+      case 'j': case 'J': case 'MediaRewind': case 'MediaTrackPrevious': stop(); skip(k.startsWith('Media') ? -30 : -STEP); break;
+      case 'l': case 'L': case 'MediaFastForward': case 'MediaTrackNext': stop(); skip(k.startsWith('Media') ? 30 : STEP); break;
     }
   }
 
@@ -582,7 +583,7 @@
     if (!('mediaSession' in navigator)) return;
     try {
       navigator.mediaSession.metadata = new MediaMetadata({ title: item.title || '', artist: "Faruk's Movie Zone", artwork: item.poster ? [{ src: FMZ.directLink(item.poster) }] : [] });
-      [['play', () => video.play()], ['pause', () => video.pause()], ['seekbackward', () => skip(-10)], ['seekforward', () => skip(10)]]
+      [['play', () => video.play()], ['pause', () => video.pause()], ['seekbackward', () => skip(-STEP)], ['seekforward', () => skip(STEP)]]
         .forEach(([a, f]) => { try { navigator.mediaSession.setActionHandler(a, f); } catch (e) { } });
     } catch (e) { }
   }

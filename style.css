@@ -8,8 +8,8 @@
   --focus:0 0 0 .18rem var(--bg),0 0 0 .38rem var(--gold);
 }
 /* Text grows smoothly with the screen: ~14px phone, ~16px laptop, ~18px+ big screens */
-html{font-size:clamp(14px,.42vw + 9.5px,20px);-webkit-text-size-adjust:100%}
-html.tv{font-size:clamp(18px,1.05vw,32px)}
+html{font-size:clamp(13px,.32vw + 9px,18px);font-size:calc(clamp(13px,.32vw + 9px,18px) * var(--ui,1));-webkit-text-size-adjust:100%}
+html.tv{font-size:clamp(12px,.75vw,20px);font-size:calc(clamp(12px,.75vw,20px) * var(--ui,1))}
 body{
   font-family:'Poppins','Hind Siliguri',system-ui,sans-serif;color:var(--text);background:var(--bg);
   background-image:
@@ -235,3 +235,8 @@ input[type=range]:focus-visible::-moz-range-thumb{box-shadow:0 0 0 .3rem rgba(25
 .link-btn{width:100%;text-align:left;color:var(--text);cursor:pointer}
 .link-btn.active{border-color:var(--gold);background:var(--gold-soft)}
 @media (max-width:640px){.frame-tools{padding:0 var(--gutter)}}
+
+/* Text size button (top right) */
+.ui-size{margin-left:auto;flex:none;font-size:.8rem;font-weight:600;color:var(--muted);border:1px solid var(--line);border-radius:2rem;padding:.35rem .8rem;white-space:nowrap}
+.ui-size:hover,.ui-size:focus-visible{color:var(--text);background:rgba(255,255,255,.08)}
+.ui-size b{color:var(--gold);margin-left:.3rem}

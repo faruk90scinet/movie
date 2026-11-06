@@ -4,8 +4,29 @@
   const FMZ = window.FMZ = {};
 
   const ua = navigator.userAgent;
-  FMZ.isTV = /SMART-TV|SmartTV|Tizen|Web0S|webOS|NetCast|BRAVIA|AFT[A-Z]|Android TV|GoogleTV|CrKey|HbbTV|Opera TV|VIDAA|PhilipsTV|Large Screen/i.test(ua);
+  FMZ.isTV = /SMART-TV|SmartTV|Tizen|Web0S|webOS|NetCast|BRAVIA|AFT[A-Z]|Android TV|GoogleTV|CrKey|HbbTV|Opera TV|VIDAA|Hisense|Toshiba|TSBNetTV|PhilipsTV|Large Screen/i.test(ua);
   if (FMZ.isTV) document.documentElement.classList.add('tv');
+
+  /* Screen text size (S / M / L), remembered on this device */
+  const UI_SIZES = [['S', .85], ['M', 1], ['L', 1.18]];
+  let uiIdx = 1;
+  try { const v = localStorage.getItem('fmz-ui'); if (v != null && UI_SIZES[+v]) uiIdx = +v; } catch (e) { }
+  const applyUi = () => document.documentElement.style.setProperty('--ui', UI_SIZES[uiIdx][1]);
+  applyUi();
+  document.addEventListener('DOMContentLoaded', () => {
+    const bar = document.querySelector('.topbar');
+    if (!bar) return;
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'ui-size'; b.title = 'Text size';
+    const label = () => { b.innerHTML = 'Aa<b>' + UI_SIZES[uiIdx][0] + '</b>'; };
+    label();
+    b.addEventListener('click', () => {
+      uiIdx = (uiIdx + 1) % UI_SIZES.length;
+      try { localStorage.setItem('fmz-ui', uiIdx); } catch (e) { }
+      applyUi(); label();
+    });
+    bar.appendChild(b);
+  });
 
   FMZ.esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
