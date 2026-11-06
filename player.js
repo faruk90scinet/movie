@@ -139,18 +139,27 @@
 
     // Mouse: click = play/pause, double click = full screen. Touch: tap = show/hide controls, double-tap sides = ±10s
     const tap = $('#tap');
-    let lastTap = 0, lastX = 0;
-    tap.addEventListener('pointerup', e => {
+    // Double click / double tap: left half = back 15s, right half = forward 15s (keep clicking to skip more).
+    // Single click: mouse = play/pause, touch = show/hide controls.
+    let lastClick = 0, clickTimer = 0, chainUntil = 0;
+    tap.addEventListener(window.PointerEvent ? 'pointerup' : 'click', e => {
       if (!menu.hidden) { closeMenu(); return; }
-      if (e.pointerType === 'mouse') { togglePlay(); showControls(); return; }
-      const now = Date.now(), r = player.getBoundingClientRect(), x = (e.clientX - r.left) / r.width;
-      if (now - lastTap < 320 && Math.abs(e.clientX - lastX) < 70 && (x < .38 || x > .62)) {
-        skip(x < .5 ? -STEP : STEP); lastTap = 0; return;
+      const now = Date.now(), r = player.getBoundingClientRect();
+      const step = (e.clientX - r.left) / r.width < .5 ? -STEP : STEP;
+      if (now < chainUntil || now - lastClick < 350) {
+        clearTimeout(clickTimer); lastClick = 0; chainUntil = now + 650;
+        skip(step); return;
       }
-      lastTap = now; lastX = e.clientX;
-      if (player.classList.contains('show-controls') && !video.paused) hideControls(true); else showControls();
+      lastClick = now;
+      const isMouse = !e.pointerType || e.pointerType === 'mouse';
+      clearTimeout(clickTimer);
+      clickTimer = setTimeout(() => {
+        if (isMouse) { togglePlay(); showControls(); }
+        else if (player.classList.contains('show-controls') && !video.paused) hideControls(true);
+        else showControls();
+      }, 300);
     });
-    tap.addEventListener('dblclick', toggleFS);
+    tap.addEventListener('dblclick', e => e.preventDefault());
     player.addEventListener('mousemove', () => showControls());
     controls.addEventListener('mouseenter', () => clearTimeout(hideTimer));
     controls.addEventListener('mouseleave', scheduleHide);

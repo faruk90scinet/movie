@@ -69,13 +69,13 @@ main{width:100%;max-width:1680px;margin:0 auto;padding:clamp(1rem,2.2vw,2rem) va
 .card:focus-visible .thumb{box-shadow:var(--focus)}
 
 /* ---------- Watch page layout ---------- */
-.watch{display:grid;grid-template-columns:minmax(0,1fr) clamp(15rem,22vw,22rem);gap:clamp(1rem,2vw,2rem);align-items:start}
-@media (max-width:1000px){.watch{grid-template-columns:minmax(0,1fr)}}
+.watch{display:grid;grid-template-columns:minmax(0,1fr) 17rem;grid-template-columns:minmax(0,1fr) clamp(13rem,24vw,22rem);gap:clamp(1rem,2vw,2rem);align-items:start}
+@media (max-width:1000px) and (orientation:portrait), (max-width:700px){.watch{grid-template-columns:minmax(0,1fr)}}
 .side{min-width:0}
 .stage{min-width:0}
 /* Player is as wide as possible but never taller than the screen */
 .player-box{width:min(100%,calc((100vh - 9.5rem) * 16 / 9));width:min(100%,calc((100dvh - 9.5rem) * 16 / 9));margin:0 auto}
-@media (max-width:1000px){.player-box{width:100%}}
+@media (max-width:1000px) and (orientation:portrait), (max-width:700px){.player-box{width:100%}}
 @media (max-width:640px){
   main.watch-main{padding-left:0;padding-right:0;padding-top:0}
   .player{border-radius:0!important;border-left:0!important;border-right:0!important}
@@ -99,7 +99,7 @@ main{width:100%;max-width:1680px;margin:0 auto;padding:clamp(1rem,2.2vw,2rem) va
 .mini .thumb .play{width:2rem;height:2rem}
 .mini .thumb .art span{font-size:1.4rem}
 .mini-title{font-size:.88rem;font-weight:500;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-@media (max-width:1000px){
+@media (max-width:1000px) and (orientation:portrait), (max-width:700px){
   .more{flex-direction:row;overflow-x:auto;scrollbar-width:none;padding:.3rem;margin:-.3rem}
   .more::-webkit-scrollbar{display:none}
   .mini{grid-template-columns:1fr;min-width:min(60vw,15rem);align-items:start}
@@ -240,3 +240,14 @@ input[type=range]:focus-visible::-moz-range-thumb{box-shadow:0 0 0 .3rem rgba(25
 .ui-size{margin-left:auto;flex:none;font-size:.8rem;font-weight:600;color:var(--muted);border:1px solid var(--line);border-radius:2rem;padding:.35rem .8rem;white-space:nowrap}
 .ui-size:hover,.ui-size:focus-visible{color:var(--text);background:rgba(255,255,255,.08)}
 .ui-size b{color:var(--gold);margin-left:.3rem}
+
+/* TV: always keep "More to watch" on the right */
+html.tv .watch{grid-template-columns:minmax(0,1fr) 17rem;grid-template-columns:minmax(0,1fr) clamp(13rem,24vw,22rem)}
+html.tv .more{flex-direction:column;overflow:visible}
+html.tv .mini{grid-template-columns:42% 1fr;min-width:0;align-items:center}
+html.tv .player-box{width:100%}
+/* Older TV browsers without aspect-ratio support */
+@supports not (aspect-ratio:16/9){
+  .player,.thumb{height:0;padding-top:56.25%}
+  .player:fullscreen{height:100%;padding-top:0}
+}
