@@ -3,15 +3,16 @@
     "title": "Kauri Mandir",
     "nav": "Channel 1",
     "videoLink": "https://www.dropbox.com/scl/fi/f48t04is4otzj8kwlzmmy/1_Kauri-Mandir.mkv?rlkey=3ryjj72rx3y4srlx9155uayov&dl=0",
+    "poster": "thumbs/channel1.jpg?v=mw6jhitn",
     "subtitles": [
       {
-        "url": "subs/channel1.bn.vtt?v=mw4vc2pm",
+        "url": "subs/channel1.bn.vtt?v=mw6jhv3c",
         "label": "বাংলা",
         "lang": "bn",
         "auto": false
       },
       {
-        "url": "subs/channel1.orig.vtt?v=mw4vc2pm",
+        "url": "subs/channel1.orig.vtt?v=mw6jhv3c",
         "label": "English",
         "auto": false
       }

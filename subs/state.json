@@ -19,9 +19,9 @@
  },
  "subs": {
   "channel1": {
-   "sig": "vid:084bcf0bc07fc4f646093cc05838e7e5587705a6549d6535bed71a93d5ca1c17",
+   "sig": "vid:654c9f83a6e614d4976ce9e87e069860b019f2534fa351ba2c67705f384d4a7e",
    "status": "ok",
-   "v": "mw4vc2pm",
+   "v": "mw6jhv3c",
    "label": "English"
   },
   "channel2": {
@@ -45,9 +45,9 @@
  },
  "thumbs": {
   "channel1": {
-   "sig": "084bcf0bc07fc4f646093cc05838e7e5587705a6549d6535bed71a93d5ca1c17",
+   "sig": "654c9f83a6e614d4976ce9e87e069860b019f2534fa351ba2c67705f384d4a7e",
    "ok": true,
-   "v": "mw4w3itt"
+   "v": "mw6jhitn"
   },
   "channel2": {
    "sig": "cd3e1ce333b569cbdcd9460eaf8a569fe752caeda64b7038f55285a0f40c453d",
