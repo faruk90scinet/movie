@@ -59,7 +59,21 @@
   "channel4": {
     "title": "Madraskaran",
     "nav": "Channel 4",
-    "videoLink": "https://www.dropbox.com/scl/fi/46jxk4cnx0n9vpwdp7r2k/4_Madraskaran.mkv?rlkey=sgd2t5jeamettu7wcx2jftvwo&dl=0"
+    "videoLink": "https://www.dropbox.com/scl/fi/46jxk4cnx0n9vpwdp7r2k/4_Madraskaran.mkv?rlkey=sgd2t5jeamettu7wcx2jftvwo&dl=0",
+    "poster": "thumbs/channel4.jpg?v=mw65onyu",
+    "subtitles": [
+      {
+        "url": "subs/channel4.bn.vtt?v=mw65p2x2",
+        "label": "বাংলা",
+        "lang": "bn",
+        "auto": false
+      },
+      {
+        "url": "subs/channel4.orig.vtt?v=mw65p2x2",
+        "label": "English",
+        "auto": false
+      }
+    ]
   },
   "jolsa": {
     "title": "আজকের নাটক 07-11-2026 (3)",
