@@ -18,30 +18,10 @@
       }
     ]
   },
-  "channel2": {
-    "title": "SGMA",
-    "nav": "Channel 2",
-    "videoLink": "https://www.dropbox.com/scl/fi/kts0xz6gmmx6eyrzv3arc/2_SGMA.mkv?rlkey=f8zdzggy4vu8tzcdns1s2dzja&dl=0",
-    "poster": "thumbs/channel2.jpg?v=mw4w3ril",
-    "subtitles": [
-      {
-        "url": "subs/channel2.bn.vtt?v=mw4vd20l",
-        "label": "বাংলা",
-        "lang": "bn",
-        "auto": false
-      },
-      {
-        "url": "subs/channel2.orig.vtt?v=mw4vd20l",
-        "label": "English",
-        "auto": false
-      }
-    ]
-  },
   "channel3": {
-    "title": "Game",
+    "title": "HrtBt",
     "nav": "Channel 3",
-    "videoLink": "https://www.dropbox.com/scl/fi/hvqsjn5hke0jnqn4xjegi/3_Game.mkv?rlkey=ys22vewuvby3d7yrrfpyrp96s&dl=0",
-    "poster": "thumbs/channel3.jpg?v=mw55ubv7",
+    "videoLink": "https://www.dropbox.com/scl/fi/fbpqq5dxntgetri06ev0k/3_HrtBt.mkv?rlkey=xw97ztl7be6d6qmwwiepqootk&dl=0",
     "subtitles": [
       {
         "url": "subs/channel3.bn.vtt?v=mw55uyyc",
