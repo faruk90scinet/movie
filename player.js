@@ -47,7 +47,7 @@
   function renderLinks() {
     const links = (item.links || []).filter(l => l && (l.url || l.link));
     const box = $('#links');
-    box.hidden = false;
+    $('#epTop').hidden = false;
     $('#meta').innerHTML = `<span class="chip gold">${links.length} videos</span>`;
     if (!links.length) { box.innerHTML = '<p class="card-sub">No videos yet.</p>'; return; }
     $('#frameBox').hidden = false;
@@ -71,6 +71,7 @@
       else if (fp.webkitRequestFullscreen) fp.webkitRequestFullscreen();
     };
     play(saved < links.length ? saved : 0, false);
+    window.dispatchEvent(new Event('resize'));   // re-fit the player now that the buttons are shown
     const act = box.querySelector('.link-btn.active'); act && act.focus({ preventScroll: true });
   }
 

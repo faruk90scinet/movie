@@ -20,6 +20,9 @@
     const bar = document.querySelector('.topbar');
     const room = h - (bar ? bar.offsetHeight : 50) - 110;   // leave space for the movie title under the player
     root.style.setProperty('--pmax', Math.max(320, Math.round(room * 16 / 9)) + 'px');
+    const ep = document.getElementById('epTop');
+    const epRoom = h - (bar ? bar.offsetHeight : 50) - (ep && !ep.hidden ? ep.offsetHeight : 140) - 90;
+    root.style.setProperty('--pmax-ep', Math.max(320, Math.round(epRoom * 16 / 9)) + 'px');
   }
   layout();
   window.addEventListener('resize', layout);
