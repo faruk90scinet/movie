@@ -37,25 +37,6 @@
       }
     ]
   },
-  "channel3": {
-    "title": "HrtBt",
-    "nav": "Channel 3",
-    "videoLink": "https://www.dropbox.com/scl/fi/fbpqq5dxntgetri06ev0k/3_HrtBt.mkv?rlkey=xw97ztl7be6d6qmwwiepqootk&dl=0",
-    "poster": "thumbs/channel3.jpg?v=mw7ix8yf",
-    "subtitles": [
-      {
-        "url": "subs/channel3.bn.vtt?v=mw7ixl82",
-        "label": "বাংলা",
-        "lang": "bn",
-        "auto": false
-      },
-      {
-        "url": "subs/channel3.orig.vtt?v=mw7ixl82",
-        "label": "English",
-        "auto": false
-      }
-    ]
-  },
   "channel4": {
     "title": "Madraskaran",
     "nav": "Channel 4",

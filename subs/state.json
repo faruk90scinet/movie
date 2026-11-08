@@ -8,10 +8,6 @@
    "rev": "65fb0dc9c5d86059dd6dd",
    "url": "https://www.dropbox.com/scl/fi/f48t04is4otzj8kwlzmmy/1_Kauri-Mandir.mkv?rlkey=3ryjj72rx3y4srlx9155uayov&dl=0"
   },
-  "id:4NXeJ_VlvrQAAAAAAAG4NQ": {
-   "rev": "65fbeeb936b00059dd6dd",
-   "url": "https://www.dropbox.com/scl/fi/fbpqq5dxntgetri06ev0k/3_HrtBt.mkv?rlkey=xw97ztl7be6d6qmwwiepqootk&dl=0"
-  },
   "id:4NXeJ_VlvrQAAAAAAAG4Ng": {
    "rev": "65fbef9afb5f0059dd6dd",
    "url": "https://www.dropbox.com/scl/fi/5fsicg9jynasdkgzdkf18/2_The-Dark-Heaven.mkv?rlkey=cbdok54pua8aq7j3zja0dcpwa&dl=0"
@@ -26,12 +22,6 @@
    "sig": "vid:654c9f83a6e614d4976ce9e87e069860b019f2534fa351ba2c67705f384d4a7e",
    "status": "ok",
    "v": "mw6jhv3c",
-   "label": "English"
-  },
-  "channel3": {
-   "sig": "vid:d4710365398d7b1af04306d119ed92ba50e41a44288d56c9cbb931ccbf38f0c4",
-   "status": "ok",
-   "v": "mw7ixl82",
    "label": "English"
   },
   "channel4": {
@@ -58,11 +48,6 @@
    "sig": "654c9f83a6e614d4976ce9e87e069860b019f2534fa351ba2c67705f384d4a7e",
    "ok": true,
    "v": "mw6jhitn"
-  },
-  "channel3": {
-   "sig": "d4710365398d7b1af04306d119ed92ba50e41a44288d56c9cbb931ccbf38f0c4",
-   "ok": true,
-   "v": "mw7ix8yf"
   },
   "channel4": {
    "sig": "137a6b8f610428d0494c16d72543ea5bad176d182955d1698164f24c2f99b982",
