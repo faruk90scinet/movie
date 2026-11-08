@@ -78,7 +78,21 @@
   "channel5": {
     "title": "HrtBeat",
     "nav": "Channel 5",
-    "videoLink": "https://www.dropbox.com/scl/fi/o46436fadm6ujcj9xzbj6/5_HrtBeat.mkv?rlkey=228006ded0jc8614jpczv8kzt&dl=0"
+    "videoLink": "https://www.dropbox.com/scl/fi/o46436fadm6ujcj9xzbj6/5_HrtBeat.mkv?rlkey=228006ded0jc8614jpczv8kzt&dl=0",
+    "poster": "thumbs/channel5.jpg?v=mw7mqf2m",
+    "subtitles": [
+      {
+        "url": "subs/channel5.bn.vtt?v=mw7mqrph",
+        "label": "বাংলা",
+        "lang": "bn",
+        "auto": false
+      },
+      {
+        "url": "subs/channel5.orig.vtt?v=mw7mqrph",
+        "label": "English",
+        "auto": false
+      }
+    ]
   },
   "jolsa": {
     "title": "আজকের নাটক 07-11-2026 (3)",
