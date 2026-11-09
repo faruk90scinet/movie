@@ -40,21 +40,36 @@
   "channel3": {
     "title": "Heart.Beat.33-36",
     "nav": "Channel 3",
-    "videoLink": "https://www.dropbox.com/scl/fi/cott6u479ttwh6au17lta/3_Heart.Beat.33-36.mkv?rlkey=2u620oyucwllp9g5j4at8hyks&dl=0"
-  },
-  "channel4": {
-    "title": "Heart.Beat.37-40",
-    "nav": "Channel 4",
-    "videoLink": "https://www.dropbox.com/scl/fi/2xhg9i7xj9sxx5m0cy76z/4_Heart.Beat.37-40.mkv?rlkey=f3s807g7cra6lvnjc2wr4m319&dl=0",
+    "videoLink": "https://www.dropbox.com/scl/fi/cott6u479ttwh6au17lta/3_Heart.Beat.33-36.mkv?rlkey=2u620oyucwllp9g5j4at8hyks&dl=0",
+    "poster": "thumbs/channel3.jpg?v=mw9p0jr4",
     "subtitles": [
       {
-        "url": "subs/channel4.bn.vtt?v=mw904r8v",
+        "url": "subs/channel3.bn.vtt?v=mw9p14pi",
         "label": "বাংলা",
         "lang": "bn",
         "auto": false
       },
       {
-        "url": "subs/channel4.orig.vtt?v=mw904r8v",
+        "url": "subs/channel3.orig.vtt?v=mw9p14pi",
+        "label": "English",
+        "auto": false
+      }
+    ]
+  },
+  "channel4": {
+    "title": "Heart.Beat.37-40",
+    "nav": "Channel 4",
+    "videoLink": "https://www.dropbox.com/scl/fi/2xhg9i7xj9sxx5m0cy76z/4_Heart.Beat.37-40.mkv?rlkey=f3s807g7cra6lvnjc2wr4m319&dl=0",
+    "poster": "thumbs/channel4.jpg?v=mw9p1mb7",
+    "subtitles": [
+      {
+        "url": "subs/channel4.bn.vtt?v=mw9p21te",
+        "label": "বাংলা",
+        "lang": "bn",
+        "auto": false
+      },
+      {
+        "url": "subs/channel4.orig.vtt?v=mw9p21te",
         "label": "English",
         "auto": false
       }

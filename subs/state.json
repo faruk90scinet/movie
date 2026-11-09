@@ -25,15 +25,21 @@
    "label": "English"
   },
   "channel4": {
-   "sig": "vid:3bd370a354f191aadedcda2b91d58d66724e5b3886027213fedda2c07d156095",
+   "sig": "vid:2b7173ff0183772d925caee4e2611c892845883e3fc265e168c78669b57f6f24",
    "status": "ok",
-   "v": "mw904r8v",
+   "v": "mw9p21te",
    "label": "English"
   },
   "channel2": {
    "sig": "vid:d1c0d05a844ae7bc4b64d6cf003abadab04d6f1444cb9958f275eedbdfbc6d63",
    "status": "ok",
    "v": "mw9lkhu7",
+   "label": "English"
+  },
+  "channel3": {
+   "sig": "vid:02bcc9a6c633a83f5c1f156b94360027afbca8e5063d469c788419c785ff7ff9",
+   "status": "ok",
+   "v": "mw9p14pi",
    "label": "English"
   }
  },
@@ -44,14 +50,19 @@
    "v": "mw6jhitn"
   },
   "channel4": {
-   "sig": "3bd370a354f191aadedcda2b91d58d66724e5b3886027213fedda2c07d156095",
+   "sig": "2b7173ff0183772d925caee4e2611c892845883e3fc265e168c78669b57f6f24",
    "ok": true,
-   "v": "mw904dxu"
+   "v": "mw9p1mb7"
   },
   "channel2": {
    "sig": "d1c0d05a844ae7bc4b64d6cf003abadab04d6f1444cb9958f275eedbdfbc6d63",
    "ok": true,
    "v": "mw9lk2v3"
+  },
+  "channel3": {
+   "sig": "02bcc9a6c633a83f5c1f156b94360027afbca8e5063d469c788419c785ff7ff9",
+   "ok": true,
+   "v": "mw9p0jr4"
   }
  }
 }
