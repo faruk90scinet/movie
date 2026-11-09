@@ -22,15 +22,16 @@
     "title": "Heart Beat 21-24",
     "nav": "Channel 2",
     "videoLink": "https://www.dropbox.com/scl/fi/b7z5wymyz1ooe391t65dn/2_Heart_Beat_21-24.mkv?rlkey=zjejupz7frcm75okkksii2w36&dl=0",
+    "poster": "thumbs/channel2.jpg?v=mw903ivc",
     "subtitles": [
       {
-        "url": "subs/channel2.bn.vtt?v=mw7jvvre",
+        "url": "subs/channel2.bn.vtt?v=mw903vay",
         "label": "বাংলা",
         "lang": "bn",
         "auto": false
       },
       {
-        "url": "subs/channel2.orig.vtt?v=mw7jvvre",
+        "url": "subs/channel2.orig.vtt?v=mw903vay",
         "label": "English",
         "auto": false
       }
@@ -59,15 +60,16 @@
     "title": "Heart Beat 25-28",
     "nav": "Channel 4",
     "videoLink": "https://www.dropbox.com/scl/fi/0b5jw37mqlg1f1kckkev8/4_Heart_Beat_25-28.mkv?rlkey=6dgz7ugabxnhbjw82jxcoks6f&dl=0",
+    "poster": "thumbs/channel4.jpg?v=mw904dxu",
     "subtitles": [
       {
-        "url": "subs/channel4.bn.vtt?v=mw65p2x2",
+        "url": "subs/channel4.bn.vtt?v=mw904r8v",
         "label": "বাংলা",
         "lang": "bn",
         "auto": false
       },
       {
-        "url": "subs/channel4.orig.vtt?v=mw65p2x2",
+        "url": "subs/channel4.orig.vtt?v=mw904r8v",
         "label": "English",
         "auto": false
       }
