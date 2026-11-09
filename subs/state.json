@@ -4,14 +4,6 @@
    "rev": "65fb0dc9c5d86059dd6dd",
    "url": "https://www.dropbox.com/scl/fi/f48t04is4otzj8kwlzmmy/1_Kauri-Mandir.mkv?rlkey=3ryjj72rx3y4srlx9155uayov&dl=0"
   },
-  "id:4NXeJ_VlvrQAAAAAAAG8Ow": {
-   "rev": "65fc18262d915059dd6dd",
-   "url": "https://www.dropbox.com/scl/fi/3694hpn7vsfbyro6uw5ep/3_HertBet17-20.mkv?rlkey=j8ipptgn2uf5c73socfyx40p3&dl=0"
-  },
-  "id:4NXeJ_VlvrQAAAAAAAG8Tw": {
-   "rev": "65fd3b9ed1504059dd6dd",
-   "url": "https://www.dropbox.com/scl/fi/b7z5wymyz1ooe391t65dn/2_Heart_Beat_21-24.mkv?rlkey=zjejupz7frcm75okkksii2w36&dl=0"
-  },
   "id:4NXeJ_VlvrQAAAAAAAG8Vg": {
    "rev": "65fd3bfdad342059dd6dd",
    "url": "https://www.dropbox.com/scl/fi/0b5jw37mqlg1f1kckkev8/4_Heart_Beat_25-28.mkv?rlkey=6dgz7ugabxnhbjw82jxcoks6f&dl=0"
@@ -29,18 +21,6 @@
    "status": "ok",
    "v": "mw904r8v",
    "label": "English"
-  },
-  "channel2": {
-   "sig": "vid:0bfe0913e028d8b4d0b7e7e16ca461ec7fc2a25d6e27689911c4d20bb4cc1298",
-   "status": "ok",
-   "v": "mw903vay",
-   "label": "English"
-  },
-  "channel3": {
-   "sig": "vid:a837841ee138b91275d75d03b2db163fd30dadd765feb437ee0bc8dd503cfba7",
-   "status": "ok",
-   "v": "mw7pt30v",
-   "label": "English"
   }
  },
  "thumbs": {
@@ -53,16 +33,6 @@
    "sig": "3bd370a354f191aadedcda2b91d58d66724e5b3886027213fedda2c07d156095",
    "ok": true,
    "v": "mw904dxu"
-  },
-  "channel2": {
-   "sig": "0bfe0913e028d8b4d0b7e7e16ca461ec7fc2a25d6e27689911c4d20bb4cc1298",
-   "ok": true,
-   "v": "mw903ivc"
-  },
-  "channel3": {
-   "sig": "a837841ee138b91275d75d03b2db163fd30dadd765feb437ee0bc8dd503cfba7",
-   "ok": true,
-   "v": "mw7psr7d"
   }
  }
 }

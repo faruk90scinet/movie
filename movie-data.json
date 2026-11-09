@@ -18,44 +18,6 @@
       }
     ]
   },
-  "channel2": {
-    "title": "Heart Beat 21-24",
-    "nav": "Channel 2",
-    "videoLink": "https://www.dropbox.com/scl/fi/b7z5wymyz1ooe391t65dn/2_Heart_Beat_21-24.mkv?rlkey=zjejupz7frcm75okkksii2w36&dl=0",
-    "poster": "thumbs/channel2.jpg?v=mw903ivc",
-    "subtitles": [
-      {
-        "url": "subs/channel2.bn.vtt?v=mw903vay",
-        "label": "বাংলা",
-        "lang": "bn",
-        "auto": false
-      },
-      {
-        "url": "subs/channel2.orig.vtt?v=mw903vay",
-        "label": "English",
-        "auto": false
-      }
-    ]
-  },
-  "channel3": {
-    "title": "HertBet17-20",
-    "nav": "Channel 3",
-    "videoLink": "https://www.dropbox.com/scl/fi/3694hpn7vsfbyro6uw5ep/3_HertBet17-20.mkv?rlkey=j8ipptgn2uf5c73socfyx40p3&dl=0",
-    "poster": "thumbs/channel3.jpg?v=mw7psr7d",
-    "subtitles": [
-      {
-        "url": "subs/channel3.bn.vtt?v=mw7pt30v",
-        "label": "বাংলা",
-        "lang": "bn",
-        "auto": false
-      },
-      {
-        "url": "subs/channel3.orig.vtt?v=mw7pt30v",
-        "label": "English",
-        "auto": false
-      }
-    ]
-  },
   "channel4": {
     "title": "Heart Beat 25-28",
     "nav": "Channel 4",
@@ -76,17 +38,17 @@
     ]
   },
   "jolsa": {
-    "title": "আজকের নাটক 08-11-2026 (4)",
+    "title": "আজকের নাটক 09-11-2026 (5)",
     "nav": "জলসার নাটক",
     "type": "links",
     "links": [
       {
         "title": "পর.শুরাম",
-        "url": "https://www.blogger.com/video.g?token=AD6v5dwT19Q1PtiriKscQ7G1YjI1_jXYDmwsfadN78G3ugz6-fBsE_99F9dHQM9YjWSy_ZbuVXxEjJ21XENxJgE4Dm44RAcwrsBJTLEBgqUDLk_Rx1K4tPmzeFZzCMIPpQhQsUZeNhev&origin=www.morestable.xyz"
+        "url": "https://www.blogger.com/video.g?token=AD6v5dxXi8qbsC5Iilqu8WSkDWyeS3mSFzEj8aqmGsxOTUAyZO9ebdw56b3t665VCTTmM2XepKp5vlmD1O9Bo58lhx8SFGUT9pyupTLhnN6ybZsOp8q1iM4n5fbYauYYqQ0GrOE87E8t&origin=www.morestable.xyz"
       },
       {
         "title": "প্রফে.সর বি.দ্যা",
-        "url": "https://www.blogger.com/video.g?token=AD6v5dyKkdbLDgYidwzsk549X72ViYcB8jctBjssQAM6OG8P40ynV5A-wTMbD4TFGn3yIIRiP0Soo1jt5-tdOAJHEsIM9pv74DSBpgU1xoMYOPla9KjySj15f9WkAT44Pa9f5TO1cQ4&origin=www.morestable.xyz"
+        "url": "https://www.blogger.com/video.g?token=AD6v5dwq5BpOQ4_ra07ATAhiRIMuam82OATG1_KXbmcdeoOKn58S4PwjvyzSgT0iOPGXF2jvrS4BZ0CNdRMYIOF8FbchjrJ7xMgGUGr-wyQa7zXUSnooGzLKl_HKZM6L1tCykuDyawo&origin=www.morestable.xyz"
       }
     ]
   }
