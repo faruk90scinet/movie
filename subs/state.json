@@ -35,9 +35,9 @@
    "label": "English"
   },
   "channel2": {
-   "sig": "vid:d1c0d05a844ae7bc4b64d6cf003abadab04d6f1444cb9958f275eedbdfbc6d63",
+   "sig": "vid:370509eb4985a6b26b610ae66f0fc4088bde684a12184ab4997bbb224a1c4281",
    "status": "ok",
-   "v": "mw9lkhu7",
+   "v": "mwal0kxy",
    "label": "English"
   },
   "channel3": {
@@ -59,9 +59,9 @@
    "v": "mw9p1mb7"
   },
   "channel2": {
-   "sig": "d1c0d05a844ae7bc4b64d6cf003abadab04d6f1444cb9958f275eedbdfbc6d63",
+   "sig": "370509eb4985a6b26b610ae66f0fc4088bde684a12184ab4997bbb224a1c4281",
    "ok": true,
-   "v": "mw9lk2v3"
+   "v": "mwal06an"
   },
   "channel3": {
    "sig": "02bcc9a6c633a83f5c1f156b94360027afbca8e5063d469c788419c785ff7ff9",
