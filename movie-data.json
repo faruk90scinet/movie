@@ -18,25 +18,6 @@
       }
     ]
   },
-  "channel2": {
-    "title": "Heart Beat 29-32 (Faruk's MacBook Pro's conflicted copy 2026-11-10)",
-    "nav": "Channel 2",
-    "videoLink": "https://www.dropbox.com/scl/fi/gu29h8jl5km3554uufbk8/2_Heart_Beat_29-32-Faruk-s-MacBook-Pro-s-conflicted-copy-2026-11-10.mkv?rlkey=ah24hex1223f2rf6gmc8h8asz&dl=0",
-    "poster": "thumbs/channel2.jpg?v=mwal06an",
-    "subtitles": [
-      {
-        "url": "subs/channel2.bn.vtt?v=mwal0kxy",
-        "label": "বাংলা",
-        "lang": "bn",
-        "auto": false
-      },
-      {
-        "url": "subs/channel2.orig.vtt?v=mwal0kxy",
-        "label": "English",
-        "auto": false
-      }
-    ]
-  },
   "channel3": {
     "title": "Heart.Beat.33-36",
     "nav": "Channel 3",
@@ -76,17 +57,17 @@
     ]
   },
   "jolsa": {
-    "title": "আজকের নাটক 12-11-2026 (7)",
+    "title": "আজকের নাটক 13-11-2026 (8)",
     "nav": "জলসার নাটক",
     "type": "links",
     "links": [
       {
         "title": "পর.শুরাম",
-        "url": "https://www.blogger.com/video.g?token=AD6v5dxCzqMb8AI96w4qgMs1fMZnSltz0-WeDm8FU_kQ5NmHf0NS0t7o-K99nHWQtgesFWtcLax5FuGOQ5AP_0QKH64y5GSD_dZLH9CVN2gNxcByFO2yS3odJQmfU2NfkVTBB2yxmJ52&origin=www.niyogbd.xyz"
+        "url": "https://www.blogger.com/video.g?token=AD6v5dz9Jejt9VM2G9Fx7Z7z7YR2pZNjKtn9kCa2ZPWu67bCcmsrXZrc_75_VqWXkJy4xHaZ9nGw0voCg1MLu8GQniZn7U4KB2gu_--veCrxicgd3mjcXoebmsQoCOVdGHZZsZPMFHRp&origin=www.niyogbd.xyz"
       },
       {
         "title": "প্রফে.সর বি.দ্যা",
-        "url": "https://www.blogger.com/video.g?token=AD6v5dxVamd40pz0V866G5GALGAyBP2TkX8kBcl329NYYlrA29-7DADrrhmR7ioenB0dkxKk_H-aps10Vlqaybg9ss4qYk_cngm19TAVHVgIqr0afH_VHm0QHzzElahqPhtxIgSRjiU&origin=www.niyogbd.xyz"
+        "url": "https://www.blogger.com/video.g?token=AD6v5dwhq8POeA8XmTnnEw1qNHFutBX-rEE83JMLOBRDuFDGTbFKbbRPIY4coZdO45miZ7lS9C4uDItC84SoKqoDdLrWmJuEhDLEqCXYR0gglscYYOI0tDeuMHtiRH7awm3KFRuVQQ&origin=www.niyogbd.xyz"
       }
     ]
   }
