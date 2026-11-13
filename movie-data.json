@@ -78,7 +78,16 @@
   "channel5": {
     "title": "BCP129-136",
     "nav": "Channel 5",
-    "videoLink": "https://www.dropbox.com/scl/fi/iw99yc9o5ynfvtgexmr5q/5_BCP129-136.mkv?rlkey=ysb4rg8q6g5u8v59msk8d2d47&dl=0"
+    "videoLink": "https://www.dropbox.com/scl/fi/iw99yc9o5ynfvtgexmr5q/5_BCP129-136.mkv?rlkey=ysb4rg8q6g5u8v59msk8d2d47&dl=0",
+    "poster": "thumbs/channel5.jpg?v=mwen9esg",
+    "subtitles": [
+      {
+        "url": "subs/channel5.bn.vtt?v=mwen9q7e",
+        "label": "বাংলা",
+        "lang": "bn",
+        "auto": false
+      }
+    ]
   },
   "jolsa": {
     "title": "আজকের নাটক 13-11-2026 (8)",
