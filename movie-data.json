@@ -21,7 +21,21 @@
   "channel2": {
     "title": "Court 41-44",
     "nav": "Channel 2",
-    "videoLink": "https://www.dropbox.com/scl/fi/gyss7z8s0av7sqozvqdp3/2_Court_41-44.mkv?rlkey=wzj99cqupaan6dq2f5vmzp0db&dl=0"
+    "videoLink": "https://www.dropbox.com/scl/fi/gyss7z8s0av7sqozvqdp3/2_Court_41-44.mkv?rlkey=wzj99cqupaan6dq2f5vmzp0db&dl=0",
+    "poster": "thumbs/channel2.jpg?v=mwguddm8",
+    "subtitles": [
+      {
+        "url": "subs/channel2.bn.vtt?v=mwgudoxh",
+        "label": "বাংলা",
+        "lang": "bn",
+        "auto": false
+      },
+      {
+        "url": "subs/channel2.orig.vtt?v=mwgudoxh",
+        "label": "English",
+        "auto": false
+      }
+    ]
   },
   "channel3": {
     "title": "Heart.Beat.33-36",

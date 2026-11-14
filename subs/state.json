@@ -44,6 +44,12 @@
    "sig": "vid:c52a1a3b0612133757788ed6b42e92645b94b302d1cae3f7c068a5e4b6334906",
    "status": "bn",
    "v": "mwen9q7e"
+  },
+  "channel2": {
+   "sig": "vid:400af58f9f4a2c9f04a639a644bf3182012d5dff6b2667d90c79cdca2298d143",
+   "status": "ok",
+   "v": "mwgudoxh",
+   "label": "English"
   }
  },
  "thumbs": {
@@ -66,6 +72,11 @@
    "sig": "c52a1a3b0612133757788ed6b42e92645b94b302d1cae3f7c068a5e4b6334906",
    "ok": true,
    "v": "mwen9esg"
+  },
+  "channel2": {
+   "sig": "400af58f9f4a2c9f04a639a644bf3182012d5dff6b2667d90c79cdca2298d143",
+   "ok": true,
+   "v": "mwguddm8"
   }
  }
 }
