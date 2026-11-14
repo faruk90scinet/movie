@@ -12,10 +12,6 @@
    "rev": "65fdd2dbaf26c059dd6dd",
    "url": "https://www.dropbox.com/scl/fi/2xhg9i7xj9sxx5m0cy76z/4_Heart.Beat.37-40.mkv?rlkey=f3s807g7cra6lvnjc2wr4m319&dl=0"
   },
-  "id:4NXeJ_VlvrQAAAAAAAHBLA": {
-   "rev": "6601903266bf4059dd6dd",
-   "url": "https://www.dropbox.com/scl/fi/x9hvhdguhp8g9h1o6u1qe/2_Jail.er.mkv?rlkey=tu8ed8oix84vi9ve6ikjvgz92&dl=0"
-  },
   "id:4NXeJ_VlvrQAAAAAAAHBLQ": {
    "rev": "6602207db1331059dd6dd",
    "url": "https://www.dropbox.com/scl/fi/iw99yc9o5ynfvtgexmr5q/5_BCP129-136.mkv?rlkey=ysb4rg8q6g5u8v59msk8d2d47&dl=0"
@@ -40,12 +36,6 @@
    "v": "mw9p14pi",
    "label": "English"
   },
-  "channel2": {
-   "sig": "vid:fa9154a4f374ae1015ffe9e51f2650d34fe49d38f9f22b04d0de92b4baf89255",
-   "status": "ok",
-   "v": "mwdx8ze2",
-   "label": "English"
-  },
   "channel5": {
    "sig": "vid:c52a1a3b0612133757788ed6b42e92645b94b302d1cae3f7c068a5e4b6334906",
    "status": "bn",
@@ -67,11 +57,6 @@
    "sig": "02bcc9a6c633a83f5c1f156b94360027afbca8e5063d469c788419c785ff7ff9",
    "ok": true,
    "v": "mw9p0jr4"
-  },
-  "channel2": {
-   "sig": "fa9154a4f374ae1015ffe9e51f2650d34fe49d38f9f22b04d0de92b4baf89255",
-   "ok": true,
-   "v": "mwdx8mgy"
   },
   "channel5": {
    "sig": "c52a1a3b0612133757788ed6b42e92645b94b302d1cae3f7c068a5e4b6334906",

@@ -18,25 +18,6 @@
       }
     ]
   },
-  "channel2": {
-    "title": "Jail.er",
-    "nav": "Channel 2",
-    "videoLink": "https://www.dropbox.com/scl/fi/x9hvhdguhp8g9h1o6u1qe/2_Jail.er.mkv?rlkey=tu8ed8oix84vi9ve6ikjvgz92&dl=0",
-    "poster": "thumbs/channel2.jpg?v=mwdx8mgy",
-    "subtitles": [
-      {
-        "url": "subs/channel2.bn.vtt?v=mwdx8ze2",
-        "label": "বাংলা",
-        "lang": "bn",
-        "auto": false
-      },
-      {
-        "url": "subs/channel2.orig.vtt?v=mwdx8ze2",
-        "label": "English",
-        "auto": false
-      }
-    ]
-  },
   "channel3": {
     "title": "Heart.Beat.33-36",
     "nav": "Channel 3",
