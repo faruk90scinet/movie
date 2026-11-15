@@ -1,8 +1,8 @@
 {
  "links": {
   "id:4NXeJ_VlvrQAAAAAAAG2Ng": {
-   "rev": "65fb0dc9c5d86059dd6dd",
-   "url": "https://www.dropbox.com/scl/fi/f48t04is4otzj8kwlzmmy/1_Kauri-Mandir.mkv?rlkey=3ryjj72rx3y4srlx9155uayov&dl=0"
+   "rev": "66055ee75018f059dd6dd",
+   "url": "https://www.dropbox.com/scl/fi/f48t04is4otzj8kwlzmmy/0_Kauri-Mandir.mkv?rlkey=3ryjj72rx3y4srlx9155uayov&dl=0"
   },
   "id:4NXeJ_VlvrQAAAAAAAHAMg": {
    "rev": "65fdd70d6b513059dd6dd",
@@ -22,12 +22,6 @@
   }
  },
  "subs": {
-  "channel1": {
-   "sig": "vid:654c9f83a6e614d4976ce9e87e069860b019f2534fa351ba2c67705f384d4a7e",
-   "status": "ok",
-   "v": "mw6jhv3c",
-   "label": "English"
-  },
   "channel4": {
    "sig": "vid:2b7173ff0183772d925caee4e2611c892845883e3fc265e168c78669b57f6f24",
    "status": "ok",
@@ -53,11 +47,6 @@
   }
  },
  "thumbs": {
-  "channel1": {
-   "sig": "654c9f83a6e614d4976ce9e87e069860b019f2534fa351ba2c67705f384d4a7e",
-   "ok": true,
-   "v": "mw6jhitn"
-  },
   "channel4": {
    "sig": "2b7173ff0183772d925caee4e2611c892845883e3fc265e168c78669b57f6f24",
    "ok": true,
