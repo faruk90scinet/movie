@@ -2,7 +2,21 @@
   "channel0": {
     "title": "Kauri Mandir",
     "nav": "Channel 0",
-    "videoLink": "https://www.dropbox.com/scl/fi/f48t04is4otzj8kwlzmmy/0_Kauri-Mandir.mkv?rlkey=3ryjj72rx3y4srlx9155uayov&dl=0"
+    "videoLink": "https://www.dropbox.com/scl/fi/f48t04is4otzj8kwlzmmy/0_Kauri-Mandir.mkv?rlkey=3ryjj72rx3y4srlx9155uayov&dl=0",
+    "poster": "thumbs/channel0.jpg?v=mwidzn7s",
+    "subtitles": [
+      {
+        "url": "subs/channel0.bn.vtt?v=mwidzz16",
+        "label": "বাংলা",
+        "lang": "bn",
+        "auto": false
+      },
+      {
+        "url": "subs/channel0.orig.vtt?v=mwidzz16",
+        "label": "English",
+        "auto": false
+      }
+    ]
   },
   "channel2": {
     "title": "Court 41-44",

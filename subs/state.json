@@ -44,6 +44,12 @@
    "status": "ok",
    "v": "mwgudoxh",
    "label": "English"
+  },
+  "channel0": {
+   "sig": "vid:654c9f83a6e614d4976ce9e87e069860b019f2534fa351ba2c67705f384d4a7e",
+   "status": "ok",
+   "v": "mwidzz16",
+   "label": "English"
   }
  },
  "thumbs": {
@@ -66,6 +72,11 @@
    "sig": "400af58f9f4a2c9f04a639a644bf3182012d5dff6b2667d90c79cdca2298d143",
    "ok": true,
    "v": "mwguddm8"
+  },
+  "channel0": {
+   "sig": "654c9f83a6e614d4976ce9e87e069860b019f2534fa351ba2c67705f384d4a7e",
+   "ok": true,
+   "v": "mwidzn7s"
   }
  }
 }
