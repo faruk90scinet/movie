@@ -18,6 +18,11 @@
       }
     ]
   },
+  "channel1": {
+    "title": "third.murder",
+    "nav": "Channel 1",
+    "videoLink": "https://www.dropbox.com/scl/fi/b5lkwhe6ismg3mgurxrdq/1_third.murder.mkv?rlkey=zrm204t7uldulil5fds4mkrgc&dl=0"
+  },
   "channel2": {
     "title": "Court 41-44",
     "nav": "Channel 2",
