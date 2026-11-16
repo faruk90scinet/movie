@@ -21,7 +21,21 @@
   "channel1": {
     "title": "third.murder",
     "nav": "Channel 1",
-    "videoLink": "https://www.dropbox.com/scl/fi/b5lkwhe6ismg3mgurxrdq/1_third.murder.mkv?rlkey=zrm204t7uldulil5fds4mkrgc&dl=0"
+    "videoLink": "https://www.dropbox.com/scl/fi/b5lkwhe6ismg3mgurxrdq/1_third.murder.mkv?rlkey=zrm204t7uldulil5fds4mkrgc&dl=0",
+    "poster": "thumbs/channel1.jpg?v=mwiyp8d1",
+    "subtitles": [
+      {
+        "url": "subs/channel1.bn.vtt?v=mwiyplqn",
+        "label": "বাংলা",
+        "lang": "bn",
+        "auto": false
+      },
+      {
+        "url": "subs/channel1.orig.vtt?v=mwiyplqn",
+        "label": "English",
+        "auto": false
+      }
+    ]
   },
   "channel2": {
     "title": "Court 41-44",
