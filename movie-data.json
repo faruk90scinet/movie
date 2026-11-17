@@ -19,10 +19,9 @@
     ]
   },
   "channel1": {
-    "title": "third.murder",
+    "title": "PDK",
     "nav": "Channel 1",
-    "videoLink": "https://www.dropbox.com/scl/fi/b5lkwhe6ismg3mgurxrdq/1_third.murder.mkv?rlkey=zrm204t7uldulil5fds4mkrgc&dl=0",
-    "poster": "thumbs/channel1.jpg?v=mwiyp8d1",
+    "videoLink": "https://www.dropbox.com/scl/fi/r8mipcjf4tor12d5bsbzj/1_PDK.mkv?rlkey=pt3pdtuyzmyjax9ieclnnaqml&dl=0",
     "subtitles": [
       {
         "url": "subs/channel1.bn.vtt?v=mwiyplqn",
@@ -32,25 +31,6 @@
       },
       {
         "url": "subs/channel1.orig.vtt?v=mwiyplqn",
-        "label": "English",
-        "auto": false
-      }
-    ]
-  },
-  "channel2": {
-    "title": "Court 41-44",
-    "nav": "Channel 2",
-    "videoLink": "https://www.dropbox.com/scl/fi/gyss7z8s0av7sqozvqdp3/2_Court_41-44.mkv?rlkey=wzj99cqupaan6dq2f5vmzp0db&dl=0",
-    "poster": "thumbs/channel2.jpg?v=mwguddm8",
-    "subtitles": [
-      {
-        "url": "subs/channel2.bn.vtt?v=mwgudoxh",
-        "label": "বাংলা",
-        "lang": "bn",
-        "auto": false
-      },
-      {
-        "url": "subs/channel2.orig.vtt?v=mwgudoxh",
         "label": "English",
         "auto": false
       }
@@ -94,32 +74,18 @@
       }
     ]
   },
-  "channel5": {
-    "title": "BCP129-136",
-    "nav": "Channel 5",
-    "videoLink": "https://www.dropbox.com/scl/fi/iw99yc9o5ynfvtgexmr5q/5_BCP129-136.mkv?rlkey=ysb4rg8q6g5u8v59msk8d2d47&dl=0",
-    "poster": "thumbs/channel5.jpg?v=mwen9esg",
-    "subtitles": [
-      {
-        "url": "subs/channel5.bn.vtt?v=mwen9q7e",
-        "label": "বাংলা",
-        "lang": "bn",
-        "auto": false
-      }
-    ]
-  },
   "jolsa": {
-    "title": "আজকের নাটক 16-11-2026 (11)",
+    "title": "আজকের নাটক 17-11-2026 (12)",
     "nav": "জলসার নাটক",
     "type": "links",
     "links": [
       {
         "title": "পর.শুরাম",
-        "url": "https://www.blogger.com/video.g?token=AD6v5dyiTYgwTWZYI_yMlGawE0_r7P5tnnIvfPh6zj_WmdYfJ71Ri3webvbV1u2--GE6OZtzcStgHPbbSLpUpjmILCRJ_m24OqrV0aVzC_25tstJYv2pn1S9Y53JuKhJ_olDBTpkSg&origin=www.morestable.xyz"
+        "url": "https://www.blogger.com/video.g?token=AD6v5dyjoBgYBhVPYXQSs6fYUr0rQXfHmq9wtns1IAXvUZdME2xPX1XGaLSAZqKHTNgaHsObecHyCx5y1lkTT5qKMRCzgDlxmCgA6kfJj-eqiaWBBXJUOLiYv0xG8q6c3D5zNedO-zk&origin=www.morestable.xyz"
       },
       {
         "title": "প্রফে.সর বি.দ্যা",
-        "url": "https://www.blogger.com/video.g?token=AD6v5dzIg0V0W09nsYFW7bYpmYjG9JpLjLHkdRQJZ-91IZgYUYZzmXRYGfLfmzrSGvE1Cmqkp8iVIKOMS5x15pYcS5AlfPph1Z6TWmBRsuomTEJzox4Pwh1MO09tnwJXh6O0eGie1y_1&origin=www.morestable.xyz"
+        "url": "https://www.blogger.com/video.g?token=AD6v5dzyLTtiPXB5d6CtNB2jMF3n3pLPISuLg5nv3fZolQIuL-zwQWODkbFLS4E2JjnF_iGIAqRd_gQk_l6YQuwWQE27lUd7sF6WhgcL8SxYWn9Lr_4RSvZCqHOw6N5zZ9fqoknm20G-&origin=www.morestable.xyz"
       }
     ]
   }
