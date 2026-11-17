@@ -37,10 +37,9 @@
    "label": "English"
   },
   "channel1": {
-   "sig": "vid:762303c8ee1c27fbaddf425e8a01baea3b964957aeec0ee5308b5e2a761b656a",
-   "status": "ok",
-   "v": "mwiyplqn",
-   "label": "English"
+   "sig": "vid:14b56abbbb55817827e76a08ed5cc22a76c18693c1cae70eaace619311751a1d",
+   "status": "bn",
+   "v": "mwkcnjsa"
   }
  },
  "thumbs": {
@@ -60,9 +59,9 @@
    "v": "mwidzn7s"
   },
   "channel1": {
-   "sig": "762303c8ee1c27fbaddf425e8a01baea3b964957aeec0ee5308b5e2a761b656a",
+   "sig": "14b56abbbb55817827e76a08ed5cc22a76c18693c1cae70eaace619311751a1d",
    "ok": true,
-   "v": "mwiyp8d1"
+   "v": "mwkcn7lq"
   }
  }
 }
