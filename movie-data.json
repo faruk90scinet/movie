@@ -40,7 +40,21 @@
   "channel2": {
     "title": "Heart.Beat.45-52",
     "nav": "Channel 2",
-    "videoLink": "https://www.dropbox.com/scl/fi/ntb8xp5r1zdzpepbsroen/2_Heart.Beat.45-52.mkv?rlkey=c8mhvzio3syznhaz2xd67tola&dl=0"
+    "videoLink": "https://www.dropbox.com/scl/fi/ntb8xp5r1zdzpepbsroen/2_Heart.Beat.45-52.mkv?rlkey=c8mhvzio3syznhaz2xd67tola&dl=0",
+    "poster": "thumbs/channel2.jpg?v=mwm1ipm9",
+    "subtitles": [
+      {
+        "url": "subs/channel2.bn.vtt?v=mwm1jaem",
+        "label": "বাংলা",
+        "lang": "bn",
+        "auto": false
+      },
+      {
+        "url": "subs/channel2.orig.vtt?v=mwm1jaem",
+        "label": "English",
+        "auto": false
+      }
+    ]
   },
   "channel4": {
     "title": "Heart.Beat.37-40",
