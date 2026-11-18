@@ -56,24 +56,10 @@
       }
     ]
   },
-  "channel4": {
-    "title": "Heart.Beat.37-40",
-    "nav": "Channel 4",
-    "videoLink": "https://www.dropbox.com/scl/fi/2xhg9i7xj9sxx5m0cy76z/4_Heart.Beat.37-40.mkv?rlkey=f3s807g7cra6lvnjc2wr4m319&dl=0",
-    "poster": "thumbs/channel4.jpg?v=mw9p1mb7",
-    "subtitles": [
-      {
-        "url": "subs/channel4.bn.vtt?v=mw9p21te",
-        "label": "বাংলা",
-        "lang": "bn",
-        "auto": false
-      },
-      {
-        "url": "subs/channel4.orig.vtt?v=mw9p21te",
-        "label": "English",
-        "auto": false
-      }
-    ]
+  "channel5": {
+    "title": "Paribari minironjon",
+    "nav": "Channel 5",
+    "videoLink": "https://www.dropbox.com/scl/fi/0a86g2qbezgt8wxuqibjt/5_Paribari_minironjon.mkv?rlkey=avkzf7qaz99a9amhsltejkyg9&dl=0"
   },
   "jolsa": {
     "title": "আজকের নাটক 18-11-2026 (13)",
