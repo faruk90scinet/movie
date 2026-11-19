@@ -18,44 +18,6 @@
       }
     ]
   },
-  "channel1": {
-    "title": "Heart.Beat.E41-44",
-    "nav": "Channel 1",
-    "videoLink": "https://www.dropbox.com/scl/fi/bqazd72kjqisyoloi9ieu/1_Heart.Beat.E41-44.mkv?rlkey=so1jpka2dzpxm1hdbu9684lak&dl=0",
-    "poster": "thumbs/channel1.jpg?v=mwlwfvbt",
-    "subtitles": [
-      {
-        "url": "subs/channel1.bn.vtt?v=mwlwg6gn",
-        "label": "বাংলা",
-        "lang": "bn",
-        "auto": false
-      },
-      {
-        "url": "subs/channel1.orig.vtt?v=mwlwg6gn",
-        "label": "English",
-        "auto": false
-      }
-    ]
-  },
-  "channel2": {
-    "title": "Heart.Beat.45-52",
-    "nav": "Channel 2",
-    "videoLink": "https://www.dropbox.com/scl/fi/ntb8xp5r1zdzpepbsroen/2_Heart.Beat.45-52.mkv?rlkey=c8mhvzio3syznhaz2xd67tola&dl=0",
-    "poster": "thumbs/channel2.jpg?v=mwm1ipm9",
-    "subtitles": [
-      {
-        "url": "subs/channel2.bn.vtt?v=mwm1jaem",
-        "label": "বাংলা",
-        "lang": "bn",
-        "auto": false
-      },
-      {
-        "url": "subs/channel2.orig.vtt?v=mwm1jaem",
-        "label": "English",
-        "auto": false
-      }
-    ]
-  },
   "channel3": {
     "title": "heart.beat.53-60",
     "nav": "Channel 3",
@@ -74,6 +36,11 @@
         "auto": false
       }
     ]
+  },
+  "channel4": {
+    "title": "heart.beat.61-68",
+    "nav": "Channel 4",
+    "videoLink": "https://www.dropbox.com/scl/fi/o6kgf8fqg1wxpisu3348w/4_heart.beat.61-68.mkv?rlkey=3uhg5bkquugoaowqp7dkavbmw&dl=0"
   },
   "channel5": {
     "title": "Paribari minironjon",
