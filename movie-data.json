@@ -40,7 +40,8 @@
   "channel4": {
     "title": "heart.beat.61-68",
     "nav": "Channel 4",
-    "videoLink": "https://www.dropbox.com/scl/fi/o6kgf8fqg1wxpisu3348w/4_heart.beat.61-68.mkv?rlkey=3uhg5bkquugoaowqp7dkavbmw&dl=0"
+    "videoLink": "https://www.dropbox.com/scl/fi/o6kgf8fqg1wxpisu3348w/4_heart.beat.61-68.mkv?rlkey=3uhg5bkquugoaowqp7dkavbmw&dl=0",
+    "poster": "thumbs/channel4.jpg?v=mwnsqjcm"
   },
   "channel5": {
     "title": "Paribari minironjon",
