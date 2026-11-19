@@ -47,9 +47,9 @@
    "label": "English"
   },
   "channel3": {
-   "sig": "vid:499c541638c41b57992ff69ee434e3f8284b317a65713bc814b1b77e90bfdf9c",
+   "sig": "vid:3200881f967d7f362cb2d4e6e8bc91c6a268b2a5f7cdfa36aa9567d51791af5c",
    "status": "ok",
-   "v": "mwmhb3kb",
+   "v": "mwnh1wvf",
    "label": "English"
   }
  },
@@ -75,9 +75,9 @@
    "v": "mwmdtze4"
   },
   "channel3": {
-   "sig": "499c541638c41b57992ff69ee434e3f8284b317a65713bc814b1b77e90bfdf9c",
-   "ok": true,
-   "v": "mwmhalim"
+   "sig": "3200881f967d7f362cb2d4e6e8bc91c6a268b2a5f7cdfa36aa9567d51791af5c",
+   "ok": false,
+   "tries": 1
   }
  }
 }
