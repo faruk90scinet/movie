@@ -2,7 +2,7 @@ name: Sync movies from Dropbox
 
 on:
   schedule:
-    - cron: '*/15 * * * *'   # every 15 minutes
+    - cron: '*/30 * * * *'   # every 30 minutes
   workflow_dispatch:          # "Run workflow" button for an instant update
 
 permissions:
@@ -23,6 +23,7 @@ jobs:
       DROPBOX_REFRESH_TOKEN: ${{ secrets.DROPBOX_REFRESH_TOKEN }}
       DROPBOX_FOLDER: ${{ secrets.DROPBOX_FOLDER }}
       TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+      KEEP_MKV: ${{ vars.KEEP_MKV }}
       GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
