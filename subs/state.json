@@ -47,6 +47,18 @@
   "channel4": {
    "sig": "vid:e25623f51c48efde34100275e021408e17bb6b1bd4150d3792a26aafed60ed9e",
    "status": "none"
+  },
+  "channel1": {
+   "sig": "vid:f90e11811c6ef51a2f7c09d5b54228f46656b5e00bcd0e55d4022caf19df83ca",
+   "status": "ok",
+   "v": "mwomgvov",
+   "label": "English"
+  },
+  "channel2": {
+   "sig": "vid:748c588d3ddbbe19ac8c56af9f893e985fb5e2c016770533fc9b20c6f1b5ce34",
+   "status": "ok",
+   "v": "mwomhs3u",
+   "label": "English"
   }
  },
  "thumbs": {
@@ -69,6 +81,16 @@
    "sig": "e25623f51c48efde34100275e021408e17bb6b1bd4150d3792a26aafed60ed9e",
    "ok": true,
    "v": "mwnsqjcm"
+  },
+  "channel1": {
+   "sig": "f90e11811c6ef51a2f7c09d5b54228f46656b5e00bcd0e55d4022caf19df83ca",
+   "ok": true,
+   "v": "mwomgowg"
+  },
+  "channel2": {
+   "sig": "748c588d3ddbbe19ac8c56af9f893e985fb5e2c016770533fc9b20c6f1b5ce34",
+   "ok": true,
+   "v": "mwomhbos"
   }
  }
 }
