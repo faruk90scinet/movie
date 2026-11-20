@@ -69,8 +69,22 @@
     const pic = FMZ.picture(it, true);
     video.removeAttribute('poster');
     if (pic.src) video.poster = pic.src; else if (pic.fid) FMZ.fileURL(pic.fid).then(u => { if (item === it) video.poster = u; }).catch(() => { });
-    video.src = srcUrl;
-    $('#errVlc').href = 'vlc://' + srcUrl;
+    $('#errVlc').href = FMZ.isIOS ? 'vlc-x-callback://x-callback-url/stream?url=' + encodeURIComponent(srcUrl) : 'vlc://' + srcUrl;
+    let mkv = false;
+    try { mkv = /\.(mkv|webm|mk3d)$/i.test(decodeURIComponent(new URL(srcUrl).pathname)); } catch (e) { }
+    if (FMZ.isIOS && (mkv || it.ios === false)) {
+      // iPhone/iPad cannot play MKV: don't spin forever, explain instead
+      video.removeAttribute('src'); video.load();
+      $('#errTitle').textContent = it.ios === false ? "This video can't play on iPhone" : 'Getting ready for iPhone…';
+      $('#errText').textContent = it.ios === false
+        ? 'Its video format is not supported by iPhone. Open it in the free VLC app instead.'
+        : 'This video is being converted so it can play on iPhone. Please try again in a few minutes, or open it in the free VLC app now.';
+      $('#errRetry').hidden = true;
+      $('#errorBox').hidden = false;
+    } else {
+      $('#errRetry').hidden = false;
+      video.src = srcUrl;
+    }
     loadSubtitles();
     setupMediaSession();
   }
@@ -419,7 +433,7 @@
       { key: 'speed', label: 'Playback speed', value: video.playbackRate + '×', sub: true, onClick: openSpeedMenu }
     ];
     if (sub.cur && sub.cur.bn) items.push({ label: 'Download Bengali subtitle (.vtt)', onClick: downloadSub });
-    items.push({ label: 'Open in VLC app', onClick: () => { location.href = 'vlc://' + srcUrl; } });
+    items.push({ label: 'Open in VLC app', onClick: () => { location.href = $('#errVlc').href; } });
     items.push({ label: 'Copy video link', onClick: () => { copyLink(); closeMenu(B.set); } });
     if (typeof focusKey === 'string') items.forEach(i => { if (i.key === focusKey) i.focus = true; });
     openMenu('Settings', items);

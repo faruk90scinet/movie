@@ -6,7 +6,7 @@
   <meta name="robots" content="noindex, nofollow">
   <title>Dropbox setup · Faruk's Movie Zone</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=21">
+  <link rel="stylesheet" href="style.css?v=22">
   <style>
     main{max-width:820px}
     .step{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:1.2rem 1.4rem;margin-bottom:1rem}
@@ -32,7 +32,7 @@
       <ul>
         <li>Open <a href="https://www.dropbox.com/developers/apps/create" target="_blank" rel="noopener">dropbox.com/developers/apps/create</a> (log in with the Dropbox that has your movie folder).</li>
         <li>Choose <b>Scoped access</b> → <b>Full Dropbox</b> → name it e.g. <code>FMZ Sync</code> → <b>Create app</b>.</li>
-        <li>Open the <b>Permissions</b> tab and tick: <code>files.metadata.read</code>, <code>files.content.read</code>, <code>sharing.read</code>, <code>sharing.write</code> → <b>Submit</b> (at the bottom).</li>
+        <li>Open the <b>Permissions</b> tab and tick: <code>files.metadata.read</code>, <code>files.content.read</code>, <code>files.content.write</code>, <code>sharing.read</code>, <code>sharing.write</code> → <b>Submit</b> (at the bottom).</li>
         <li>Open the <b>Settings</b> tab and copy the <b>App key</b> and <b>App secret</b> into the boxes below.</li>
       </ul>
       <label for="key">App key</label><input id="key" autocomplete="off" spellcheck="false">

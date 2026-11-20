@@ -8,6 +8,7 @@
   // Android TV boxes/browsers (e.g. TV Bro) often look like a tablet: Android, not "Mobile", no touch screen
   if (!FMZ.isTV && /TV ?Bro/i.test(ua)) FMZ.isTV = true;
   if (!FMZ.isTV && /Android/i.test(ua) && !/Mobile/i.test(ua) && !('ontouchstart' in window) && !(navigator.maxTouchPoints > 0)) FMZ.isTV = true;
+  FMZ.isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   const root = document.documentElement;
   if (FMZ.isTV) root.classList.add('tv');
 
