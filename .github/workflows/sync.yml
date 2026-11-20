@@ -21,6 +21,8 @@ jobs:
       DROPBOX_APP_KEY: ${{ secrets.DROPBOX_APP_KEY }}
       DROPBOX_APP_SECRET: ${{ secrets.DROPBOX_APP_SECRET }}
       DROPBOX_REFRESH_TOKEN: ${{ secrets.DROPBOX_REFRESH_TOKEN }}
+      DROPBOX_FOLDER: ${{ secrets.DROPBOX_FOLDER }}
+      TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
       GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
@@ -34,7 +36,7 @@ jobs:
           git config user.name "FMZ Sync"
           git config user.email "fmz-sync@users.noreply.github.com"
           cat > /tmp/publish.sh <<'SH'
-          git add movie-data.json subs thumbs
+          git add -A
           if git diff --cached --quiet; then echo "Nothing new."; exit 0; fi
           git commit -m "$1"
           git pull --rebase -X ours || true
@@ -45,9 +47,9 @@ jobs:
       - name: 1) Show new movies on the site right away
         run: |
           node sync/sync.mjs --quick
-          bash /tmp/publish.sh "New movies from Dropbox"
+          bash /tmp/publish.sh "Update"
 
       - name: 2) Thumbnails and Bengali subtitles
         run: |
           node sync/sync.mjs
-          bash /tmp/publish.sh "Thumbnails and subtitles"
+          bash /tmp/publish.sh "Update"
