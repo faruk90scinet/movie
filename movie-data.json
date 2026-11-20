@@ -103,7 +103,20 @@
   "channel6": {
     "title": "Drones",
     "nav": "Channel 6",
-    "videoLink": "https://www.dropbox.com/scl/fi/aw48044qoxlcjhl5ac74g/6_Drones.mkv?rlkey=oljrnwjkjibp1jttpincsa8gl&dl=0"
+    "videoLink": "https://www.dropbox.com/scl/fi/aw48044qoxlcjhl5ac74g/6_Drones.mkv?rlkey=oljrnwjkjibp1jttpincsa8gl&dl=0",
+    "subtitles": [
+      {
+        "url": "subs/channel6.bn.vtt?v=mwp1l6i9",
+        "label": "বাংলা",
+        "lang": "bn",
+        "auto": false
+      },
+      {
+        "url": "subs/channel6.orig.vtt?v=mwp1l6i9",
+        "label": "English",
+        "auto": false
+      }
+    ]
   },
   "jolsa": {
     "title": "আজকের নাটক 20-11-2026 (15)",

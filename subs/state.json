@@ -63,6 +63,12 @@
    "status": "ok",
    "v": "mwomhs3u",
    "label": "English"
+  },
+  "channel6": {
+   "sig": "vid:aa33d84cf649af01899746a643918737eefbd59d2d04be01c57d711a4e0167bf",
+   "status": "ok",
+   "v": "mwp1l6i9",
+   "label": "English"
   }
  },
  "thumbs": {
@@ -95,6 +101,11 @@
    "sig": "748c588d3ddbbe19ac8c56af9f893e985fb5e2c016770533fc9b20c6f1b5ce34",
    "ok": true,
    "v": "mwomhbos"
+  },
+  "channel6": {
+   "sig": "aa33d84cf649af01899746a643918737eefbd59d2d04be01c57d711a4e0167bf",
+   "ok": false,
+   "tries": 1
   }
  }
 }
