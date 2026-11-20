@@ -3,6 +3,7 @@
 // Dropbox folder layout:
 //   Game (2024).mkv          → a movie            (a same-name .srt / .jpg next to it is used if present)
 //   Panchayat/1.mkv, 2.mkv…  → a web series        (folder name = series name; "Name S2" = season 2)
+//   Heart.Beat.61-68.mkv     → one video holding episodes 61–68 of "Heart Beat" (works loose or in a folder)
 //   Jolsar Natok.txt         → the জলসার নাটক page
 //   password.txt             → who can open the site: one "Name,Password" per line
 //
@@ -175,8 +176,22 @@ function parseSeries(folder) {
   return { title: p.title, year: p.year, season };
 }
 
-/** Episode number from "S01E03", "E03", "Ep 3", "Episode 3", "03 - Name", "3" */
+const clean = name => name.replace(/\.[^.]+$/, '').replace(/\b(2160p|1080p|720p|480p|x26[45]|h\.?26[45]|10bit|ddp?5\.?1|5\.1|(?:19|20)\d{2})\b/gi, ' ');
+
+/** One video holding several episodes: "Heart.Beat.61-68" → { n: 61, n2: 68, before: "Heart.Beat." } */
+function episodeRange(name) {
+  const b = clean(name);
+  const m = b.match(/(?:\bE(?:p(?:isode)?s?)?\s*\.?\s*)?(\d{1,4})\s*(?:-|–|—|~|to)\s*(?:E(?:p)?\s*)?(\d{1,4})(?!.*\d)/i);
+  if (!m) return null;
+  const n = +m[1], n2 = +m[2];
+  if (!(n2 > n) || n2 - n > 60) return null;
+  return { n, n2, before: b.slice(0, m.index) };
+}
+
+/** Episode number from "S01E03", "E03", "Ep 3", "Episode 3", "03 - Name", "3" (or a range, see above) */
 function episodeNumber(name) {
+  const r = episodeRange(name);
+  if (r) return r.n;
   const b = name.replace(/\.[^.]+$/, '').replace(/\b(2160p|1080p|720p|480p|x26[45]|h\.?26[45]|10bit|ddp?5\.?1|5\.1|(?:19|20)\d{2})\b/gi, ' ');
   let m = b.match(/S\d{1,2}\s*E(\d{1,3})/i) || b.match(/\bE(?:p(?:isode)?)?\s*\.?\s*(\d{1,3})\b/i) || b.match(/^\s*(\d{1,3})(?!\d)/) || b.match(/(\d{1,3})(?!.*\d)/);
   return m ? +m[1] : null;
@@ -369,9 +384,12 @@ async function cuesFromVideo(file) {
     log(`   downloaded in ${((Date.now() - t0) / 1000).toFixed(0)}s, reading subtitle tracks…`);
     const res = await MkvSubs.extract(await fs.openAsBlob(tmp));
     res.tracks.forEach(t => log(`     track ${t.number}: ${t.codec} ${t.lang} ${t.kind} ${t.cues.length} lines`));
+    const ch = (res.chapters || []).filter((c, i, a) => i === 0 || c.t - a[i - 1].t > 30)
+      .map(c => ({ t: c.t, l: /^(chapter|part|ch)?\s*\d+$/i.test(c.l.trim()) || /^\d{1,2}:\d{2}/.test(c.l) ? '' : c.l.trim() }));
+    if (ch.length) log(`   ${ch.length} chapters`);
     const tr = pickTrack(res.tracks);
-    if (!tr) return { status: res.tracks.some(t => t.kind === 'image') ? 'image' : 'none' };
-    return { status: 'ok', cues: tr.cues, lang: tr.lang };
+    if (!tr) return { status: res.tracks.some(t => t.kind === 'image') ? 'image' : 'none', ch };
+    return { status: 'ok', cues: tr.cues, lang: tr.lang, ch };
   } finally {
     fs.rmSync(tmp, { force: true });
   }
@@ -409,18 +427,19 @@ async function buildSubtitles(vid, video, sidecar, store, state) {
       got = cues.length ? { status: 'ok', cues, lang: '' } : { status: 'none' };
     } else if (MATROSKA.test(video.name)) got = await cuesFromVideo(video);
     else got = { status: 'none' };
-    if (got.status !== 'ok') { log(`   no text subtitles (${got.status})`); return { sig, status: got.status }; }
+    const ch = got.ch && got.ch.length > 1 ? got.ch : undefined;
+    if (got.status !== 'ok') { log(`   no text subtitles (${got.status})`); return { sig, status: got.status, ch }; }
 
     if (S.isBengali(got.cues)) {
       store.put(bnL, Buffer.from(S.toVTT(got.cues)));
       log(`   Bengali subtitles found (${got.cues.length} lines)`);
-      return { sig, status: 'bn' };
+      return { sig, status: 'bn', ch };
     }
     store.put(origL, Buffer.from(S.toVTT(got.cues)));
     const { texts, failed } = await translate(got.cues);
     store.put(bnL, Buffer.from(S.toVTT(got.cues, texts)));
     log(`   translated ${got.cues.length} lines${failed ? ' (some failed, will retry next run)' : ''}`);
-    return { sig, status: failed ? 'partial' : 'ok', label: LANG[(got.lang || '').toLowerCase().split('-')[0]] || 'Original' };
+    return { sig, status: failed ? 'partial' : 'ok', ch, label: LANG[(got.lang || '').toLowerCase().split('-')[0]] || 'Original' };
   } catch (e) {
     console.error(`   subtitle error: ${e.message}`);
     return { sig, status: 'error', tries: (prev.sig === sig ? prev.tries || 0 : 0) + 1 };
@@ -518,12 +537,18 @@ async function main() {
     const plain = f.name.toLowerCase().replace(/[^a-z]/g, '');
     if (parts.length === 1 && /\.txt$/i.test(f.name) && plain.includes('jolsa') && plain.includes('natok')) { natokFile = f; continue; }
     if (!VIDEO.test(f.name)) continue;
-    if (parts.length === 1) movies.push(f);
+    let name, folder = null;
+    if (parts.length > 1) { folder = parts[0]; name = folder; }
     else {
-      const folder = parts[0];
-      if (!seriesMap.has(folder)) seriesMap.set(folder, []);
-      seriesMap.get(folder).push(f);
+      const rg = episodeRange(f.name);                     // loose "Heart.Beat.61-68.mkv" → series "Heart Beat"
+      if (!rg || !rg.before.trim()) { movies.push(f); continue; }
+      name = rg.before;
     }
+    const ps = parseSeries(name), key = ps.title.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim() + '|' + ps.season;
+    if (!seriesMap.has(key)) seriesMap.set(key, { name, folder, files: [] });
+    const g = seriesMap.get(key);
+    if (folder && !g.folder) { g.folder = folder; g.name = folder; }
+    g.files.push(f);
   }
   const vidOf = f => sha(f.id).slice(0, 12);
   const addedAt = f => { const v = vidOf(f); state.added[v] = state.added[v] || Date.parse(f.server_modified || f.client_modified) || Date.now(); return state.added[v]; };
@@ -553,27 +578,36 @@ async function main() {
     else if (state.subs[vid]) buildKeep(vid, state.subs[vid], store);
     const subs = subEntries(vid, state.subs[vid], store);
     if (subs) m.subs = subs;
+    if (state.subs[vid] && state.subs[vid].ch) m.ch = state.subs[vid].ch;
     catalog.movies.push(m);
     if (!QUICK) saveState(keys.K, state);
   }
 
   /* ---- web series ---- */
   let sn = 0;
-  for (const [folder, eps] of [...seriesMap].sort((a, b) => a[0].localeCompare(b[0]))) {
+  for (const [key, grp] of [...seriesMap].sort((a, b) => a[0].localeCompare(b[0]))) {
     sn++;
-    const ps = parseSeries(folder), sid = sha('series:' + folder.toLowerCase()).slice(0, 12);
+    const eps = grp.files, folder = grp.folder;
+    const ps = parseSeries(grp.name), sid = sha('series:' + key).slice(0, 12);
     log(`Series #${sn}: ${eps.length} episodes`);
     const meta = await lookup(state, 's', ps.title + '|' + (ps.year || '') + '|' + ps.season, () => tmdbSeries(ps.title, ps.year, ps.season));
-    const cover = [...byPath.entries()].find(([p]) => p.startsWith(folder.toLowerCase() + '/') && /\/(cover|poster|folder)\.(jpe?g|png|webp)$/.test(p));
+    const cover = folder && [...byPath.entries()].find(([p]) => p.startsWith(folder.toLowerCase() + '/') && /\/(cover|poster|folder)\.(jpe?g|png|webp)$/.test(p));
     const s = { id: sid, t: ps.title, y: ps.year ? String(ps.year) : '', season: ps.season, eps: [] };
     if (meta) Object.assign(s, { t: meta.t || s.t, y: meta.y || s.y, g: meta.g, o: meta.o, bd: meta.bd, bdt: meta.bdt, lg: meta.lg, ps: meta.ps });
 
-    const list = eps.map((f, i) => ({ f, n: episodeNumber(f.name) })).sort((a, b) => (a.n ?? 999) - (b.n ?? 999) || a.f.name.localeCompare(b.f.name));
+    const list = eps.map(f => { const rg = episodeRange(f.name); return { f, n: rg ? rg.n : episodeNumber(f.name), n2: rg ? rg.n2 : null }; })
+      .sort((a, b) => (a.n ?? 9999) - (b.n ?? 9999) || a.f.name.localeCompare(b.f.name));
+    let top = 0;
     const usedN = new Set();
-    list.forEach((e, i) => { if (e.n == null || usedN.has(e.n)) e.n = Math.max(0, ...usedN) + 1; usedN.add(e.n); });
-    for (const { f, n: en } of list) {
-      const vid = vidOf(f), em = meta && meta.eps ? meta.eps[en] : null;
+    list.forEach(e => {
+      if (e.n == null || usedN.has(e.n)) { e.n = top + 1; e.n2 = null; }
+      for (let k = e.n; k <= (e.n2 || e.n); k++) usedN.add(k);
+      top = Math.max(top, e.n2 || e.n);
+    });
+    for (const { f, n: en, n2 } of list) {
+      const vid = vidOf(f), em = !n2 && meta && meta.eps ? meta.eps[en] : null;
       const ep = { id: vid, n: en, t: em && em.t ? em.t : '', o: em ? em.o : '', rt: em ? em.rt : null, add: addedAt(f), v: await shareLink(f, state, keys.rotate) };
+      if (n2) ep.n2 = n2;
       if (em && em.st) ep.st = em.st;
       const img = sibling(f, IMAGE), side = sibling(f, SUBFILE);
       if (img || !ep.st) {
@@ -584,6 +618,7 @@ async function main() {
       else if (state.subs[vid]) buildKeep(vid, state.subs[vid], store);
       const subs = subEntries(vid, state.subs[vid], store);
       if (subs) ep.subs = subs;
+      if (state.subs[vid] && state.subs[vid].ch) ep.ch = state.subs[vid].ch;
       s.eps.push(ep);
       if (!QUICK) saveState(keys.K, state);
     }
@@ -636,7 +671,7 @@ function buildKeep(vid, st, store) {
 }
 function saveState(K, state) { fs.writeFileSync(STATE_FILE, seal(K, Buffer.from(JSON.stringify(state)))); }
 
-export { main, parseName, parseSeries, episodeNumber, parseNatok, parsePasswords, setupKeys, seal, unseal, kekFor };
+export { main, parseName, parseSeries, episodeNumber, episodeRange, parseNatok, parsePasswords, setupKeys, seal, unseal, kekFor };
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   main().catch(e => { console.error('SYNC FAILED: ' + e.message); process.exit(1); });
 }
