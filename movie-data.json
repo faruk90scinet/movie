@@ -18,6 +18,16 @@
       }
     ]
   },
+  "channel1": {
+    "title": "418",
+    "nav": "Channel 1",
+    "videoLink": "https://www.dropbox.com/scl/fi/4ozc6iro2cw34tt8rtn8c/1_418.mkv?rlkey=f2zkbiihcbyu96ycxlyykyuw2&dl=0"
+  },
+  "channel2": {
+    "title": "Heart.Beat.69-76",
+    "nav": "Channel 2",
+    "videoLink": "https://www.dropbox.com/scl/fi/n3hoide88y6pam1rgtfli/2_Heart.Beat.69-76.mkv?rlkey=6aoln1kyxapxaphfrc1b139c3&dl=0"
+  },
   "channel3": {
     "title": "heart.beat.53-60",
     "nav": "Channel 3",
