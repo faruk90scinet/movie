@@ -3,6 +3,7 @@
 // Dropbox folder layout:
 //   Game (2024).mkv          → a movie            (a same-name .srt / .jpg next to it is used if present)
 //   Panchayat/1.mkv, 2.mkv…  → a web series        (folder name = series name; "Name S2" = season 2)
+//   MKV files get an MP4 copy (plays on iPhone); the MKV is then removed (set KEEP_MKV=1 to keep it)
 //   Heart.Beat.61-68.mkv     → one video holding episodes 61–68 of "Heart Beat" (works loose or in a folder)
 //   Jolsar Natok.txt         → the জলসার নাটক page
 //   password.txt             → who can open the site: one "Name,Password" per line
@@ -325,7 +326,7 @@ function ensureFfmpeg() {
 /** Returns an encrypted file id for a picture of this video (own .jpg if given, else a frame) */
 async function makeThumb(vid, video, image, store, state) {
   const logical = 'th/' + vid;
-  const sig = image ? 'img:' + image.content_hash : 'vid:' + video.content_hash;
+  const sig = image ? 'img:' + image.content_hash : 'vid:' + srcHash(vid, video);
   const prev = state.thumbs[vid];
   if (prev && prev.sig === sig) { if (prev.ok) return store.use(logical); if ((prev.tries || 0) >= 3) return null; }
   try {
@@ -371,17 +372,31 @@ function pickTrack(tracks) {
   return (en.length ? en : pool).sort((a, b) => b.cues.length - a.cues.length)[0];
 }
 
-async function cuesFromVideo(file) {
+/* A video is downloaded at most once per run and shared by the subtitle and iPhone steps */
+const localCopies = new Map();
+async function getLocal(file) {
+  if (localCopies.has(file.id)) return localCopies.get(file.id);
   const tmp = path.join(os.tmpdir(), 'fmz-' + Date.now() + path.extname(file.name));
-  try {
-    log(`   downloading (${(file.size / 1e9).toFixed(2)} GB)…`);
-    const t0 = Date.now();
-    const r = await download(file.id);
-    const body = Readable.fromWeb(r.body);
-    let got = 0, next = 0.1;
-    body.on('data', c => { got += c.length; if (file.size && got / file.size >= next) { log(`   downloaded ${Math.round(next * 100)}%`); next += 0.1; } });
-    await pipeline(body, fs.createWriteStream(tmp));
-    log(`   downloaded in ${((Date.now() - t0) / 1000).toFixed(0)}s, reading subtitle tracks…`);
+  log(`   downloading (${(file.size / 1e9).toFixed(2)} GB)…`);
+  const t0 = Date.now();
+  const r = await download(file.id);
+  const body = Readable.fromWeb(r.body);
+  let got = 0, next = 0.1;
+  body.on('data', c => { got += c.length; if (file.size && got / file.size >= next) { log(`   downloaded ${Math.round(next * 100)}%`); next += 0.1; } });
+  await pipeline(body, fs.createWriteStream(tmp));
+  log(`   downloaded in ${((Date.now() - t0) / 1000).toFixed(0)}s`);
+  localCopies.set(file.id, tmp);
+  return tmp;
+}
+function dropLocal(file) {
+  const p = localCopies.get(file.id);
+  if (p) { fs.rmSync(p, { force: true }); localCopies.delete(file.id); }
+}
+
+async function cuesFromVideo(file) {
+  {
+    const tmp = await getLocal(file);
+    log('   reading subtitle tracks…');
     const res = await MkvSubs.extract(await fs.openAsBlob(tmp));
     res.tracks.forEach(t => log(`     track ${t.number}: ${t.codec} ${t.lang} ${t.kind} ${t.cues.length} lines`));
     const ch = (res.chapters || []).filter((c, i, a) => i === 0 || c.t - a[i - 1].t > 30)
@@ -390,8 +405,6 @@ async function cuesFromVideo(file) {
     const tr = pickTrack(res.tracks);
     if (!tr) return { status: res.tracks.some(t => t.kind === 'image') ? 'image' : 'none', ch };
     return { status: 'ok', cues: tr.cues, lang: tr.lang, ch };
-  } finally {
-    fs.rmSync(tmp, { force: true });
   }
 }
 
@@ -402,7 +415,7 @@ async function translate(cues) {
 }
 
 async function buildSubtitles(vid, video, sidecar, store, state) {
-  const sig = sidecar ? 'side:' + sidecar.content_hash : 'vid:' + video.content_hash;
+  const sig = sidecar ? 'side:' + sidecar.content_hash : 'vid:' + srcHash(vid, video);
   const prev = state.subs[vid] || {};
   const bnL = `sub/${vid}/bn`, origL = `sub/${vid}/orig`;
   const keep = st => { if (['ok', 'partial', 'bn'].includes(st.status)) { store.use(bnL); if (st.status !== 'bn') store.use(origL); } return st; };
@@ -452,6 +465,95 @@ function subEntries(vid, st, store) {
   if (st.status !== 'bn') list.push({ f: store.id(`sub/${vid}/orig`), l: st.label || 'Original' });
   return list;
 }
+
+/* ---------------- MP4 copy that plays on iPhone (and everywhere else) ---------------- */
+const KEEP_MKV = /^(1|yes|true)$/i.test(process.env.KEEP_MKV || '');
+const RUN_START = Date.now(), CONVERT_BUDGET = 120 * 60000;   // stop starting new conversions after 2 hours
+
+async function uploadLarge(localPath, dropboxPath) {
+  const size = fs.statSync(localPath).size, CHUNK = 128 * 1024 * 1024;
+  const fd = fs.openSync(localPath, 'r');
+  const read = (pos, len) => { const b = Buffer.alloc(len); fs.readSync(fd, b, 0, len, pos); return b; };
+  const call = async (ep, arg, body) => {
+    for (let i = 1; ; i++) {
+      const r = await fetch('https://content.dropboxapi.com/2/files/' + ep, {
+        method: 'POST',
+        headers: { Authorization: 'Bearer ' + TOKEN, 'Content-Type': 'application/octet-stream', 'Dropbox-API-Arg': asciiJson(arg) },
+        body
+      });
+      if (r.ok) return r.json();
+      if ((r.status === 429 || r.status >= 500) && i < 5) { await sleep(3000 * i); continue; }
+      throw new Error('upload ' + ep + ' failed (' + r.status + ')');
+    }
+  };
+  try {
+    let off = Math.min(CHUNK, size);
+    const { session_id } = await call('upload_session/start', { close: false }, read(0, off));
+    while (size - off > CHUNK) {
+      await call('upload_session/append_v2', { cursor: { session_id, offset: off }, close: false }, read(off, CHUNK));
+      off += CHUNK;
+      log(`   uploaded ${Math.round(off / size * 100)}%`);
+    }
+    return await call('upload_session/finish',
+      { cursor: { session_id, offset: off }, commit: { path: dropboxPath, mode: 'overwrite', autorename: false, mute: true } },
+      read(off, size - off));
+  } finally { fs.closeSync(fd); }
+}
+
+/** Makes "Name.mp4" next to "Name.mkv" (no quality loss), then removes the MKV. Returns the new file, or null. */
+async function convertForPhones(vid, f, state) {
+  if (!MATROSKA.test(f.name)) return null;
+  const c = state.conv[vid];
+  if (c && c.from === f.content_hash && (c.status === 'unsupported' || (c.status === 'error' && c.tries >= 3))) return null;
+  if (Date.now() - RUN_START > CONVERT_BUDGET) { log('   iPhone copy: next run'); return null; }
+  const out = path.join(os.tmpdir(), 'fmz-out-' + vid + '.mp4');
+  try {
+    ensureFfmpeg();
+    const local = await getLocal(f);
+    const info = JSON.parse(execFileSync('ffprobe', ['-v', 'error', '-show_streams', '-of', 'json', local]).toString());
+    const v = info.streams.find(s => s.codec_type === 'video' && !(s.disposition && s.disposition.attached_pic));
+    const audio = info.streams.filter(s => s.codec_type === 'audio');
+    const tenBit = v && /10|12/.test(v.pix_fmt || '');
+    const okVideo = v && ((v.codec_name === 'h264' && !tenBit) || v.codec_name === 'hevc');
+    if (!okVideo) {
+      log(`   iPhone copy not possible (${v ? v.codec_name + (tenBit ? ' 10-bit' : '') : 'no video'})`);
+      state.conv[vid] = { from: f.content_hash, status: 'unsupported' };
+      return null;
+    }
+    log(`   making iPhone copy (${v.codec_name}, ${audio.length} audio)…`);
+    const t0 = Date.now();
+    const args = ['-y', '-v', 'error', '-i', local, '-map', '0:' + v.index];
+    audio.forEach(a => args.push('-map', '0:' + a.index));
+    args.push('-c:v', 'copy');
+    if (v.codec_name === 'hevc') args.push('-tag:v', 'hvc1');
+    audio.forEach((a, k) => {
+      if (['aac', 'mp3'].includes(a.codec_name)) args.push(`-c:a:${k}`, 'copy');
+      else args.push(`-c:a:${k}`, 'aac', `-b:a:${k}`, '192k', `-ac:a:${k}`, '2');
+    });
+    args.push('-sn', '-dn', '-map_chapters', '0', '-movflags', '+faststart', out);
+    execFileSync('ffmpeg', args, { stdio: ['ignore', 'ignore', 'pipe'], maxBuffer: 1 << 24 });
+    const size = fs.statSync(out).size;
+    log(`   converted in ${((Date.now() - t0) / 1000).toFixed(0)}s, uploading ${(size / 1e9).toFixed(2)} GB…`);
+    const md = await uploadLarge(out, f.path_display.replace(/\.[^./]+$/, '.mp4'));
+    if (md.size !== size) throw new Error('upload size mismatch');
+    if (!KEEP_MKV) { await api('files/delete_v2', { path: f.id }); log('   MKV removed (kept in Dropbox trash for 30 days)'); }
+    state.conv[vid] = { from: f.content_hash, to: md.content_hash, status: 'done' };
+    return Object.assign({ '.tag': 'file' }, md);
+  } catch (e) {
+    console.error('   iPhone copy error: ' + e.message.split('\n')[0]);
+    state.conv[vid] = { from: f.content_hash, status: 'error', tries: (c && c.from === f.content_hash ? c.tries || 0 : 0) + 1 };
+    return null;
+  } finally {
+    fs.rmSync(out, { force: true });
+  }
+}
+
+/* An MP4 made from an MKV keeps the MKV's subtitles and pictures */
+let STATE_REF = null;
+const srcHash = (vid, f) => {
+  const c = STATE_REF && STATE_REF.conv[vid];
+  return c && c.to && c.to === f.content_hash ? c.from : f.content_hash;
+};
 
 /* ---------------- Keys: who can open the site ---------------- */
 function setupKeys(users) {
@@ -508,7 +610,8 @@ async function main() {
     if (p) state = JSON.parse(p);
   }
   state.links = state.links || {}; state.subs = state.subs || {}; state.thumbs = state.thumbs || {};
-  state.tmdb = state.tmdb || {}; state.files = state.files || {}; state.added = state.added || {};
+  state.tmdb = state.tmdb || {}; state.files = state.files || {}; state.added = state.added || {}; state.conv = state.conv || {};
+  STATE_REF = state;
   const stateBefore = JSON.stringify(state);
 
   // New key: move every encrypted file over to it
@@ -532,7 +635,17 @@ async function main() {
     for (const [p, g] of byPath) if (p.startsWith(base + '.') && re.test(p) && p.slice(base.length + 1).indexOf('/') < 0) return g;
     return null;
   };
+  // If both "Name.mkv" and "Name.mp4" exist, use the MP4 (it plays on iPhone too)
+  const baseOf = f => rel(f).replace(/\.[^./]+$/, '').toLowerCase();
+  const mp4s = new Map(files.filter(f => /\.(mp4|m4v)$/i.test(f.name)).map(f => [baseOf(f), f]));
+  const hidden = new Set();
+  for (const f of files) if (MATROSKA.test(f.name) && mp4s.has(baseOf(f))) {
+    hidden.add(f.id);
+    const v = sha(baseOf(f)).slice(0, 12), m4 = mp4s.get(baseOf(f));
+    if (!state.conv[v] || !state.conv[v].to) state.conv[v] = { from: f.content_hash, to: m4.content_hash, status: 'done' };
+  }
   for (const f of files) {
+    if (hidden.has(f.id)) continue;
     const r = rel(f), parts = r.split('/');
     const plain = f.name.toLowerCase().replace(/[^a-z]/g, '');
     if (parts.length === 1 && /\.txt$/i.test(f.name) && plain.includes('jolsa') && plain.includes('natok')) { natokFile = f; continue; }
@@ -550,12 +663,37 @@ async function main() {
     if (folder && !g.folder) { g.folder = folder; g.name = folder; }
     g.files.push(f);
   }
-  const vidOf = f => sha(f.id).slice(0, 12);
+  const vidOf = f => sha(rel(f).replace(/\.[^./]+$/, '').toLowerCase()).slice(0, 12);
   const addedAt = f => { const v = vidOf(f); state.added[v] = state.added[v] || Date.parse(f.server_modified || f.client_modified) || Date.now(); return state.added[v]; };
 
   const catalog = { v: 2, movies: [], series: [], jolsa: null };
   const tmdbOn = !!process.env.TMDB_API_KEY;
   if (!tmdbOn) log('No TMDB_API_KEY: using pictures from the videos');
+
+  const newFiles = new Set();
+  /** subtitles → iPhone copy → picture → link, for one movie or episode */
+  async function processVideo(f, vid, entry, needPicture) {
+    const img = sibling(f, IMAGE), side = sibling(f, SUBFILE);
+    let fv = f;
+    if (!QUICK) {
+      state.subs[vid] = await buildSubtitles(vid, f, side, store, state);
+      fv = (await convertForPhones(vid, f, state)) || f;
+      newFiles.add(fv.id);
+      dropLocal(f);
+    } else if (state.subs[vid]) buildKeep(vid, state.subs[vid], store);
+    if (img || needPicture) {
+      const th = QUICK ? store.use('th/' + vid) : await makeThumb(vid, fv, img, store, state);
+      if (th) entry.th = th;
+    }
+    entry.v = await shareLink(fv, state, keys.rotate);
+    const c = state.conv[vid];
+    if (c && c.status === 'unsupported' && c.from === fv.content_hash) entry.ios = false;
+    const subs = subEntries(vid, state.subs[vid], store);
+    if (subs) entry.subs = subs;
+    if (state.subs[vid] && state.subs[vid].ch) entry.ch = state.subs[vid].ch;
+    if (!QUICK) saveState(keys.K, state);
+    return entry;
+  }
 
   /* ---- movies ---- */
   let n = 0;
@@ -564,23 +702,9 @@ async function main() {
     const vid = vidOf(f), nm = parseName(f.name);
     log(`Movie #${n}`);
     const meta = await lookup(state, 'm', nm.title + '|' + (nm.year || ''), () => tmdbMovie(nm.title, nm.year));
-    const img = sibling(f, IMAGE), side = sibling(f, SUBFILE);
-    const m = {
-      id: vid, t: nm.title, y: nm.year ? String(nm.year) : '', add: addedAt(f),
-      v: await shareLink(f, state, keys.rotate)
-    };
+    const m = { id: vid, t: nm.title, y: nm.year ? String(nm.year) : '', add: addedAt(f) };
     if (meta) Object.assign(m, { t: meta.t || m.t, y: meta.y || m.y, rt: meta.rt, g: meta.g, o: meta.o, bd: meta.bd, bdt: meta.bdt, lg: meta.lg, ps: meta.ps });
-    if (img || !m.bd) {
-      const th = QUICK ? store.use('th/' + vid) : await makeThumb(vid, f, img, store, state);
-      if (th) m.th = th;
-    }
-    if (!QUICK) state.subs[vid] = await buildSubtitles(vid, f, side, store, state);
-    else if (state.subs[vid]) buildKeep(vid, state.subs[vid], store);
-    const subs = subEntries(vid, state.subs[vid], store);
-    if (subs) m.subs = subs;
-    if (state.subs[vid] && state.subs[vid].ch) m.ch = state.subs[vid].ch;
-    catalog.movies.push(m);
-    if (!QUICK) saveState(keys.K, state);
+    catalog.movies.push(await processVideo(f, vid, m, !m.bd));
   }
 
   /* ---- web series ---- */
@@ -606,21 +730,10 @@ async function main() {
     });
     for (const { f, n: en, n2 } of list) {
       const vid = vidOf(f), em = !n2 && meta && meta.eps ? meta.eps[en] : null;
-      const ep = { id: vid, n: en, t: em && em.t ? em.t : '', o: em ? em.o : '', rt: em ? em.rt : null, add: addedAt(f), v: await shareLink(f, state, keys.rotate) };
+      const ep = { id: vid, n: en, t: em && em.t ? em.t : '', o: em ? em.o : '', rt: em ? em.rt : null, add: addedAt(f) };
       if (n2) ep.n2 = n2;
       if (em && em.st) ep.st = em.st;
-      const img = sibling(f, IMAGE), side = sibling(f, SUBFILE);
-      if (img || !ep.st) {
-        const th = QUICK ? store.use('th/' + vid) : await makeThumb(vid, f, img, store, state);
-        if (th) ep.th = th;
-      }
-      if (!QUICK) state.subs[vid] = await buildSubtitles(vid, f, side, store, state);
-      else if (state.subs[vid]) buildKeep(vid, state.subs[vid], store);
-      const subs = subEntries(vid, state.subs[vid], store);
-      if (subs) ep.subs = subs;
-      if (state.subs[vid] && state.subs[vid].ch) ep.ch = state.subs[vid].ch;
-      s.eps.push(ep);
-      if (!QUICK) saveState(keys.K, state);
+      s.eps.push(await processVideo(f, vid, ep, !ep.st));
     }
     s.add = Math.max(...s.eps.map(e => e.add));
     if (cover) {
@@ -645,9 +758,10 @@ async function main() {
     for (const logical of Object.keys(state.files)) if (!store.used.has(logical)) store.drop(logical);
     const liveVids = new Set(files.map(vidOf));
     for (const v of Object.keys(state.subs)) if (!liveVids.has(v)) delete state.subs[v];
+    for (const v of Object.keys(state.conv)) if (!liveVids.has(v)) delete state.conv[v];
     for (const v of Object.keys(state.thumbs)) if (!liveVids.has(v) && !v.startsWith('cv/')) delete state.thumbs[v];
   }
-  const live = new Set(files.map(f => f.id));
+  const live = new Set(files.map(f => f.id).concat([...newFiles]));
   for (const id of Object.keys(state.links)) if (!live.has(id)) delete state.links[id];
   const valid = new Set(Object.keys(state.files).map(l => store.id(l) + '.bin'));
   for (const f of fs.readdirSync(FILES)) if (!valid.has(f)) fs.rmSync(path.join(FILES, f), { force: true });
