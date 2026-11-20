@@ -16,83 +16,143 @@
   const SIZES = [['S', .75], ['M', 1], ['L', 1.25], ['XL', 1.5], ['XXL', 1.85]];
   const SPEEDS = [.75, 1, 1.25, 1.5, 2];
 
-  let item = null, itemId = '', srcUrl = '', hideTimer = 0, lastSave = 0, toastTimer = 0, osdTimer = 0;
+  let item = null, itemId = '', srcUrl = '', hideTimer = 0, lastSave = 0, toastTimer = 0, osdTimer = 0, cat = null, bound = false;
   const sub = { sources: [], opts: [], cur: null, track: null, cueObjs: [], texts: [], pending: null, tr: null, offset: 0, scale: LS.get('fmz-sub-scale', 1) };
+  let resumeFrom = null;
+  const nx = { ep: null, shown: false, cancelled: false, timer: 0, left: 0 };
+  B.eps = $('#bEps');
 
   init();
 
   async function init() {
-    itemId = new URLSearchParams(location.search).get('id') || 'channel1';
-    let data;
-    try { data = await FMZ.loadData(); }
-    catch (e) { $('#title').textContent = 'Could not load the movie list. Please refresh.'; return; }
-    FMZ.renderNav(data, itemId);
-    renderMore(data);
-    item = data[itemId];
-    if (!item) { $('#title').textContent = 'Movie not found'; return; }
-    item.id = itemId;
-    document.title = (item.title || itemId) + " · Faruk's Movie Zone";
-    $('#title').textContent = item.title || itemId;
-    if (FMZ.isLinks(item)) return renderLinks();
+    const q = new URLSearchParams(location.search);
+    try { cat = await FMZ.loadCatalog(); }
+    catch (e) { $('#title').textContent = 'Could not open the movie list. Please refresh.'; return; }
+    FMZ.renderNav(cat, '');
+    const it = findItem(q.get('v'));
+    if (!it) { $('#title').textContent = 'This video is not available any more.'; renderSide(null); return; }
     setupPlayer();
+    loadItem(it, q.get('t') === '0');
   }
 
-  function renderMore(data) {
-    const others = FMZ.items(data).filter(it => it.id !== itemId);
-    $('#more').innerHTML = others.map(it =>
-      `<a class="mini" href="${FMZ.watchUrl(it.id)}">${FMZ.thumbHTML(it)}<span class="mini-title">${FMZ.esc(it.title || it.id)}</span></a>`).join('')
-      || '<p class="card-sub">Nothing else yet.</p>';
+  /** A movie, or an episode with .series */
+  function findItem(id) {
+    if (!id) return null;
+    return cat.movies.find(m => m.id === id) || cat.series.reduce((f, s) => f || s.eps.find(e => e.id === id), null);
   }
+  const titleOf = it => it.series ? `${it.series.t} · Episode ${it.n}` : it.t;
 
-  function renderLinks() {
-    const links = (item.links || []).filter(l => l && (l.url || l.link));
-    const box = $('#links');
-    $('#epTop').hidden = false;
-    $('#meta').innerHTML = `<span class="chip gold">${links.length} videos</span>`;
-    if (!links.length) { box.innerHTML = '<p class="card-sub">No videos yet.</p>'; return; }
-    $('#frameBox').hidden = false;
-    box.innerHTML = links.map((l, i) =>
-      `<button class="link-btn" type="button" data-i="${i}"><span class="play">${FMZ.PLAY_SVG}</span><span>${FMZ.esc(l.title || l.label || 'Video ' + (i + 1))}</span></button>`).join('');
-    const frame = $('#frame'), fp = $('#framePlayer');
-    const saved = LS.get('fmz-ep:' + itemId, 0);
-    function play(i, focusFrame) {
-      const l = links[i]; if (!l) return;
-      const url = l.url || l.link;
-      if (frame.src !== url) frame.src = url;
-      $('#frameOpen').href = url;
-      $('#frameNow').textContent = l.title || '';
-      box.querySelectorAll('.link-btn').forEach((b, k) => b.classList.toggle('active', k === i));
-      LS.set('fmz-ep:' + itemId, i);
-      if (focusFrame) fp.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  /** Loads a movie or episode into the player (also used for "next episode" without reloading the page) */
+  function loadItem(it, fromStart) {
+    if (item) saveProgress();
+    item = it; itemId = it.id;
+    history.replaceState(null, '', FMZ.watchUrl(it.id));
+    document.title = titleOf(it) + " · Faruk's Movie Zone";
+    $('#kicker').textContent = it.series ? it.series.t : (it.y || '');
+    $('#title').textContent = it.series ? `Episode ${it.n}${it.t ? ' · ' + it.t : ''}` : it.t;
+    if (it.series) FMZ.setSeriesLast(it.series.id, it.id);
+    document.body.dataset.back = it.series ? FMZ.seriesUrl(it.series.id) : 'index.html';
+    FMZ.renderNav(cat, it.series ? 'series' : 'movies');
+    renderSide(it);
+    B.eps.hidden = !it.series;
+
+    // reset
+    hideNext(); nx.cancelled = false;
+    nx.ep = it.series ? it.series.eps[it.series.eps.findIndex(e => e.id === it.id) + 1] || null : null;
+    $('#errorBox').hidden = true;
+    resumeFrom = fromStart ? 0 : null;
+    sub.offset = LS.get('fmz-sub-offset:' + itemId, 0);
+    if (sub.tr) { sub.tr.stop(); sub.tr = null; }
+    sub.sources = []; sub.opts = []; sub.cur = null; buildCues(); setTrStatus(null);
+
+    srcUrl = FMZ.directLink(it.v);
+    const pic = FMZ.picture(it, true);
+    video.removeAttribute('poster');
+    if (pic.src) video.poster = pic.src; else if (pic.fid) FMZ.fileURL(pic.fid).then(u => { if (item === it) video.poster = u; }).catch(() => { });
+    video.src = srcUrl;
+    $('#errVlc').href = 'vlc://' + srcUrl;
+    loadSubtitles();
+    setupMediaSession();
+  }
+  function renderSide(it) {
+    const box = $('#more');
+    if (it && it.series) {
+      $('#sideTitle').textContent = 'Episodes';
+      box.innerHTML = it.series.eps.map(e => {
+        const p = FMZ.getProgress(e.id), w = FMZ.isWatched(e.id), pct = p && p.d ? Math.min(100, p.t / p.d * 100) : 0;
+        return `<a class="mini${e.id === it.id ? ' current' : ''}" href="${FMZ.watchUrl(e.id)}" data-ep="${e.id}">
+          <div class="thumb">${FMZ.imgTag(e, false, 'mini-pic')}${pct ? `<span class="bar"><i style="width:${pct}%"></i></span>` : ''}${e.id === it.id ? '<span class="now">▶ Playing</span>' : ''}</div>
+          <span class="mini-title"><b>Episode ${e.n}</b>${e.t ? ' · ' + FMZ.esc(e.t) : ''}${w ? ' <em class="ok">✓</em>' : ''}</span></a>`;
+      }).join('');
+      box.querySelectorAll('[data-ep]').forEach(a => a.addEventListener('click', e => {
+        const ep = findItem(a.dataset.ep);
+        if (ep && !e.ctrlKey && !e.metaKey) { e.preventDefault(); loadItem(ep); video.play().catch(() => { }); player.focus({ preventScroll: true }); }
+      }));
+    } else {
+      $('#sideTitle').textContent = 'More to watch';
+      const others = cat.movies.filter(m => !it || m.id !== it.id).concat(cat.series).sort((a, b) => (b.add || 0) - (a.add || 0));
+      box.innerHTML = others.map(o => `<a class="mini" href="${o.eps ? FMZ.seriesUrl(o.id) : FMZ.watchUrl(o.id)}">
+          <div class="thumb">${FMZ.imgTag(o, false, 'mini-pic')}<div class="mini-on">${FMZ.titleArt(o, 'mini-logo')}</div></div>
+          <span class="mini-title">${FMZ.esc(o.t)}<small>${o.eps ? o.eps.length + ' episodes' : [o.y, FMZ.fmtRuntime(o.rt)].filter(Boolean).join(' · ')}</small></span></a>`).join('')
+        || '<p class="card-sub">Nothing else yet.</p>';
     }
-    box.addEventListener('click', e => { const b = e.target.closest('.link-btn'); if (b) play(+b.dataset.i, true); });
-    $('#frameFS').onclick = () => {
-      if (fp.requestFullscreen) fp.requestFullscreen().catch(() => { });
-      else if (fp.webkitRequestFullscreen) fp.webkitRequestFullscreen();
-    };
-    play(saved < links.length ? saved : 0, false);
-    window.dispatchEvent(new Event('resize'));   // re-fit the player now that the buttons are shown
-    const act = box.querySelector('.link-btn.active'); act && act.focus({ preventScroll: true });
+    FMZ.fillImages(box);
+  }
+
+  /* ================= Next episode ================= */
+  function checkNext() {
+    if (!nx.ep || nx.cancelled || nx.shown) return;
+    const d = video.duration, t = video.currentTime;
+    if (isFinite(d) && d > 45 && d - t <= 20) showNext();
+  }
+  function showNext() {
+    nx.shown = true; nx.left = 10;
+    const e = nx.ep;
+    $('#nextTitle').textContent = `Episode ${e.n}${e.t ? ' · ' + e.t : ''}`;
+    $('#nextImg').innerHTML = FMZ.imgTag(e, false, 'next-pic');
+    FMZ.fillImages($('#nextImg'));
+    $('#nextCard').hidden = false;
+    tickNext();
+    nx.timer = setInterval(tickNext, 1000);
+    if (FMZ.isTV) $('#nextPlay').focus({ preventScroll: true });
+  }
+  function tickNext() {
+    $('#nextLabel').textContent = `Next episode in ${nx.left}s`;
+    if (nx.left-- <= 0) playNext();
+  }
+  function hideNext() { clearInterval(nx.timer); nx.shown = false; $('#nextCard').hidden = true; }
+  function playNext() {
+    const e = nx.ep; hideNext();
+    if (!e) return;
+    FMZ.setProgress(itemId, video.duration, video.duration);   // mark this one watched
+    loadItem(e, true);
+    const p = video.play(); if (p) p.catch(() => { });
+    player.focus({ preventScroll: true });
+  }
+  function openEpisodes() {
+    const s = item.series;
+    openMenu('Episodes', s.eps.map(e => ({
+      label: `Episode ${e.n}${e.t ? ' · ' + e.t : ''}`, active: e.id === item.id,
+      value: FMZ.isWatched(e.id) ? '✓' : '',
+      onClick: () => { closeMenu(B.eps); if (e.id !== item.id) { loadItem(e); video.play().catch(() => { }); } }
+    })));
   }
 
   /* ================= Player setup ================= */
   function setupPlayer() {
     $('#playerBox').hidden = false;
     if (matchMedia('(hover:hover)').matches && !FMZ.isTV) $('#keys').hidden = false;
-    srcUrl = FMZ.directLink(item.videoLink);
-    sub.offset = LS.get('fmz-sub-offset:' + itemId, 0);
     player.style.setProperty('--sub-scale', sub.scale);
-
     sub.track = video.addTextTrack('subtitles', 'FMZ', 'bn');
     sub.track.mode = 'hidden';
     sub.track.addEventListener('cuechange', renderSubs);
-
-    if (item.poster) video.poster = FMZ.directLink(item.poster);
     video.volume = LS.get('fmz-vol', 1);
-    video.src = srcUrl;
     bindEvents();
-    loadSubtitles();
-    setupMediaSession();
+    $('#nextPlay').addEventListener('click', playNext);
+    $('#nextCancel').addEventListener('click', () => { nx.cancelled = true; hideNext(); player.focus({ preventScroll: true }); });
+    B.eps.addEventListener('click', () => toggleMenu('eps', openEpisodes));
+    video.addEventListener('timeupdate', checkNext);
+    video.addEventListener('ended', () => { if (nx.ep && !nx.cancelled) playNext(); else if (item) FMZ.setProgress(itemId, video.duration, video.duration); });
     player.focus({ preventScroll: true });
     showControls();
   }
@@ -173,7 +233,6 @@
     window.addEventListener('pagehide', saveProgress);
     document.addEventListener('visibilitychange', () => { if (document.hidden) saveProgress(); });
 
-    $('#errVlc').href = 'vlc://' + srcUrl;
     $('#errCopy').addEventListener('click', copyLink);
     $('#errRetry').addEventListener('click', () => { $('#errorBox').hidden = true; video.load(); video.play().catch(() => { }); });
     $('#toastBtn').addEventListener('click', () => { const f = $('#toastBtn')._fn; hideToast(); f && f(); });
@@ -230,7 +289,7 @@
   function onMeta() {
     onTime(); onVolume();
     setupAudioTracks();
-    const p = FMZ.getProgress(itemId);
+    const p = resumeFrom === 0 ? null : FMZ.getProgress(itemId);
     if (p && p.t > 15 && p.t < video.duration - 60) {
       video.currentTime = p.t;
       toast('Resumed from ' + FMZ.fmtTime(p.t), 'Start over', () => { video.currentTime = 0; });
@@ -387,18 +446,20 @@
 
   /* ================= Subtitles ================= */
   async function loadSubtitles() {
-    const list = FMZ.subtitleList(item);
+    const me = item;
+    const list = (item.subs || []).map(s => ({ f: s.f, url: s.f, label: s.l || '', lang: s.lang || '' }));
+    const hasBn = list.some(s => s.lang === 'bn');
+    list.forEach(s => { s.auto = !hasBn; });          // translate in the browser only if no Bengali file exists
     if (!list.length) { B.cc.classList.remove('on'); renderMeta(); return; }
     sub.loading = true;
     const res = await Promise.all(list.map(async s => {
       try {
-        const r = await fetch(s.url);
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        const cues = S.parse(await r.text());
+        const cues = S.parse(await FMZ.fileText(s.f));
         if (!cues.length) throw new Error('empty');
         return Object.assign({}, s, { cues, isBn: S.isBengali(cues) });
-      } catch (e) { console.warn('Subtitle failed:', s.url, e); return null; }
+      } catch (e) { console.warn('Subtitle failed', e); return null; }
     }));
+    if (me !== item) return;
     sub.loading = false;
     sub.sources = res.filter(Boolean);
     sub.opts = buildOpts();
@@ -430,8 +491,9 @@
     const chips = [];
     if (sub.opts.some(o => o.bn && !o.tr)) chips.push('<span class="chip gold">বাংলা সাবটাইটেল</span>');
     else if (sub.opts.some(o => o.tr)) chips.push('<span class="chip gold">বাংলা অটো অনুবাদ</span>');
-    if (item.year) chips.push(`<span class="chip">${FMZ.esc(item.year)}</span>`);
-    if (item.info) chips.push(`<span class="chip">${FMZ.esc(item.info)}</span>`);
+    const base = item.series || item;
+    if (!item.series && item.rt) chips.push(`<span class="chip">${FMZ.esc(FMZ.fmtRuntime(item.rt))}</span>`);
+    if (base.g && base.g.length) chips.push(`<span class="chip">${FMZ.esc(base.g.join(' · '))}</span>`);
     $('#meta').innerHTML = chips.join('');
   }
 
@@ -517,7 +579,7 @@
     const blob = new Blob([S.toVTT(src.cues, sub.texts)], { type: 'text/vtt' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = (item.title || itemId).replace(/[^\p{L}\p{N}]+/gu, '_') + '_bn.vtt';
+    a.download = titleOf(item).replace(/[^\p{L}\p{N}]+/gu, '_') + '_bn.vtt';
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(a.href), 5000);
     closeMenu(B.set);
@@ -535,7 +597,12 @@
 
   /* ================= Keyboard + TV remote ================= */
   function onKey(e) {
-    if (!item || FMZ.isLinks(item)) return;
+    if (!item) return;
+    if (!$('#nextCard').hidden && $('#nextCard').contains(document.activeElement) && FMZ.keyDir(e)) {
+      const d = FMZ.keyDir(e);
+      if (d === 'left' || d === 'right') { e.preventDefault(); e.stopPropagation(); (d === 'left' ? $('#nextPlay') : $('#nextCancel')).focus(); }
+      return;
+    }
     const t = e.target;
     if (t && t.matches && t.matches('input[type=text],textarea')) return;
     const a = document.activeElement;
@@ -576,7 +643,7 @@
     }
 
     if (inCtl && a.tagName === 'BUTTON' && (k === 'Enter' || k === ' ')) return;   // the button handles it
-    if ($('#toast').contains(a)) return;
+    if ($('#toast').contains(a) || $('#nextCard').contains(a)) return;
     switch (k) {
       case ' ': case 'k': case 'K': case 'Enter': case 'MediaPlayPause': stop(); togglePlay(); showControls(); break;
       case 'MediaPlay': stop(); video.play().catch(() => { }); break;
@@ -592,7 +659,8 @@
   function setupMediaSession() {
     if (!('mediaSession' in navigator)) return;
     try {
-      navigator.mediaSession.metadata = new MediaMetadata({ title: item.title || '', artist: "Faruk's Movie Zone", artwork: item.poster ? [{ src: FMZ.directLink(item.poster) }] : [] });
+      const pic = FMZ.picture(item, false);
+      navigator.mediaSession.metadata = new MediaMetadata({ title: titleOf(item), artist: "Faruk's Movie Zone", artwork: pic.src ? [{ src: pic.src }] : [] });
       [['play', () => video.play()], ['pause', () => video.pause()], ['seekbackward', () => skip(-STEP)], ['seekforward', () => skip(STEP)]]
         .forEach(([a, f]) => { try { navigator.mediaSession.setActionHandler(a, f); } catch (e) { } });
     } catch (e) { }

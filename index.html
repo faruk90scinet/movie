@@ -3,64 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+  <meta name="googlebot" content="noindex, nofollow">
+  <meta name="referrer" content="no-referrer">
   <meta name="theme-color" content="#07070b">
   <title>Faruk's Movie Zone</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=11">
+  <link rel="preconnect" href="https://image.tmdb.org">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=20">
 </head>
 <body data-page="home">
   <header class="topbar">
     <a class="brand" href="index.html"><b>FMZ</b><span>Faruk's Movie Zone</span></a>
-    <nav class="nav" id="nav" aria-label="Channels"></nav>
+    <nav class="nav" id="nav" aria-label="Menu"></nav>
   </header>
 
-  <main>
-    <section id="continue" hidden>
-      <h2 class="section-title">Continue watching</h2>
-      <div class="grid" id="continueGrid"></div>
-      <div style="height:2rem"></div>
-    </section>
-    <section>
-      <h2 class="section-title">All movies</h2>
-      <div class="grid" id="grid"><p class="empty">Loading…</p></div>
-    </section>
-  </main>
+  <main id="app" class="app"><p class="empty">Loading…</p></main>
 
-  <footer class="footer">© Faruk's Movie Zone</footer>
+  <div class="page-toast" id="pageToast" hidden></div>
 
-  <script src="common.js?v=11"></script>
-  <script>
-    (async function () {
-      const grid = document.getElementById('grid');
-      let data;
-      try { data = await FMZ.loadData(); }
-      catch (e) { grid.innerHTML = '<p class="empty">Could not load the movie list. Please refresh.</p>'; return; }
-
-      FMZ.renderNav(data, null);
-      const items = FMZ.items(data);
-      const card = it => {
-        const links = FMZ.isLinks(it);
-        const hasSub = !links && FMZ.subtitleList(it).length;
-        const tag = links ? 'Episodes' : hasSub ? 'বাংলা সাবটাইটেল' : '';
-        const p = FMZ.getProgress(it.id);
-        const sub = links ? `${(it.links || []).length} videos` : p ? `${FMZ.fmtTime(p.t)} watched` : (it.nav || '');
-        return `<a class="card" href="${FMZ.watchUrl(it.id)}">${FMZ.thumbHTML(it, { tag })}
-          <div class="card-title">${FMZ.esc(it.title || it.id)}</div>
-          <div class="card-sub">${FMZ.esc(sub)}&nbsp;</div></a>`;
-      };
-      grid.innerHTML = items.length ? items.map(card).join('') : '<p class="empty">No movies yet.</p>';
-
-      const watching = items.filter(it => FMZ.getProgress(it.id))
-        .sort((a, b) => FMZ.getProgress(b.id).at - FMZ.getProgress(a.id).at).slice(0, 4);
-      if (watching.length) {
-        document.getElementById('continueGrid').innerHTML = watching.map(card).join('');
-        document.getElementById('continue').hidden = false;
-      }
-      // TV: put the remote's focus on the first movie straight away
-      if (FMZ.isTV) { const first = document.querySelector('.card'); first && first.focus(); }
-    })();
-  </script>
+  <script src="common.js?v=20"></script>
+  <script src="home.js?v=20"></script>
 </body>
 </html>

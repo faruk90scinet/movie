@@ -1,4 +1,4 @@
-/* Faruk's Movie Zone — shared helpers: data, links, saved progress, TV remote navigation */
+/* Faruk's Movie Zone — shared helpers: password lock, movie list, watch history, TV remote navigation */
 (function () {
   'use strict';
   const FMZ = window.FMZ = {};
@@ -51,14 +51,143 @@
 
   FMZ.esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
-  FMZ.loadData = async function () {
-    const r = await fetch('movie-data.json', { cache: 'no-cache' });
-    if (!r.ok) throw new Error('movie-data.json: HTTP ' + r.status);
+  /* ================= Locked library: password → key → movie list ================= */
+  const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+  const toB64 = buf => btoa(String.fromCharCode.apply(null, new Uint8Array(buf)));
+  const subtle = window.crypto && window.crypto.subtle;
+  let KEY = null, catalogPromise = null;
+
+  async function fetchKeys() {
+    const r = await fetch('data/keys.json', { cache: 'no-cache' });
+    if (!r.ok) throw new Error('keys ' + r.status);
     return r.json();
+  }
+  async function tryKek(rawKek, keys) {
+    const kek = await subtle.importKey('raw', rawKek, 'AES-GCM', false, ['decrypt']);
+    for (const e of keys.entries) {
+      const blob = b64(e);
+      try {
+        const pt = await subtle.decrypt({ name: 'AES-GCM', iv: blob.subarray(0, 12) }, kek, blob.subarray(12));
+        const o = JSON.parse(new TextDecoder().decode(pt));
+        return { key: await subtle.importKey('raw', b64(o.k), 'AES-GCM', false, ['decrypt']), name: o.n };
+      } catch (err) { }
+    }
+    return null;
+  }
+  async function decrypt(buf) {
+    const u = new Uint8Array(buf);
+    return subtle.decrypt({ name: 'AES-GCM', iv: u.subarray(0, 12) }, KEY, u.subarray(12));
+  }
+
+  /** Shows the password screen until a correct password is entered. Resolves with {key, name}. */
+  function askPassword(keys, message) {
+    return new Promise(resolve => {
+      const box = document.createElement('div');
+      box.className = 'login';
+      box.innerHTML = `<form class="login-card" autocomplete="off">
+          <div class="login-logo"><b>FMZ</b>Faruk's Movie Zone</div>
+          <h1>Enter your password</h1>
+          <p class="login-msg">${FMZ.esc(message || 'Ask Faruk for a password. You only need it once on this device.')}</p>
+          <div class="login-field"><input id="loginPw" type="password" inputmode="text" autocomplete="current-password" placeholder="Password" aria-label="Password">
+          <button type="button" class="login-eye" aria-label="Show password">👁</button></div>
+          <button class="btn primary login-go" type="submit">Enter</button>
+          <p class="login-err" hidden></p>
+        </form>`;
+      document.body.appendChild(box);
+      document.documentElement.classList.add('locked');
+      const input = box.querySelector('input'), err = box.querySelector('.login-err'), go = box.querySelector('.login-go');
+      box.querySelector('.login-eye').onclick = () => { input.type = input.type === 'password' ? 'text' : 'password'; input.focus(); };
+      box.querySelector('form').onsubmit = async e => {
+        e.preventDefault();
+        const pw = input.value.trim();
+        if (!pw) return;
+        go.disabled = true; go.textContent = 'Checking…'; err.hidden = true;
+        try {
+          const base = await subtle.importKey('raw', new TextEncoder().encode(pw), 'PBKDF2', false, ['deriveBits']);
+          const raw = await subtle.deriveBits({ name: 'PBKDF2', salt: b64(keys.salt), iterations: keys.iter, hash: 'SHA-256' }, base, 256);
+          const ok = await tryKek(raw, keys);
+          if (ok) {
+            try { localStorage.setItem('fmz-kek', toB64(raw)); localStorage.setItem('fmz-name', ok.name || ''); } catch (x) { }
+            box.remove(); document.documentElement.classList.remove('locked');
+            FMZ.welcome = ok.name;
+            resolve(ok); return;
+          }
+          err.textContent = 'Wrong password. Please try again.';
+        } catch (x) { err.textContent = 'Something went wrong. Please try again.'; }
+        err.hidden = false; go.disabled = false; go.textContent = 'Enter'; input.select();
+      };
+      setTimeout(() => input.focus(), 50);
+    });
+  }
+
+  FMZ.unlock = async function () {
+    if (!subtle) throw new Error('This browser is too old or the page is not on https.');
+    const keys = await fetchKeys();
+    let saved = null;
+    try { saved = localStorage.getItem('fmz-kek'); } catch (e) { }
+    if (saved) {
+      const ok = await tryKek(b64(saved), keys);
+      if (ok) return ok;
+      try { localStorage.removeItem('fmz-kek'); } catch (e) { }
+      return askPassword(keys, 'Your access has changed. Please enter your password again.');
+    }
+    return askPassword(keys);
   };
-  FMZ.items = data => Object.keys(data).map(id => Object.assign({ id }, data[id]));
-  FMZ.watchUrl = id => 'watch.html?id=' + encodeURIComponent(id);
-  FMZ.isLinks = item => item && (item.type === 'links' || Array.isArray(item.links));
+
+  /** The decrypted movie list: {movies:[…], series:[…], jolsa:{…}} */
+  FMZ.loadCatalog = function () {
+    if (!catalogPromise) catalogPromise = (async () => {
+      const ok = await FMZ.unlock();
+      KEY = ok.key; FMZ.userName = ok.name;
+      const r = await fetch('data/c.bin', { cache: 'no-cache' });
+      if (!r.ok) throw new Error('list ' + r.status);
+      const cat = JSON.parse(new TextDecoder().decode(await decrypt(await r.arrayBuffer())));
+      cat.movies = cat.movies || []; cat.series = cat.series || [];
+      cat.series.forEach(s => s.eps.forEach(e => { e.series = s; }));
+      return cat;
+    })();
+    return catalogPromise;
+  };
+
+  const fileCache = {};
+  FMZ.fileBytes = function (fid) {
+    if (!fileCache[fid]) fileCache[fid] = fetch('data/f/' + fid + '.bin').then(r => { if (!r.ok) throw new Error('file ' + r.status); return r.arrayBuffer(); }).then(decrypt);
+    return fileCache[fid];
+  };
+  FMZ.fileText = async fid => new TextDecoder().decode(await FMZ.fileBytes(fid));
+  const urlCache = {};
+  FMZ.fileURL = fid => urlCache[fid] || (urlCache[fid] = FMZ.fileBytes(fid).then(b => URL.createObjectURL(new Blob([b], { type: 'image/jpeg' }))));
+
+  /** Fills every <img data-fid> / [data-bgfid] inside an element with its decrypted picture */
+  FMZ.fillImages = function (scope) {
+    (scope || document).querySelectorAll('[data-fid]').forEach(el => {
+      const fid = el.dataset.fid; el.removeAttribute('data-fid');
+      FMZ.fileURL(fid).then(u => { el.src = u; el.classList.add('ready'); }).catch(() => { });
+    });
+  };
+
+  const TMDB_IMG = 'https://image.tmdb.org/t/p/';
+  FMZ.tmdbImg = (p, size) => p ? TMDB_IMG + (size || 'w780') + p : '';
+
+  /** Picture for a movie / series / episode: {src} or {fid} */
+  FMZ.picture = function (it, big) {
+    if (it.bd) return { src: FMZ.tmdbImg(it.bd, big ? 'w1280' : 'w780') };
+    if (it.st) return { src: FMZ.tmdbImg(it.st, big ? 'original' : 'w500') };
+    if (it.th) return { fid: it.th };
+    if (it.series) return FMZ.picture(it.series, big);
+    return {};
+  };
+  FMZ.imgTag = function (it, big, cls) {
+    const p = FMZ.picture(it, big);
+    if (p.src) return `<img class="${cls || ''} ready" src="${FMZ.esc(p.src)}" alt="" loading="lazy">`;
+    if (p.fid) return `<img class="${cls || ''}" data-fid="${p.fid}" alt="">`;
+    return `<div class="${cls || ''} noart" style="--h:${FMZ.hue(it.t || it.id)}"></div>`;
+  };
+  /** Title shown on top of a picture: the official logo if there is one, otherwise big letters */
+  FMZ.titleArt = function (it, cls) {
+    if (it.lg) return `<img class="${cls || 'logo'}" src="${FMZ.esc(FMZ.tmdbImg(it.lg, 'w500'))}" alt="${FMZ.esc(it.t)}" loading="lazy">`;
+    return `<span class="${cls ? cls + '-text' : 'logo-text'}">${FMZ.esc(it.t || '')}</span>`;
+  };
 
   /** Turns a Dropbox share link into a direct stream link. Other links pass through. */
   FMZ.directLink = function (u) {
@@ -73,61 +202,73 @@
     } catch (e) { return u; }
   };
 
-  /** All subtitle files for an entry: new "subtitles" list plus the older single-link fields. */
-  FMZ.subtitleList = function (item) {
-    const out = [], seen = new Set();
-    const add = (url, label, lang, auto) => {
-      url = FMZ.directLink(url);
-      if (url && !seen.has(url)) { seen.add(url); out.push({ url, label: label || '', lang: lang || '', auto: auto !== false }); }
-    };
-    (Array.isArray(item.subtitles) ? item.subtitles : []).forEach(s => {
-      if (typeof s === 'string') add(s); else if (s) add(s.url || s.link, s.label, s.lang, s.auto);
-    });
-    add(item.subtitleBnLink, '', 'bn');
-    add(item.subtitleEnLink, 'English', 'en');
-    return out;
-  };
-
   FMZ.fmtTime = function (t) {
     if (!isFinite(t) || t < 0) t = 0;
     t = Math.floor(t);
     const h = Math.floor(t / 3600), m = Math.floor(t % 3600 / 60), s = t % 60;
     return (h ? h + ':' + String(m).padStart(2, '0') : m) + ':' + String(s).padStart(2, '0');
   };
+  FMZ.fmtRuntime = min => !min ? '' : (min >= 60 ? Math.floor(min / 60) + 'h ' + String(min % 60).padStart(2, '0') + 'm' : min + ' min');
+  FMZ.fmtLeft = p => { const s = Math.max(0, p.d - p.t), m = Math.round(s / 60); return m >= 60 ? Math.floor(m / 60) + 'h ' + (m % 60) + 'm left' : m + ' min left'; };
+  FMZ.isNew = it => it.add && Date.now() - it.add < 7 * 86400000;
 
-  /* ---- saved watch position ---- */
-  const PKEY = 'fmz-progress';
-  const readAll = () => { try { return JSON.parse(localStorage.getItem(PKEY)) || {}; } catch (e) { return {}; } };
-  FMZ.getProgress = id => readAll()[id] || null;
+  /* ---- watch history (kept on this device) ---- */
+  const LSget = (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } };
+  const LSset = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { } };
+  FMZ.getProgress = id => LSget('fmz-progress', {})[id] || null;
+  FMZ.isWatched = id => !!LSget('fmz-watched', {})[id];
   FMZ.setProgress = function (id, t, d) {
-    const all = readAll();
-    if (!d || t < 15 || t > d - 60) delete all[id]; else all[id] = { t: Math.round(t), d: Math.round(d), at: Date.now() };
-    try { localStorage.setItem(PKEY, JSON.stringify(all)); } catch (e) { }
+    const all = LSget('fmz-progress', {});
+    if (d && t > d - Math.min(90, d * 0.05)) {            // finished
+      delete all[id];
+      const w = LSget('fmz-watched', {}); w[id] = Date.now(); LSset('fmz-watched', w);
+    } else if (!d || t < 15) delete all[id];
+    else all[id] = { t: Math.round(t), d: Math.round(d), at: Date.now() };
+    LSset('fmz-progress', all);
+  };
+  FMZ.setSeriesLast = (sid, epId) => { const a = LSget('fmz-series', {}); a[sid] = { ep: epId, at: Date.now() }; LSset('fmz-series', a); };
+  FMZ.getSeriesLast = sid => LSget('fmz-series', {})[sid] || null;
+
+  /** The episode to play next for a series: the one in progress, else the next unwatched one */
+  FMZ.seriesTarget = function (s) {
+    const last = FMZ.getSeriesLast(s.id);
+    if (last) {
+      const i = s.eps.findIndex(e => e.id === last.ep);
+      if (i >= 0) {
+        if (FMZ.getProgress(s.eps[i].id)) return { ep: s.eps[i], resume: true, at: last.at };
+        if (!FMZ.isWatched(s.eps[i].id)) return { ep: s.eps[i], resume: false, at: last.at, upNext: true };
+        const next = s.eps.slice(i + 1).find(e => !FMZ.isWatched(e.id)) || s.eps[i + 1];
+        if (next) return { ep: next, resume: false, at: last.at, upNext: true };
+        return { ep: s.eps[0], resume: false, at: last.at, done: true };
+      }
+    }
+    return { ep: s.eps.find(e => !FMZ.isWatched(e.id)) || s.eps[0], resume: false };
   };
 
-  /* ---- shared markup ---- */
+  /** Everything in progress, newest first */
+  FMZ.continueList = function (cat) {
+    const out = [];
+    cat.movies.forEach(m => { const p = FMZ.getProgress(m.id); if (p) out.push({ kind: 'movie', it: m, p, at: p.at }); });
+    cat.series.forEach(s => {
+      const t = FMZ.seriesTarget(s);
+      if (t.at && !t.done) out.push({ kind: 'series', it: s, ep: t.ep, p: FMZ.getProgress(t.ep.id), at: t.at, upNext: t.upNext });
+    });
+    return out.sort((a, b) => b.at - a.at);
+  };
+
+  FMZ.watchUrl = id => 'watch.html?v=' + encodeURIComponent(id);
+  FMZ.seriesUrl = id => 'index.html#s/' + encodeURIComponent(id);
+  FMZ.hue = s => { let h = 0; for (const c of String(s)) h = (h * 31 + c.charCodeAt(0)) % 360; return h; };
   const PLAY = '<svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>';
   FMZ.PLAY_SVG = PLAY;
-  FMZ.hue = s => { let h = 0; for (const c of String(s)) h = (h * 31 + c.charCodeAt(0)) % 360; return h; };
-  FMZ.initials = s => String(s).replace(/[^\p{L}\p{N} ]/gu, ' ').trim().split(/\s+/).slice(0, 2).map(w => [...w][0] || '').join('').toUpperCase();
 
-  FMZ.thumbHTML = function (item, opts = {}) {
-    const p = FMZ.getProgress(item.id);
-    const pct = p && p.d ? Math.min(100, p.t / p.d * 100) : 0;
-    const art = item.poster
-      ? `<img src="${FMZ.esc(FMZ.directLink(item.poster))}" alt="" loading="lazy">`
-      : `<div class="art" style="--h:${FMZ.hue(item.title || item.id)}"><span>${FMZ.esc(FMZ.initials(item.title || ''))}</span></div>`;
-    const tag = opts.tag ? `<span class="tag">${FMZ.esc(opts.tag)}</span>` : '';
-    return `<div class="thumb">${art}${tag}<span class="play">${PLAY}</span>${pct ? `<span class="bar"><i style="width:${pct}%"></i></span>` : ''}</div>`;
-  };
-
-  FMZ.renderNav = function (data, activeId) {
+  /** Top menu: Home · Movies · Web Series · জলসার নাটক */
+  FMZ.renderNav = function (cat, active) {
     const nav = document.getElementById('nav');
     if (!nav) return;
-    nav.innerHTML = FMZ.items(data).map(it =>
-      `<a href="${FMZ.watchUrl(it.id)}"${it.id === activeId ? ' class="active" aria-current="page"' : ''}>${FMZ.esc(it.nav || it.title || it.id)}</a>`).join('');
-    const a = nav.querySelector('.active');
-    if (a) a.scrollIntoView({ block: 'nearest', inline: 'center' });
+    const items = [['home', 'index.html', 'Home'], ['movies', 'index.html#movies', 'Movies'], ['series', 'index.html#series', 'Web Series']];
+    if (cat && cat.jolsa) items.push(['jolsa', 'index.html#jolsa', 'জলসার নাটক']);
+    nav.innerHTML = items.map(([k, href, label]) => `<a href="${href}" data-k="${k}"${k === active ? ' class="active" aria-current="page"' : ''}>${label}</a>`).join('');
   };
 
   /* ---- TV remote / keyboard arrow navigation ---- */
@@ -192,7 +333,7 @@
   document.addEventListener('keydown', function (e) {
     if (e.defaultPrevented) return;
     const t = e.target;
-    if (t && t.matches && t.matches('input[type=text],input[type=url],input[type=search],textarea,select,[contenteditable]')) return;
+    if (t && t.matches && t.matches('input[type=text],input[type=password],input[type=url],input[type=search],textarea,select,[contenteditable]')) return;
     const dir = FMZ.keyDir(e);
     if (dir) {
       if (t && t.matches && t.matches('input[type=range]') && (dir === 'left' || dir === 'right')) return;
@@ -201,7 +342,7 @@
     }
     if (FMZ.isBackKey(e) && document.body.dataset.page === 'watch' && (e.key !== 'Escape' || FMZ.isTV)) {
       e.preventDefault();
-      location.href = 'index.html';
+      location.href = document.body.dataset.back || 'index.html';
     }
   });
 })();

@@ -3,12 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+  <meta name="googlebot" content="noindex, nofollow">
+  <meta name="referrer" content="no-referrer">
   <meta name="theme-color" content="#07070b">
   <title>Faruk's Movie Zone</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=11">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=20">
 </head>
 <body data-page="watch">
   <header class="topbar">
@@ -19,19 +22,6 @@
   <main class="watch-main">
     <div class="watch">
       <div class="stage">
-        <div class="ep-top" id="epTop" hidden>
-          <div class="links" id="links"></div>
-          <h2 class="frame-now" id="frameNow"></h2>
-        </div>
-        <div class="player-box" id="frameBox" hidden>
-          <div class="player frame-player" id="framePlayer">
-            <iframe id="frame" title="Video" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen></iframe>
-          </div>
-          <div class="frame-tools">
-            <button class="btn" type="button" id="frameFS">Full screen</button>
-            <a class="btn" id="frameOpen" href="#" target="_blank" rel="noopener">Open in new tab</a>
-          </div>
-        </div>
         <div class="player-box" id="playerBox" hidden>
           <div class="player show-controls" id="player" tabindex="0" aria-label="Video player">
             <video id="video" playsinline preload="metadata"></video>
@@ -40,6 +30,11 @@
             <div class="osd" id="osd"></div>
             <div class="spinner" id="spinner" hidden></div>
             <button class="big-play" id="bigPlay" type="button" aria-label="Play"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></button>
+            <div class="next-card" id="nextCard" hidden>
+              <div class="next-img" id="nextImg"></div>
+              <div class="next-txt"><small id="nextLabel">Next episode</small><b id="nextTitle"></b>
+                <div class="next-btns"><button class="btn primary" type="button" id="nextPlay">▶ Play now</button><button class="btn" type="button" id="nextCancel">Cancel</button></div></div>
+            </div>
             <div class="toast" id="toast"><span id="toastText"></span><button type="button" id="toastBtn" hidden></button></div>
 
             <div class="controls" id="controls" data-nav-skip>
@@ -63,6 +58,7 @@
                 <span class="time" id="time">0:00 / 0:00</span>
                 <span class="spacer"></span>
                 <span class="tr-status" id="trStatus"></span>
+                <button class="ctl ctl-text" id="bEps" type="button" aria-label="Episodes" hidden>☰ Episodes</button>
                 <button class="ctl" id="bCC" type="button" aria-label="Subtitles">
                   <svg viewBox="0 0 24 24"><path d="M19 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm-8 7H9.5v-.5h-2v3h2V13H11v1a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1zm7 0h-1.5v-.5h-2v3h2V13H18v1a1 1 0 0 1-1 1h-3a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1z"/></svg>
                 </button>
@@ -94,6 +90,7 @@
         </div>
 
         <div class="info">
+          <div class="info-kicker" id="kicker"></div>
           <h1 id="title">Loading…</h1>
           <div class="meta" id="meta"></div>
           <p class="keys" id="keys" hidden>
@@ -103,16 +100,15 @@
       </div>
 
       <aside class="side">
-        <h2>More to watch</h2>
+        <h2 id="sideTitle">More to watch</h2>
         <div class="more" id="more"></div>
       </aside>
     </div>
   </main>
 
-  <footer class="footer">© Faruk's Movie Zone</footer>
 
-  <script src="common.js?v=11"></script>
-  <script src="subtitles.js?v=11"></script>
-  <script src="player.js?v=11"></script>
+  <script src="common.js?v=20"></script>
+  <script src="subtitles.js?v=20"></script>
+  <script src="player.js?v=20"></script>
 </body>
 </html>
