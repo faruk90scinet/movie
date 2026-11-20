@@ -40,7 +40,7 @@
     if (!id) return null;
     return cat.movies.find(m => m.id === id) || cat.series.reduce((f, s) => f || s.eps.find(e => e.id === id), null);
   }
-  const titleOf = it => it.series ? `${it.series.t} · Episode ${it.n}` : it.t;
+  const titleOf = it => it.series ? `${it.series.t} · ${FMZ.epLabel(it)}` : it.t;
 
   /** Loads a movie or episode into the player (also used for "next episode" without reloading the page) */
   function loadItem(it, fromStart) {
@@ -49,7 +49,7 @@
     history.replaceState(null, '', FMZ.watchUrl(it.id));
     document.title = titleOf(it) + " · Faruk's Movie Zone";
     $('#kicker').textContent = it.series ? it.series.t : (it.y || '');
-    $('#title').textContent = it.series ? `Episode ${it.n}${it.t ? ' · ' + it.t : ''}` : it.t;
+    $('#title').textContent = it.series ? `${FMZ.epLabel(it)}${it.t ? ' · ' + it.t : ''}` : it.t;
     if (it.series) FMZ.setSeriesLast(it.series.id, it.id);
     document.body.dataset.back = it.series ? FMZ.seriesUrl(it.series.id) : 'index.html';
     FMZ.renderNav(cat, it.series ? 'series' : 'movies');
@@ -82,7 +82,7 @@
         const p = FMZ.getProgress(e.id), w = FMZ.isWatched(e.id), pct = p && p.d ? Math.min(100, p.t / p.d * 100) : 0;
         return `<a class="mini${e.id === it.id ? ' current' : ''}" href="${FMZ.watchUrl(e.id)}" data-ep="${e.id}">
           <div class="thumb">${FMZ.imgTag(e, false, 'mini-pic')}${pct ? `<span class="bar"><i style="width:${pct}%"></i></span>` : ''}${e.id === it.id ? '<span class="now">▶ Playing</span>' : ''}</div>
-          <span class="mini-title"><b>Episode ${e.n}</b>${e.t ? ' · ' + FMZ.esc(e.t) : ''}${w ? ' <em class="ok">✓</em>' : ''}</span></a>`;
+          <span class="mini-title"><b>${FMZ.epLabel(e)}</b>${e.t ? ' · ' + FMZ.esc(e.t) : ''}${w ? ' <em class="ok">✓</em>' : ''}</span></a>`;
       }).join('');
       box.querySelectorAll('[data-ep]').forEach(a => a.addEventListener('click', e => {
         const ep = findItem(a.dataset.ep);
@@ -93,7 +93,7 @@
       const others = cat.movies.filter(m => !it || m.id !== it.id).concat(cat.series).sort((a, b) => (b.add || 0) - (a.add || 0));
       box.innerHTML = others.map(o => `<a class="mini" href="${o.eps ? FMZ.seriesUrl(o.id) : FMZ.watchUrl(o.id)}">
           <div class="thumb">${FMZ.imgTag(o, false, 'mini-pic')}<div class="mini-on">${FMZ.titleArt(o, 'mini-logo')}</div></div>
-          <span class="mini-title">${FMZ.esc(o.t)}<small>${o.eps ? o.eps.length + ' episodes' : [o.y, FMZ.fmtRuntime(o.rt)].filter(Boolean).join(' · ')}</small></span></a>`).join('')
+          <span class="mini-title">${FMZ.esc(o.t)}<small>${o.eps ? FMZ.epCount(o) + ' episodes' : [o.y, FMZ.fmtRuntime(o.rt)].filter(Boolean).join(' · ')}</small></span></a>`).join('')
         || '<p class="card-sub">Nothing else yet.</p>';
     }
     FMZ.fillImages(box);
@@ -108,7 +108,7 @@
   function showNext() {
     nx.shown = true; nx.left = 10;
     const e = nx.ep;
-    $('#nextTitle').textContent = `Episode ${e.n}${e.t ? ' · ' + e.t : ''}`;
+    $('#nextTitle').textContent = `${FMZ.epLabel(e)}${e.t ? ' · ' + e.t : ''}`;
     $('#nextImg').innerHTML = FMZ.imgTag(e, false, 'next-pic');
     FMZ.fillImages($('#nextImg'));
     $('#nextCard').hidden = false;
@@ -130,12 +130,23 @@
     player.focus({ preventScroll: true });
   }
   function openEpisodes() {
-    const s = item.series;
-    openMenu('Episodes', s.eps.map(e => ({
-      label: `Episode ${e.n}${e.t ? ' · ' + e.t : ''}`, active: e.id === item.id,
+    const s = item.series, items = [];
+    if (item.ch && item.ch.length > 1) {
+      items.push({ head: 'In this video' });
+      const now = video.currentTime;
+      item.ch.forEach((c, i) => {
+        const nextT = item.ch[i + 1] ? item.ch[i + 1].t : Infinity;
+        items.push({ label: c.l || (item.n2 && item.ch.length === item.n2 - item.n + 1 ? 'Episode ' + (item.n + i) : 'Part ' + (i + 1)),
+          value: FMZ.fmtTime(c.t), active: now >= c.t && now < nextT,
+          onClick: () => { video.currentTime = c.t; closeMenu(B.eps); video.play().catch(() => { }); } });
+      });
+      items.push({ head: 'All episodes' });
+    }
+    openMenu('Episodes', items.concat(s.eps.map(e => ({
+      label: `${FMZ.epLabel(e)}${e.t ? ' · ' + e.t : ''}`, active: e.id === item.id,
       value: FMZ.isWatched(e.id) ? '✓' : '',
       onClick: () => { closeMenu(B.eps); if (e.id !== item.id) { loadItem(e); video.play().catch(() => { }); } }
-    })));
+    }))));
   }
 
   /* ================= Player setup ================= */
@@ -368,6 +379,7 @@
     menu.appendChild(h);
     let focusEl = null;
     items.forEach(it => {
+      if (it.head) { const d = document.createElement('div'); d.className = 'menu-head'; d.textContent = it.head; menu.appendChild(d); return; }
       const b = document.createElement('button');
       b.type = 'button'; b.className = 'menu-item';
       b.innerHTML = `<span class="mi-check">${it.active ? '✓' : ''}</span><span class="mi-label">${FMZ.esc(it.label)}</span>` +

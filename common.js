@@ -256,6 +256,10 @@
     return out.sort((a, b) => b.at - a.at);
   };
 
+  /** "Episode 4" or, for one video holding several episodes, "Episodes 61–68" */
+  FMZ.epLabel = e => e.n2 ? `Episodes ${e.n}–${e.n2}` : `Episode ${e.n}`;
+  FMZ.epShort = e => e.n2 ? `E${e.n}–${e.n2}` : `E${e.n}`;
+  FMZ.epCount = s => s.eps.reduce((n, e) => n + (e.n2 ? e.n2 - e.n + 1 : 1), 0);
   FMZ.watchUrl = id => 'watch.html?v=' + encodeURIComponent(id);
   FMZ.seriesUrl = id => 'index.html#s/' + encodeURIComponent(id);
   FMZ.hue = s => { let h = 0; for (const c of String(s)) h = (h * 31 + c.charCodeAt(0)) % 360; return h; };

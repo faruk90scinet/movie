@@ -12,6 +12,7 @@
     FLAG_DEFAULT: 0x88, FLAG_FORCED: 0x55AA,
     CONTENT_ENCODINGS: 0x6D80, CONTENT_ENCODING: 0x6240, CONTENT_COMPRESSION: 0x5034,
     COMP_ALGO: 0x4254, COMP_SETTINGS: 0x4255,
+    CHAPTERS: 0x1043A770, EDITION: 0x45B9, ATOM: 0xB6, CH_START: 0x91, CH_HIDDEN: 0x98, CH_DISPLAY: 0x80, CH_STRING: 0x85,
     TIMESTAMP: 0xE7, SIMPLEBLOCK: 0xA3, BLOCKGROUP: 0xA0, BLOCK: 0xA1, BLOCK_DURATION: 0x9B
   };
   // Elements that can only appear at segment level (used to end clusters of unknown size)
@@ -200,7 +201,8 @@
     if (segStart < 0) throw new Error('This is not an MKV (Matroska) file.');
 
     p = segStart;
-    let lastReport = 0, tracksSeen = false;
+    let lastReport = 0, tracksSeen = false, noText = false;
+    const chapters = [];
     while (p < segEnd) {
       if (signal && signal.aborted) throw new Error('Cancelled');
       const h = await r.header(p);
@@ -215,10 +217,26 @@
       } else if (h.id === ID.TRACKS && h.de != null) {
         parseTracks((await r.bytes(h.ds, h.de - h.ds)).slice(), tracks);
         tracksSeen = true;
-        if (![...tracks.values()].some(t => t.kind === 'text')) break;   // nothing readable, stop early
+        noText = ![...tracks.values()].some(t => t.kind === 'text');   // then stop at the first cluster
+        p = h.de;
+      } else if (h.id === ID.CHAPTERS && h.de != null) {
+        const a = (await r.bytes(h.ds, h.de - h.ds)).slice();
+        for (const ed of kids(a, 0, a.length)) {
+          if (ed.id !== ID.EDITION || chapters.length) continue;      // first edition only
+          for (const at of kids(a, ed.start, ed.end)) {
+            if (at.id !== ID.ATOM) continue;
+            let t = 0, label = '', hidden = false;
+            for (const k of kids(a, at.start, at.end)) {
+              if (k.id === ID.CH_START) t = uint(a, k.start, k.end) / 1e9;
+              else if (k.id === ID.CH_HIDDEN) hidden = !!uint(a, k.start, k.end);
+              else if (k.id === ID.CH_DISPLAY && !label) for (const d of kids(a, k.start, k.end)) if (d.id === ID.CH_STRING) label = str(a, d.start, d.end);
+            }
+            if (!hidden) chapters.push({ t: Math.round(t * 10) / 10, l: label });
+          }
+        }
         p = h.de;
       } else if (h.id === ID.CLUSTER) {
-        if (tracksSeen && !tracks.size) break;
+        if (tracksSeen && (!tracks.size || noText)) break;
         p = await parseCluster(r, h, segEnd, tracks, scale);
       } else {
         if (h.de == null) break;
@@ -238,7 +256,8 @@
       });
       return { number: t.number, codec: t.codec, lang: t.lang, name: t.name, kind: t.kind, isDefault: t.isDefault, forced: t.forced, count: t.count, cues };
     });
-    return { duration: duration * scale / 1e9, tracks: out };
+    chapters.sort((a, b) => a.t - b.t);
+    return { duration: duration * scale / 1e9, tracks: out, chapters };
   }
 
   const api = { extract };

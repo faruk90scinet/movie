@@ -55,7 +55,7 @@
   function metaLine(it) {
     const bits = [];
     if (it.y) bits.push(`<span>${E(it.y)}</span>`);
-    if (it.eps) bits.push(`<span>${it.eps.length} episode${it.eps.length > 1 ? 's' : ''}</span>`);
+    if (it.eps) { const c = FMZ.epCount(it); bits.push(`<span>${c} episode${c > 1 ? 's' : ''}</span>`); }
     else if (it.rt) bits.push(`<span>${FMZ.fmtRuntime(it.rt)}</span>`);
     if (it.g && it.g.length) bits.push(`<span>${E(it.g.join(' · '))}</span>`);
     return `<div class="meta-line">${bits.join('<i>•</i>')}${subsChip(it)}</div>`;
@@ -68,8 +68,8 @@
     if (isSeries) {
       const t = opt.ep ? { ep: opt.ep } : null;
       href = opt.ep ? FMZ.watchUrl(opt.ep.id) : FMZ.seriesUrl(it.id);
-      if (opt.ep) { p = opt.p; sub = `Episode ${opt.ep.n}` + (p ? ' · ' + FMZ.fmtLeft(p) : opt.upNext ? ' · Up next' : ''); }
-      else sub = `${it.eps.length} episode${it.eps.length > 1 ? 's' : ''}`;
+      if (opt.ep) { p = opt.p; sub = FMZ.epLabel(opt.ep) + (p ? ' · ' + FMZ.fmtLeft(p) : opt.upNext ? ' · Up next' : ''); }
+      else { const c = FMZ.epCount(it); sub = `${c} episode${c > 1 ? 's' : ''}`; }
       const newest = Math.max(...it.eps.map(e => e.add || 0));
       if (Date.now() - newest < 7 * 864e5) badge = it.eps.some(e => Date.now() - e.add > 7 * 864e5) ? 'NEW EPISODES' : 'NEW';
       if (t && opt.ep) badge = '';
@@ -83,7 +83,7 @@
     return `<a class="tile" href="${href}">
       <div class="tile-img">${FMZ.imgTag(it, false, 'tile-pic')}<span class="tile-shade"></span>
         ${badge ? `<span class="badge">${badge}</span>` : ''}
-        ${opt.ep ? `<span class="ep-tag">E${opt.ep.n}</span>` : ''}
+        ${opt.ep ? `<span class="ep-tag">${FMZ.epShort(opt.ep)}</span>` : ''}
         <div class="tile-title">${FMZ.titleArt(it, 'tile-logo')}</div>
         ${pct ? `<span class="bar"><i style="width:${pct}%"></i></span>` : ''}
       </div>
@@ -121,7 +121,7 @@
       const t = FMZ.seriesTarget(it);
       play = FMZ.watchUrl(t.ep.id);
       p = t.resume ? FMZ.getProgress(t.ep.id) : null;
-      playLabel = (t.resume ? 'Resume' : t.upNext ? 'Play' : 'Play') + ` Episode ${t.ep.n}`;
+      playLabel = (t.resume ? 'Resume' : t.upNext ? 'Play' : 'Play') + ' ' + FMZ.epLabel(t.ep);
       second = `<a class="btn ghost" href="${FMZ.seriesUrl(it.id)}">☰&nbsp; Episodes</a>`;
     } else {
       play = FMZ.watchUrl(it.id);
@@ -155,15 +155,15 @@
     document.title = s.t + " · Faruk's Movie Zone";
     const t = FMZ.seriesTarget(s);
     const p = t.resume ? FMZ.getProgress(t.ep.id) : null;
-    const label = (t.resume ? 'Resume' : 'Play') + ` Episode ${t.ep.n}`;
+    const label = (t.resume ? 'Resume' : 'Play') + ' ' + FMZ.epLabel(t.ep);
     const eps = s.eps.map(e => {
       const ep = FMZ.getProgress(e.id), watched = FMZ.isWatched(e.id);
       const pct = ep && ep.d ? Math.min(100, ep.t / ep.d * 100) : 0;
       const desc = ep ? FMZ.fmtLeft(ep) + (e.subs ? ' · বাংলা সাবটাইটেল' : '') : (e.o || (e.subs ? 'বাংলা সাবটাইটেল' : ''));
       return `<a class="ep${e.id === t.ep.id ? ' current' : ''}" href="${FMZ.watchUrl(e.id)}">
-        <span class="ep-n">${e.n}</span>
+        <span class="ep-n${e.n2 ? ' range' : ''}">${e.n2 ? e.n + '<br>–' + e.n2 : e.n}</span>
         <div class="ep-img">${FMZ.imgTag(e, false, 'ep-pic')}<span class="play-dot">${FMZ.PLAY_SVG}</span>${pct ? `<span class="bar"><i style="width:${pct}%"></i></span>` : ''}</div>
-        <div class="ep-txt"><h3>Episode ${e.n}${e.t ? ' · ' + E(e.t) : ''}</h3><p>${E(desc)}</p></div>
+        <div class="ep-txt"><h3>${FMZ.epLabel(e)}${e.t ? ' · ' + E(e.t) : ''}</h3><p>${E(desc)}</p></div>
         <span class="ep-st${watched ? ' ok' : ''}">${watched ? '✓ Watched' : e.rt ? e.rt + ' min' : ''}</span>
       </a>`;
     }).join('');
@@ -175,7 +175,7 @@
           ${metaLine(s)}
           ${s.o ? `<p class="hero-text">${E(s.o)}</p>` : ''}
           <div class="hero-btns"><a class="btn primary big" href="${FMZ.watchUrl(t.ep.id)}" data-autofocus>${FMZ.PLAY_SVG}<span>${label}</span></a>
-            ${t.ep !== s.eps[0] ? `<a class="btn ghost" href="${FMZ.watchUrl(s.eps[0].id)}&t=0">↺&nbsp; Start from Episode 1</a>` : ''}</div>
+            ${t.ep !== s.eps[0] ? `<a class="btn ghost" href="${FMZ.watchUrl(s.eps[0].id)}&t=0">↺&nbsp; Start from the beginning</a>` : ''}</div>
           ${p ? `<div class="hero-prog"><span class="bar"><i style="width:${Math.min(100, p.t / p.d * 100)}%"></i></span><small>${FMZ.fmtLeft(p)}</small></div>` : ''}
         </div>
       </section>
